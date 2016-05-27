@@ -1,0 +1,5 @@
+#!/bin/bash
+
+mysql -h 54.169.188.17 -uminus -pminus -Dminus
+
+
