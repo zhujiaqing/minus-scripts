@@ -29,7 +29,7 @@ def dump_score(uids):
             if row is None:
                 cur.execute('INSERT INTO minus_user_score(uid,coins,score) VALUES(%s,%s,%s)' % (uid, coins, score))
             else:
-                cur.execute('UPDATE minus_user_score set coins=%s,item=%s where uid=%s' % (coins, score, uid))
+                cur.execute('UPDATE minus_user_score set coins=%s,score=%s where uid=%s' % (coins, score, uid))
             sg_mysql.commit()
             
     cur.close()
