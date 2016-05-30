@@ -25,7 +25,8 @@ def dump_score(uids):
             score = item.score if item.score is not None else 0
             print (uid, coins, score)
             cur.execute('INSERT INTO minus_user_coins(user_id,coins,score) VALUES(%s,%s,%s)', (uid, coins, score))
-
+            sg_mysql.commit()
+            
     cur.close()
 
 def dump_relation(uids):
