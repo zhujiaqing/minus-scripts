@@ -22,7 +22,7 @@ def init_uids():
         
         uids = [item[0] for item in data]
     except Exception as ex:
-        print ex
+        print 'uids', str(ex)
         
     return uids
 
@@ -45,7 +45,7 @@ def dump_score(uids):
                     cur.execute('UPDATE minus_user_score set coins=%s,score=%s where uid=%s' % (coins, score, uid))
                 sg_mysql.commit()
             except Exception as ex:
-                print ex
+                print 'score', uid, str(ex)
             
     cur.close()
 
@@ -66,8 +66,6 @@ def dump_photo(uids):
                     
                     if row is None:
                         cur.execute('INSERT INTO minus_user_photo(uid,photo_key,create_time) VALUES(%s,"%s","%s")' % (uid, photo_key, create_time))
-                    else:
-                        cur.execute('UPDATE minus_user_photo set photo_key="%s",create_time="%s" where uid=%s' % (photo_key, create_time, uid))
                 sg_mysql.commit()
             except Exception as ex:
                 print 'photo', uid, str(ex)
@@ -91,7 +89,7 @@ def dump_relation(uids):
                     cur.execute('INSERT INTO minus_user_follower(follower_id,followee_id,create_time) VALUES(%s,%s,"%s")' % (follower_id, followee_id, create_time))
                 sg_mysql.commit()
             except Exception as ex:
-                print ex
+                print 'follwer', uid, str(ex)
         
         for item in usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid):
             try:
@@ -106,7 +104,7 @@ def dump_relation(uids):
                     cur.execute('INSERT INTO minus_user_followee(follower_id,followee_id,create_time) VALUES(%s,%s,"%s")' % (follower_id, followee_id, create_time))
                 sg_mysql.commit()
             except Exception as ex:
-                print ex
+                print 'follwee', uid, str(ex)
         
     cur.close()
 
