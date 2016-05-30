@@ -21,7 +21,9 @@ def dump_score(uids):
     for uid in uids:
         for item in usa_session.execute('SELECT * FROM users.score WHERE uid=%d;' % uid):
             cur.execute('select * from minus_user_coins where user_id=%s' % item.uid if item.uid is not None else 0)
-            if 0 == cur.fetchone():
+            row = cur.fetchone()
+            print row, cur.fetchone()
+            if row is not None:
                 print 'insert'
                 cur.execute('INSERT INTO minus_user_coins(user_id,coins,score) VALUES(%s,%s,%s)' % 
                             (item.uid if item.uid is not None else 0,
@@ -31,8 +33,7 @@ def dump_score(uids):
                 print 'update'
                 cur.execute('UPDATE minus_user_coins set coins=%s,score=%s where user_id=%s' % 
                             (item.coins if item.coins is not None else 0,
-#                              item.score if item.score is not None else 0,
-            123123,
+                            item.score if item.score is not None else 0,
                              item.uid if item.uid is not None else 0))
             sg_mysql.commit()
             
