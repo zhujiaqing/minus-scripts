@@ -69,7 +69,7 @@ def dump_relation(uids):
             row = cur.fetchone()
             
             if row is None:
-                cur.execute('INSERT INTO minus_user_follower(follower_id,followee_id,create_time) VALUES(%s,%s,%s)' % (follower_id, followee_id, create_time))
+                cur.execute('INSERT INTO minus_user_follower(follower_id,followee_id,create_time) VALUES(%s,%s,"%s")' % (follower_id, followee_id, create_time))
             sg_mysql.commit()
         
         for item in usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid):
@@ -81,7 +81,7 @@ def dump_relation(uids):
             row = cur.fetchone()
             
             if row is None:
-                cur.execute('INSERT INTO minus_user_followee(follower_id,followee_id,create_time) VALUES(%s,%s,%s)' % (follower_id, followee_id, create_time))
+                cur.execute('INSERT INTO minus_user_followee(follower_id,followee_id,create_time) VALUES(%s,%s,"%s")' % (follower_id, followee_id, create_time))
             sg_mysql.commit()
         
     cur.close()
