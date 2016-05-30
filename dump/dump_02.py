@@ -57,13 +57,40 @@ def dump_photo(uids):
     cur.close()
 
 def dump_relation(uids):
-    pass
+    cur = sg_mysql.cursor()
+
+    for uid in uids:
+        for item in usa_session.execute('SELECT * FROM cb_er_dt WHERE follower_id=%s;' % uid):
+            follower_id = item.follower_id
+            followee_id = item.followee_id
+            create_time = item.dt
+            
+            cur.execute('SELECT * FROM minus_user_follower WHERE follower_id=%s and followee_id=%s' % (follower_id, followee_id))
+            row = cur.fetchone()
+            
+            if row is None:
+                cur.execute('INSERT INTO minus_user_follower(follower_id,followee_id,create_time) VALUES(%s,%s,%s)' % (follower_id, followee_id, create_time))
+            sg_mysql.commit()
+        
+        for item in usa_session.execute('SELECT * FROM cb_ee_dt WHERE followee_id=%s;' % uid):
+            follower_id = item.follower_id
+            followee_id = item.followee_id
+            create_time = item.dt
+            
+            cur.execute('SELECT * FROM minus_user_followee WHERE follower_id=%s and followee_id=%s' % (follower_id, followee_id))
+            row = cur.fetchone()
+            
+            if row is None:
+                cur.execute('INSERT INTO minus_user_followee(follower_id,followee_id,create_time) VALUES(%s,%s,%s)' % (follower_id, followee_id, create_time))
+            sg_mysql.commit()
+        
+    cur.close()
 
 if __name__ == '__main__':
     uids = init_uids()
     
 #     dump_score(uids)
-    dump_photo(uids)
+#     dump_photo(uids)
     dump_relation(uids)
 
     print '\nDump over\n'
