@@ -42,14 +42,14 @@ def dump_photo(uids):
             item_id = item.item_id
             create_time = item.dt
             
-            for ic in usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item_id):
+            for ic in usa_session.execute('SELECT view_id FROM items.dict WHERE item_id="%s";' % item_id):
                 photo_key = ic.view_id
                 
-                cur.execute('SELECT * FROM minus_user_photo WHERE uid=%s and photo_key=%s' % (uid, photo_key))
+                cur.execute('SELECT * FROM minus_user_photo WHERE uid=%s and photo_key="%s"' % (uid, photo_key))
                 row = cur.fetchone()
                 
                 if row is None:
-                    cur.execute('INSERT INTO minus_user_photo(uid,photo_key,create_time) VALUES(%s,%s,%s)' % (uid, photo_key, create_time))
+                    cur.execute('INSERT INTO minus_user_photo(uid,photo_key,create_time) VALUES(%s,"%s","%s")' % (uid, photo_key, create_time))
                 else:
                     cur.execute('UPDATE minus_user_photo set photo_key="%s",create_time="%s" where uid=%s' % (photo_key, create_time, uid))
             sg_mysql.commit()
