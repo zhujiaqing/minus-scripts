@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- codding:utf8 -*-
+# -*- coding:utf8 -*-
 
 import MySQLdb
 sg_mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
