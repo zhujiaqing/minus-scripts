@@ -20,7 +20,10 @@ def dump_score(uids):
 
     for uid in uids:
         for item in usa_session.execute('SELECT * FROM users.score WHERE uid=%d;' % uid):
-            cur.execute('INSERT INTO minus_user_coins(user_id,coins,score) VALUES(%d,%d,%d)', (int(item.uid), int(item.coins), int(item.score)))
+            uid = int(item.uid) if item.uid is not None else 0
+            coins = int(item.coins) if item.coins is not None else 0
+            score = int(item.score) if item.score is not None else 0
+            cur.execute('INSERT INTO minus_user_coins(user_id,coins,score) VALUES(%d,%d,%d)', (uid, coins, score))
 
     cur.close()
 
