@@ -23,7 +23,7 @@ def dump_score(uids):
             cur.execute('select * from minus_user_coins where user_id=%s' % item.uid if item.uid is not None else 0)
             row = cur.fetchone()
             print row, cur.fetchone()
-            if row is not None:
+            if row is None:
                 print 'insert'
                 cur.execute('INSERT INTO minus_user_coins(user_id,coins,score) VALUES(%s,%s,%s)' % 
                             (item.uid if item.uid is not None else 0,
