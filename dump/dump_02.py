@@ -60,7 +60,7 @@ def dump_relation(uids):
     cur = sg_mysql.cursor()
 
     for uid in uids:
-        for item in usa_session.execute('SELECT * FROM cb_er_dt WHERE follower_id=%s;' % uid):
+        for item in usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
             follower_id = item.follower_id
             followee_id = item.followee_id
             create_time = item.dt
@@ -72,7 +72,7 @@ def dump_relation(uids):
                 cur.execute('INSERT INTO minus_user_follower(follower_id,followee_id,create_time) VALUES(%s,%s,%s)' % (follower_id, followee_id, create_time))
             sg_mysql.commit()
         
-        for item in usa_session.execute('SELECT * FROM cb_ee_dt WHERE followee_id=%s;' % uid):
+        for item in usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid):
             follower_id = item.follower_id
             followee_id = item.followee_id
             create_time = item.dt
