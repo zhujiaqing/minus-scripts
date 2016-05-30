@@ -70,7 +70,7 @@ def dump_photo(uids):
                         cur.execute('UPDATE minus_user_photo set photo_key="%s",create_time="%s" where uid=%s' % (photo_key, create_time, uid))
                 sg_mysql.commit()
             except Exception as ex:
-                print ex
+                print uid, ex.tostring()
                 
     cur.close()
 
