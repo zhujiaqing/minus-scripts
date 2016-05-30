@@ -42,7 +42,7 @@ def dump_photo(uids):
     
     for uid in uids:
         for item in usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % uid):
-            item_id = item.view_id
+            item_id = item.item_id
             create_time = item.dt
             
             for ic in usa_session.execute('SELECT view_id FROM dict WHERE item_id=%s;' % item_id):
