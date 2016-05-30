@@ -6,35 +6,30 @@ sg_mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', c
 
 from cassandra.cluster import Cluster
 usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
-usa_session = usa_cluster.connect('items')
+usa_session = usa_cluster.connect()
 
 def init_uids():
     cur = sg_mysql.cursor()
     cur.execute('SELECT id FROM minus_user')
     data = cur.fetchall()
     cur.close()
-    return [int(item[0]) for item in data]
+    return [item[0] for item in data]
 
 def dump_score(uids):
     cur = sg_mysql.cursor()
 
     for uid in uids:
-        for item in usa_session.execute('SELECT * FROM users.score WHERE uid=%d;' % uid):
-            cur.execute('select * from minus_user_coins where user_id=%s' % item.uid if item.uid is not None else 0)
+        for item in usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid):
+            coins = item.coins if item.coins is not None else 0
+            score = item.score if item.score is not None else 0
+            
+            cur.execute('SELECT * FROM minus_user_score WHERE uid=%s' % uid)
             row = cur.fetchone()
-            print row, cur.fetchone()
+            
             if row is None:
-                print 'insert'
-                cur.execute('INSERT INTO minus_user_coins(user_id,coins,score) VALUES(%s,%s,%s)' % 
-                            (item.uid if item.uid is not None else 0,
-                             item.coins if item.coins is not None else 0,
-                             item.score if item.score is not None else 0))
+                cur.execute('INSERT INTO minus_user_score(uid,coins,item) VALUES(%s,%s,%s)' % (uid, coins, score))
             else:
-                print 'update'
-                cur.execute('UPDATE minus_user_coins set coins=%s,score=%s where user_id=%s' % 
-                            (item.coins if item.coins is not None else 0,
-                            item.score if item.score is not None else 0,
-                             item.uid if item.uid is not None else 0))
+                cur.execute('UPDATE minus_user_score set coins=%s,item=%s where uid=%s' % (coins, score, uid))
             sg_mysql.commit()
             
     cur.close()
@@ -43,7 +38,26 @@ def dump_relation(uids):
     pass
 
 def dump_photo(uids):
-    pass
+    cur = sg_mysql.cursor()
+    
+    for uid in uids:
+        for item in usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % uid):
+            item_id = item.view_id
+            create_time = item.dt
+            
+            for ic in usa_session.execute('SELECT view_id FROM dict WHERE item_id=%s;' % item_id):
+                photo_key = ic.view_id
+                
+                cur.execute('SELECT * FROM minus_user_photo WHERE uid=%s and photo_key=%s' % (uid, photo_key))
+                row = cur.fetchone()
+                
+                if row is None:
+                    cur.execute('INSERT INTO minus_user_photo(uid,photo_key,create_time) VALUES(%s,%s,%s)' % (uid, photo_key, create_time))
+                else:
+                    cur.execute('UPDATE minus_user_photo set photo_key="%s",create_time="%s" where uid=%s' % (photo_key, create_time, uid))
+            sg_mysql.commit()
+    
+    cur.close()
 
 if __name__ == '__main__':
     uids = init_uids()
