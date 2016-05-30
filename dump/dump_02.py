@@ -2,23 +2,27 @@
 # -*- codding:utf8 -*-
 
 import MySQLdb
-mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
+sg_mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
 
 from cassandra.cluster import Cluster
-cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
-session = cluster.connect('items')
+usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
+usa_session = usa_cluster.connect('items')
 
 def init_uids():
-    cur = mysql.cursor()
+    cur = sg_mysql.cursor()
     cur.execute('SELECT id FROM minus_user')
     data = cur.fetchall()
     cur.close()
     return [int(item[0]) for item in data]
 
 def dump_score(uids):
+    cur = sg_mysql.cursor()
+
     for uid in uids:
-        for item in session.execute('SELECT * FROM users.score WHERE uid=%d;' % uid):
-            print item
+        for item in usa_session.execute('SELECT * FROM users.score WHERE uid=%d;' % uid):
+            cur.execute('INSERT INTO minus_user_coins(user_id,coins,score) VALUES(%d,%d,%d)', (int(item.uid), int(item.coins), int(item.score)))
+
+    cur.close()
 
 def dump_relation(uids):
     pass
