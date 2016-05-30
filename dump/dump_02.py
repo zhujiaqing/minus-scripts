@@ -34,9 +34,6 @@ def dump_score(uids):
             
     cur.close()
 
-def dump_relation(uids):
-    pass
-
 def dump_photo(uids):
     cur = sg_mysql.cursor()
     
@@ -45,7 +42,7 @@ def dump_photo(uids):
             item_id = item.item_id
             create_time = item.dt
             
-            for ic in usa_session.execute('SELECT view_id FROM dict WHERE item_id=%s;' % item_id):
+            for ic in usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item_id):
                 photo_key = ic.view_id
                 
                 cur.execute('SELECT * FROM minus_user_photo WHERE uid=%s and photo_key=%s' % (uid, photo_key))
@@ -59,12 +56,15 @@ def dump_photo(uids):
     
     cur.close()
 
+def dump_relation(uids):
+    pass
+
 if __name__ == '__main__':
     uids = init_uids()
     
-    dump_score(uids)
-    dump_relation(uids)
+#     dump_score(uids)
     dump_photo(uids)
+    dump_relation(uids)
 
     print '\nDump over\n'
 
