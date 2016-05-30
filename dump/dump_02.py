@@ -5,7 +5,7 @@ import MySQLdb
 mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
 
 from cassandra.cluster import Cluster
-cluster = Cluster(['10.140.244.182'], protocol_version=3)
+cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
 session = cluster.connect('items')
 
 def init_uids():
@@ -17,7 +17,7 @@ def init_uids():
 
 def dump_score(uids):
     for uid in uids:
-        for item in session.execute('SELECT * FROM items.userline WHERE uid = %d;' % uid):
+        for item in session.execute('SELECT * FROM users.score WHERE uid=%d;' % uid):
             print item
 
 def dump_relation(uids):
