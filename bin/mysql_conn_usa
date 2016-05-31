@@ -1,5 +1,0 @@
-#!/bin/bash
-
-mysql -h10.231.129.198 -uroot -pcarlhu -Dminus
-
-
