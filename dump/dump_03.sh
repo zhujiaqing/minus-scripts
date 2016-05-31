@@ -5,7 +5,7 @@
 # 用户动态
 
 init_avator(){
-mysql -h54.169.188.17 -uminus -pminus -Dminus \
+mysql -N -h54.169.188.17 -uminus -pminus -Dminus \
 -e"select minus_user.id,minus_user.avatar_item from minus_user inner join minus_user_status where minus_user_status.avator=0;" | \
 while read uid key
 do
