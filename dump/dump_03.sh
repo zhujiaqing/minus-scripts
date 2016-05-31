@@ -47,11 +47,10 @@ curl -i -X PUT \
 -e"update minus_user_status set photo=1 where uid=$uid"
 
 rm -f /dev/shm/$key.jpg
-break
 done
 }
 
-#init_avator
+init_avator
 init_photo
 
 
