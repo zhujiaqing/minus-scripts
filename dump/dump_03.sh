@@ -55,6 +55,7 @@ do
 init_avator
 init_photo
 
+echo "not status sleep 10 $(date)"
 sleep 10
 done
 
