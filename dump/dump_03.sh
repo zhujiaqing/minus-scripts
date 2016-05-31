@@ -50,7 +50,16 @@ rm -f /dev/shm/$key.jpg
 done
 }
 
+while true
+do
 init_avator
 init_photo
+
+sleep 10
+done
+
+
+
+
 
 
