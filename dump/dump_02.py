@@ -2,7 +2,6 @@
 # -*- coding:utf8 -*-
 
 import MySQLdb
-from Finder.Finder_items import items
 sg_mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
 
 from cassandra.cluster import Cluster
