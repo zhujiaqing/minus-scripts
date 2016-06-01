@@ -33,8 +33,9 @@ def dump_score(uids):
     for uid in uids:
         try:
             coins = score = 0
-            item = usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid)[0]
-            if item is None:
+            items = usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid)
+            if 0 < items.size():
+                item = items[0]
                 coins = item.coins if item.coins is not None else 0
                 score = item.score if item.score is not None else 0
                 
