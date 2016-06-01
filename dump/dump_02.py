@@ -2,6 +2,7 @@
 # -*- coding:utf8 -*-
 
 import MySQLdb
+from Finder.Finder_items import items
 sg_mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
 
 from cassandra.cluster import Cluster
@@ -34,6 +35,13 @@ def dump_score(uids):
         try:
             coins = score = 0
             items = usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid)
+            
+            print items
+            print items.getRow()
+            print items.size()
+            print len(items)
+            continue
+            
             if 0 < len(items):
                 item = items[0]
                 coins = item.coins if item.coins is not None else 0
