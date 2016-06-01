@@ -31,8 +31,10 @@ def dump_score(uids):
     cur = sg_mysql.cursor()
 
     for uid in uids:
-        for item in usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid):
-            try:
+        try:
+            coins = score = 0
+            item = usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid)[0]
+            if item is None:
                 coins = item.coins if item.coins is not None else 0
                 score = item.score if item.score is not None else 0
                 
@@ -44,8 +46,8 @@ def dump_score(uids):
                 else:
                     cur.execute('UPDATE minus_user_score set coins=%s,score=%s where uid=%s' % (coins, score, uid))
                 sg_mysql.commit()
-            except Exception as ex:
-                print 'score', uid, str(ex)
+        except Exception as ex:
+            print 'score', uid, str(ex)
             
     cur.close()
 
