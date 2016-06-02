@@ -27,7 +27,16 @@ mysqldump -h10.231.129.198 -uroot -pcarlhu minus minus_userbirthdate | mysql -h5
 mysqldump -h10.231.129.198 -uroot -pcarlhu minus minus_usergender | mysql -h54.169.188.17 -uminus -pminus -Dminus
 }
 
-#part
-all
+local(){
+mysqldump -h10.231.129.198 -uroot -pcarlhu minus minus_user | gzip -d > minus_user-$(date +%Y%m%d).gz
 
+mysqldump -h10.231.129.198 -uroot -pcarlhu minus minus_userbirthdate | gzip -d > minus_userbirthdate-$(date +%Y%m%d).gz
+
+mysqldump -h10.231.129.198 -uroot -pcarlhu minus minus_usergender | gzip -d > minus_usergender-$(date +%Y%m%d).gz
+
+}
+
+#part
+#all
+local
 
