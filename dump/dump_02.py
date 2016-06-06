@@ -116,11 +116,9 @@ def dump_all(start_uid=0, size=10):
         dump_relation(uids)
         
         if size == len(data):
-            print 'go on'
             cur.execute('SELECT id FROM minus_user where id>%s limit %s' % (start_uid, size))
             data = cur.fetchall()
             batch_dump(cur, data, size)
-            
         
     try:
         cur = sg_mysql.cursor()
