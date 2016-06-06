@@ -1,5 +1,6 @@
 #!/bin/bash
 
-mysql -h 54.169.188.17 -uminus -pminus -Dminus
+#mysql -h 54.169.188.17 -uminus -pminus -Dminus
+mysql -h 54.169.234.201 -uminus -pminus -Dminus
 
 

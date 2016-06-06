@@ -2,30 +2,11 @@
 # -*- coding:utf8 -*-
 
 import MySQLdb
-sg_mysql = MySQLdb.connect(host='54.169.188.17', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
+sg_mysql = MySQLdb.connect(host='54.169.234.201', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
 
 from cassandra.cluster import Cluster
 usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
 usa_session = usa_cluster.connect()
-
-def init_uids():
-    """
-    以现有初始化用户的表为准
-    """
-    uids = []
-    
-    try:
-        cur = sg_mysql.cursor()
-        cur.execute('SELECT id FROM minus_user')
-        data = cur.fetchall()
-        cur.close()
-        
-        uids = [item[0] for item in data]
-    except Exception as ex:
-        print 'uids', str(ex)
-        
-    return uids
-
 
 def dump_score(uids):
     cur = sg_mysql.cursor()
@@ -109,12 +90,52 @@ def dump_relation(uids):
         
     cur.close()
 
-if __name__ == '__main__':
-    uids = init_uids()
-     
+def dump_test():
+    uids = []
+    try:
+        cur = sg_mysql.cursor()
+        cur.execute('SELECT id FROM minus_user limit 10')
+        data = cur.fetchall()
+        cur.close()
+        
+        uids = [item[0] for item in data]
+    except Exception as ex:
+        print 'test', str(ex)
+             
     dump_score(uids)
     dump_photo(uids)
     dump_relation(uids)
+
+def dump_all(size=10):
+    def batch_dump(cur, data, size):
+        uids = [item[0] for item in data]
+        
+        print uids
+#         dump_score(uids)
+#         dump_photo(uids)
+#         dump_relation(uids)
+        
+        if size == len(data):
+            print 'go on'
+            
+#             data = cur.fetchmany(size)
+#             batch_dump(cur, data, size)
+            
+        
+    try:
+        cur = sg_mysql.cursor()
+        cur.execute('SELECT id FROM minus_user')
+        data = cur.fetchmany(size)
+        batch_dump(cur, data, size)
+        cur.close()
+        
+    except Exception as ex:
+        print 'all', str(ex)
+             
+
+if __name__ == '__main__':
+
+    dump_all()
 
     print '\nDump over\n'
 
