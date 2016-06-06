@@ -1,2 +1,4 @@
 eclipse.preferences.version=1
+encoding//backup/mysql_to_cassandra.py=utf8
+encoding//backup/photo.py=utf-8
 encoding//dump/dump_02.py=utf8
