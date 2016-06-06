@@ -110,17 +110,16 @@ def dump_all(start_uid=0, size=10):
     def batch_dump(cur, data, size):
         uids = [item[0] for item in data]
         start_uid = uids[-1]
-        print uids, start_uid
-#         dump_score(uids)
-#         dump_photo(uids)
-#         dump_relation(uids)
+        
+        dump_score(uids)
+        dump_photo(uids)
+        dump_relation(uids)
         
         if size == len(data):
             print 'go on'
             cur.execute('SELECT id FROM minus_user where id>%s limit %s' % (start_uid, size))
             data = cur.fetchall()
-            print data
-#             batch_dump(cur, data, size)
+            batch_dump(cur, data, size)
             
         
     try:
