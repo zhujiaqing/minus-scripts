@@ -107,21 +107,23 @@ def dump_test():
     dump_photo(uids)
     dump_relation(uids)
 
-def dump_all(start_uid=0, size=100):
+def dump_all(start_uid=100, size=100):
     def batch_dump(cur, data, size):
         uids = [item[0] for item in data]
         start_uid = uids[-1]
         
-        print start_uid, uids
+        print '[%s]' % time.strftime('%Y-%m-%d %H:%M:%S'), start_uid, uids
         
-        print '[%s] score' % time.strftime('%Y-%m-%d %H:%M:%S')
-        dump_score(uids)
-        print '[%s] photo' % time.strftime('%Y-%m-%d %H:%M:%S')
-        dump_photo(uids)
-        print '[%s] relation' % time.strftime('%Y-%m-%d %H:%M:%S')
-        dump_relation(uids)
+#         print '[%s] score' % time.strftime('%Y-%m-%d %H:%M:%S')
+#         dump_score(uids)
+#         print '[%s] photo' % time.strftime('%Y-%m-%d %H:%M:%S')
+#         dump_photo(uids)
+#         print '[%s] relation' % time.strftime('%Y-%m-%d %H:%M:%S')
+#         dump_relation(uids)
         
         print size == len(data), len(data)
+        time.sleep(2)
+        
         if size == len(data):
             cur.execute('SELECT id FROM minus_user where id>%s limit %s' % (start_uid, size))
             data = cur.fetchall()
