@@ -106,10 +106,12 @@ def dump_test():
     dump_photo(uids)
     dump_relation(uids)
 
-def dump_all(start_uid=0, size=10):
+def dump_all(start_uid=0, size=100):
     def batch_dump(cur, data, size):
         uids = [item[0] for item in data]
         start_uid = uids[-1]
+        
+        print start_uid, uids
         
         dump_score(uids)
         dump_photo(uids)
