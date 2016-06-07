@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf8 -*-
 
+import time
 import MySQLdb
 sg_mysql = MySQLdb.connect(host='54.169.234.201', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
 
@@ -113,10 +114,14 @@ def dump_all(start_uid=0, size=100):
         
         print start_uid, uids
         
+        print '[%s] score' % time.strftime('%Y-%m-%d %H:%M:%S')
         dump_score(uids)
+        print '[%s] photo' % time.strftime('%Y-%m-%d %H:%M:%S')
         dump_photo(uids)
+        print '[%s] relation' % time.strftime('%Y-%m-%d %H:%M:%S')
         dump_relation(uids)
         
+        print size == len(data), len(data)
         if size == len(data):
             cur.execute('SELECT id FROM minus_user where id>%s limit %s' % (start_uid, size))
             data = cur.fetchall()
