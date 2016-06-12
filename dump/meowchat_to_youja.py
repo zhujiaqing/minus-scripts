@@ -185,12 +185,12 @@ class Dump:
         uri = '/moplus-service/meow/import/relation'
         er_list = []
         for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
-            print er, str(er[3])
+            print er, str(er.dt)
             er_list.append({
                             "fromUserId":str(uid),
-                            "toUserId":str(er[2]),
+                            "toUserId":str(er.followee_id),
                             "isLiked":"1",
-                            "createTime": str(er[3])#time.mktime(time.strptime(str(er[3]), '%Y-%m-%d %H:%M:%S'))
+                            "createTime": time.mktime(time.strptime(str(er.dt), '%Y-%m-%d %H:%M:%S'))
                      })
         payload = {
                    "list":er_list,
