@@ -105,30 +105,31 @@ class Dump:
         #### ====> request
         uri = '/moplus-service/meow/import/useraccount'
         payload = {
-                    "nick_name": user[24],
-                    "username": user[1],
-                    "password": user[3],
-                    "email": user[2],
+                    "nick_name": str(user[24]),
+                    "username": str(user[1]),
+                    "password": str(user[3]),
+                    "email": str(user[2]),
                     "sign_type": "20",
-                    "user_id": user[0],
+                    "user_id": str(user[0]),
                     "au_id": "20",
                     "security_token": "20",
                     "access_token": "20"
                     }
         print payload
+        print '============================================================> account'
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # facebook
         if user[19] != '':
             payload = {
-                        "nick_name": user[24],
-                        "username": user[1],
-                        "password": user[3],
-                        "email": user[2],
+                        "nick_name": str(user[24]),
+                        "username": str(user[1]),
+                        "password": str(user[3]),
+                        "email": str(user[2]),
                         "sign_type": "16",
-                        "user_id": user[0],
+                        "user_id": str(user[0]),
                         "au_id": "20",
-                        "security_token": user[19],
+                        "security_token": str(user[19]),
                         "access_token": ""
                     }
             print payload
@@ -137,15 +138,15 @@ class Dump:
         # twitter
         if user[16] != '':
             payload = {
-                        "nick_name": user[24],
-                        "username": user[1],
-                        "password": user[3],
-                        "email": user[2],
+                        "nick_name": str(user[24]),
+                        "username": str(user[1]),
+                        "password": str(user[3]),
+                        "email": str(user[2]),
                         "sign_type": "17",
-                        "user_id": user[0],
+                        "user_id": str(user[0]),
                         "au_id": "20",
-                        "security_token": user[16],
-                        "access_token": user[17]
+                        "security_token": str(user[16]),
+                        "access_token": str(user[17])
                     }
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
@@ -158,19 +159,19 @@ class Dump:
                     "gift_count": "0",
                     "avatarid": "0",
                     "oauth_bind": "20",
-                    "nick_name": user[24],
+                    "nick_name": str(user[24]),
                     "first_client_version": "5.1.0-test",
-                    "balance": coins,
+                    "balance": str(coins),
                     "reg_finish_datetime": str(user[5]),
-                    "glamour_count": score,
+                    "glamour_count": str(score),
                     "client_type": "8",
-                    "intruduction": user[8],
+                    "intruduction": str(user[8]),
                     "avatar_status": "2",
-                    "name": user[7],
+                    "name": str(user[7]),
                     "ua": "meow",
-                    "gender": gender[1],
-                    "user_id": uid,
-                    "id": uid,
+                    "gender": str(gender[1]),
+                    "user_id": str(uid),
+                    "id": str(uid),
                     "login_count": "0",
                     "client_version":"5.1.0-test"
                  }
@@ -179,14 +180,17 @@ class Dump:
         
         # TODO reloation list
         uri = '/moplus-service/meow/import/relation'
-        payload = {
-                   "list":[
-                           {"fromUserId":uid,
-                            "toUserId":"10000",
+        er_list = []
+        for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
+            print er, str(er[2])
+            er_list.append({
+                            "fromUserId":str(uid),
+                            "toUserId":str(er[1]),
                             "isLiked":"1",
-                            "createTime":"1465363249529"
-                            }
-                           ],
+                            "createTime":str(int(time.time()))
+                     })
+        payload = {
+                   "list":er_list,
                    "uid":"1",
                    "type":"0"
                }
