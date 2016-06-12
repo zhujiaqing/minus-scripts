@@ -2,6 +2,7 @@
 # -*- coding:utf8 -*-
 
 import time
+import datetime
 import httplib
 import httplib2
 import simplejson
@@ -52,7 +53,7 @@ class Dump:
         except Exception as ex:
             print 'Exception %s' % str(ex)
     
-    def more_user(self,start_uid=0):
+    def more_user(self, start_uid=0):
         cur = self.usa_mysql.cursor()
         m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
         cur.execute(m_sql)
@@ -161,7 +162,7 @@ class Dump:
                     "nick_name": user[24],
                     "first_client_version": "5.1.0-test",
                     "balance": coins,
-                    "reg_finish_datetime": user[5],
+                    "reg_finish_datetime": datetime.datetime(user[5]).strftime('%Y-%m-%d %H:%M:%S'),
                     "glamour_count": score,
                     "client_type": "8",
                     "intruduction": user[8],
