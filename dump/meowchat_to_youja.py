@@ -18,8 +18,26 @@ class Dump:
         cur.execute(m_sql)
         rows = cur.fetchall()
         
+        user = rows[0]
+        
         print rows
         cur.close()
+        
+        uid = user[0]
+        
+        #### cass
+        for coin in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid):
+            print coin.score,coin.coins
+        
+        for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % uid):
+            for key in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
+                print key.view_id
+        
+        for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
+            print er.follower_id, er.followee_id
+    
+        for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid):
+            print ee.follower_id, ee.followee_id
     
     def user_profile(self):
         pass
