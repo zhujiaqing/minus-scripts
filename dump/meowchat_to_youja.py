@@ -190,7 +190,7 @@ class Dump:
                             "fromUserId":str(uid),
                             "toUserId":str(er.followee_id),
                             "isLiked":"1",
-                            "createTime": time.mktime(time.strptime(str(er.dt), '%Y-%m-%d %H:%M:%S'))
+                            "createTime": time.mktime(time.strptime(str(er.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
                      })
         payload = {
                    "list":er_list,
