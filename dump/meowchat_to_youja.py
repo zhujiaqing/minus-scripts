@@ -2,7 +2,6 @@
 # -*- coding:utf8 -*-
 
 import time
-import datetime
 import httplib
 import httplib2
 import simplejson
@@ -162,7 +161,7 @@ class Dump:
                     "nick_name": user[24],
                     "first_client_version": "5.1.0-test",
                     "balance": coins,
-                    "reg_finish_datetime": datetime.datetime.strptime(str(user[5]), '%Y-%m-%d %H:%M:%S'),
+                    "reg_finish_datetime": str(user[5]),
                     "glamour_count": score,
                     "client_type": "8",
                     "intruduction": user[8],
