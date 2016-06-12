@@ -115,8 +115,8 @@ class Dump:
                     "security_token": "20",
                     "access_token": "20"
                     }
-        print payload
         print '============================================================> account'
+        print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # facebook
@@ -132,6 +132,7 @@ class Dump:
                         "security_token": str(user[19]),
                         "access_token": ""
                     }
+            print '============================================================> account'
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         
@@ -148,6 +149,7 @@ class Dump:
                         "security_token": str(user[16]),
                         "access_token": str(user[17])
                     }
+            print '============================================================> account'
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         
@@ -175,6 +177,7 @@ class Dump:
                     "login_count": "0",
                     "client_version":"5.1.0-test"
                  }
+        print '============================================================> account'
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
@@ -185,15 +188,16 @@ class Dump:
             print er, str(er[2])
             er_list.append({
                             "fromUserId":str(uid),
-                            "toUserId":str(er[1]),
+                            "toUserId":str(er[2]),
                             "isLiked":"1",
                             "createTime":str(int(time.time()))
                      })
         payload = {
                    "list":er_list,
-                   "uid":"1",
+                   "uid":uid,
                    "type":"0"
                }
+        print '============================================================> account'
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
