@@ -5,7 +5,7 @@ import time
 import MySQLdb
 sg_mysql = MySQLdb.connect(host='54.169.234.201', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
 
-from cassandra.cluster import Cluster
+from cassandra.cluster import Cluster  # @UnresolvedImport
 usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
 usa_session = usa_cluster.connect()
 

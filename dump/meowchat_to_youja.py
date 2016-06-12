@@ -2,8 +2,15 @@
 # -*- coding:utf8 -*-
 
 import time
+import httplib
+import httplib2
+import simplejson
 import MySQLdb
 from cassandra.cluster import Cluster  # @UnresolvedImport
+
+import sys
+reload(sys)
+sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
 class Dump:
     
@@ -25,14 +32,20 @@ class Dump:
         
         uid = user[0]
         
-        #### cass
-        for coin in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid):
-            print coin.score,coin.coins
+        #### ====>  cass
         
+        # balance
+        for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid):
+            coins = balance.coins if balance.coins is not None else 0
+            score = balance.score if balance.score is not None else 0
+            print coins, score
+        
+        # photo
         for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % uid):
             for key in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
                 print key.view_id
         
+        # relation
         for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
             print er.follower_id, er.followee_id
     
