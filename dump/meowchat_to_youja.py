@@ -76,7 +76,7 @@ class Dump:
                     "access_token": "20"
                     }
         print payload
-        self.api_request(host='info_ex.api.imyoujia.com', port=80, method='POST', uri=uri, body=payload)
+        self.api_request(host='info_ex.api.imyoujia.com', port=80, method='POST', uri=uri, body=simplejson.dumps(payload))
 
     
     def user_profile(self):
