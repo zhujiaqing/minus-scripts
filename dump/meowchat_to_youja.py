@@ -177,7 +177,7 @@ class Dump:
                     "login_count": "0",
                     "client_version":"5.1.0-test"
                  }
-        print '============================================================> account'
+        print '============================================================> profile'
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
@@ -190,14 +190,14 @@ class Dump:
                             "fromUserId":str(uid),
                             "toUserId":str(er[2]),
                             "isLiked":"1",
-                            "createTime":str(int(time.time()))
+                            "createTime":time.mktime(time.strptime(str(er[3]), '%Y-%m-%d %H:%M:%S'))
                      })
         payload = {
                    "list":er_list,
                    "uid":uid,
                    "type":"0"
                }
-        print '============================================================> account'
+        print '============================================================> relatioin'
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
