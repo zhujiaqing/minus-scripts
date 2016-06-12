@@ -39,6 +39,7 @@ class Dump:
             return 
         try:
             url = 'https://d1uk5e10lg6nan.cloudfront.net/j%s.jpg' % key
+            url = 'http://medical.8ops.com/images/2016/04/14/1a.jpg'
             conn = httplib2.Http()
             resp, body = conn.request(url, 'GET')
             print 'Download {"status":%s}' % resp['status']
@@ -201,17 +202,17 @@ class Dump:
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
-#         # avator
-#         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=1&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
-#         key = user[26]
-#         print key, uri
-#         self.photo_upload(uri=uri, key=key)
-# 
-#         # photo
-#         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=0&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
-#         key = 'mJYT32il9pwe'
-#         print key, uri
-#         self.photo_upload(uri=uri, key=key)
+        # avator
+        uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=1&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
+        key = user[26]
+        print key, uri
+        self.photo_upload(uri=uri, key=key)
+ 
+        # photo
+        uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=0&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
+        key = 'mJYT32il9pwe'
+        print key, uri
+        self.photo_upload(uri=uri, key=key)
 
     def user_profile(self):
         pass
