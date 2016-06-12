@@ -152,7 +152,7 @@ class Dump:
         
         uri = '/moplus-service/meow/import/userprofile'
         payload = {
-                    "birthday": gender[1],
+                    "birthday": str(birthdate[1]),
                     "fans_count": "0",
                     "sign_type": "20",
                     "gift_count": "0",
@@ -168,7 +168,7 @@ class Dump:
                     "avatar_status": "2",
                     "name": user[7],
                     "ua": "meow",
-                    "gender": "1",
+                    "gender": gender[1],
                     "user_id": uid,
                     "id": uid,
                     "login_count": "0",
@@ -193,13 +193,17 @@ class Dump:
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
-        # avator
-        uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=1&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
-        self.photo_upload(uri=uri, key=user[26])
-
-        # photo
-        uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=0&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
-        self.photo_upload(uri=uri, key='mJYT32il9pwe')
+#         # avator
+#         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=1&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
+#         key = user[26]
+#         print key, uri
+#         self.photo_upload(uri=uri, key=key)
+# 
+#         # photo
+#         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=0&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
+#         key = 'mJYT32il9pwe'
+#         print key, uri
+#         self.photo_upload(uri=uri, key=key)
 
     def user_profile(self):
         pass
