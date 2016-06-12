@@ -19,7 +19,8 @@ class Dump:
         self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
     
-    def _request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri, body=None):
+    def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
+        if uri is None: return 
         headers = {'Content-Type': 'application/json;charset=UTF-8'}
         conn = httplib.HTTPConnection(host, port, timeout=2000)
         conn.request(method, uri, body=body, headers=headers)
@@ -75,7 +76,7 @@ class Dump:
                     "access_token": "20"
                     }
         print payload
-        self._request(host='info_ex.api.imyoujia.com', port=80, method='POST', uri=uri, body=payload)
+        self.api_request(host='info_ex.api.imyoujia.com', port=80, method='POST', uri=uri, body=payload)
 
     
     def user_profile(self):
