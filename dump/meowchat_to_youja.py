@@ -4,7 +4,6 @@
 import time
 import MySQLdb
 from cassandra.cluster import Cluster  # @UnresolvedImport
-from StdSuites.Table_Suite import rows
 
 class Dump:
     
