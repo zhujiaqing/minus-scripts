@@ -52,9 +52,15 @@ class Dump:
         except Exception as ex:
             print 'Exception %s' % str(ex)
     
+    def more_user(self,start_uid=0):
+        cur = self.usa_mysql.cursor()
+        m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
+        cur.execute(m_sql)
+        rows = cur.fetchall()
+    
     def user_account(self):
         cur = self.usa_mysql.cursor()
-        m_sql = 'select * from minus_user where username="8ops2016" or usrename="atschx"'
+        m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
         cur.execute(m_sql)
         rows = cur.fetchall()
         user = rows[0]
