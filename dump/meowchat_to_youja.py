@@ -194,7 +194,7 @@ class Dump:
                      })
         payload = {
                    "list":er_list,
-                   "uid":uid,
+                   "uid":str(uid),
                    "type":"0"
                }
         print '============================================================> relatioin'
