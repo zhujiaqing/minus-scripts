@@ -19,6 +19,15 @@ class Dump:
         self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
     
+    def _request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri, body=None):
+        headers = {'Content-Type': 'application/json;charset=UTF-8'}
+        conn = httplib.HTTPConnection(host, port, timeout=2000)
+        conn.request(method, uri, body=body, headers=headers)
+        response = conn.getresponse()
+        print response.read()
+        status = response.status
+        print status
+    
     def user_account(self):
         cur = self.usa_mysql.cursor()
         m_sql = 'select * from minus_user where username="8ops2016"'
@@ -51,6 +60,23 @@ class Dump:
     
         for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid):
             print ee.follower_id, ee.followee_id
+            
+            
+        #### ====> request
+        uri = '/moplus-service/meow/import/useraccount'
+        payload = {"nick_name": user[24],
+                    "username": user[1],
+                    "password": user[3],
+                    "email": user[2],
+                    "sign_type": "20",
+                    "user_id": user[0],
+                    "au_id": "20",
+                    "security_token": "20",
+                    "access_token": "20"
+                    }
+        print payload
+        self._request(uri=uri, body=payload)
+
     
     def user_profile(self):
         pass
