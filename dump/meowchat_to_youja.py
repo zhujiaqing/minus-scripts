@@ -274,7 +274,7 @@ class Dump:
             self.logger.info('============================================================> twitter')
             try:
                 payload = {
-                            "nick_name": str(user[24]),
+                            "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
                             "username": str(user[1]),
                             "password": str(user[3]),
                             "email": str(user[2]),
@@ -319,7 +319,7 @@ class Dump:
                     "gift_count": "0",
                     "avatarid": "0",
                     "oauth_bind": "20",
-                    "nick_name": str(user[24]),
+                    "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
                     "first_client_version": "5.1.0-test",
                     "balance": str(coins),
                     "reg_finish_datetime": str(user[5]),
