@@ -369,15 +369,8 @@ class Dump:
             user_size = cur.execute(user_sql)
             users = cur.fetchall()
             if 0 == user_size : break
-            print users
-            print user_size, start_uid, limit
-            print users[user_size - 1]
-            print users[0][0]
             start_uid = users[-1][0]
             
-            print start_uid
-            
-            break
             # convert storage
             for user in users:
                 try:
