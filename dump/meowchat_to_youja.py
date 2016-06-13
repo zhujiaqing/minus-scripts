@@ -118,7 +118,7 @@ class Dump:
         #### ====> request
         
         # account
-        print '============================================================> account'
+        print '========> account'
         uri = '/moplus-service/meow/import/useraccount'
         payload = {
                     "nick_name": str(user[24]),
@@ -136,7 +136,7 @@ class Dump:
         
         # facebook
         if user[19] != '':
-            print '============================================================> facebook'
+            print '========> facebook'
             payload = {
                         "nick_name": str(user[24]),
                         "username": str(user[1]),
@@ -153,7 +153,7 @@ class Dump:
         
         # twitter
         if user[16] != '':
-            print '============================================================> twitter'
+            print '========> twitter'
             payload = {
                         "nick_name": str(user[24]),
                         "username": str(user[1]),
@@ -169,7 +169,7 @@ class Dump:
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # profile
-        print '============================================================> profile'
+        print '========> profile'
         uri = '/moplus-service/meow/import/userprofile'
         payload = {
                     "birthday": str(birthdate[1]),
@@ -198,7 +198,7 @@ class Dump:
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # reloation
-        print '============================================================> relatioin'
+        print '========> relatioin'
         uri = '/moplus-service/meow/import/relation'
         er_list = []
         for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
@@ -217,14 +217,14 @@ class Dump:
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
-        print '============================================================> avator'
+        print '========> avator'
         # avator
         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=1&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
         key = user[26]
         print key, uri
         self.photo_upload(uri=uri, key=key)
  
-        print '============================================================> photo'
+        print '========> photo'
         # photo
         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=0&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
         key = 'mJYT32il9pwe'
@@ -232,7 +232,7 @@ class Dump:
         self.photo_upload(uri=uri, key=key)
 
     def user_account(self, user):
-        self.logger.info('============================================================> account')
+        self.logger.info('========> account')
         try:
             uri = '/moplus-service/meow/import/useraccount'
             payload = {
@@ -252,7 +252,7 @@ class Dump:
         
         # facebook
         if user[19] != '':
-            self.logger.info('============================================================> facebook')
+            self.logger.info('========> facebook')
             try:
                 payload = {
                             "nick_name": str(user[24]),
@@ -271,7 +271,7 @@ class Dump:
         
         # twitter
         if user[16] != '':
-            self.logger.info('============================================================> twitter')
+            self.logger.info('========> twitter')
             try:
                 payload = {
                             "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
@@ -289,58 +289,58 @@ class Dump:
             except Exception as ex:self.logger.warn('Exception %s' % str(ex))
     
     def user_profile(self, user, cur):
-        self.logger.info('============================================================> profile')
-#         try:
-        # birthdate
-        birthdate_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
-        birthdate_size = cur.execute(birthdate_sql)
-        birthdates = cur.fetchall()
-        birthdate = None if 0 == birthdate_size else birthdates[0] 
-        print birthdates
-        print birthdate_sql
-        
-        # gender
-        gender_sql = 'select * from minus_usergender where user_id=%s' % user[0]
-        gender_size = cur.execute(gender_sql)
-        genders = cur.fetchall()
-        gender = None if 0 == gender_size else genders[0]
-        
-        # balance
-        coins = score = 0
-        for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
-            coins = balance.coins if balance.coins is not None else 0
-            score = balance.score if balance.score is not None else 0
+        self.logger.info('========> profile')
+        try:
+            # birthdate
+            birthdate_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
+            birthdate_size = cur.execute(birthdate_sql)
+            birthdates = cur.fetchall()
+            birthdate = None if 0 == birthdate_size else birthdates[0] 
+            print birthdates
+            print birthdate_sql
             
-        uri = '/moplus-service/meow/import/userprofile'
-        payload = {
-                    "birthday": str('1995-01-01' if birthdate is None else birthdate[1]),
-                    "fans_count": "0",
-                    "sign_type": "20",
-                    "gift_count": "0",
-                    "avatarid": "0",
-                    "oauth_bind": "20",
-                    "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
-                    "first_client_version": "5.1.0-test",
-                    "balance": str(coins),
-                    "reg_finish_datetime": str(user[5]),
-                    "glamour_count": str(score),
-                    "client_type": "8",
-                    "intruduction": str(user[8]),
-                    "avatar_status": "2",
-                    "name": str(user[7]),
-                    "ua": "meow",
-                    "gender": str('2' if gender is None else gender[1]),
-                    "user_id": str(user[0]),
-                    "id": str(user[0]),
-                    "login_count": "0",
-                    "client_version":"5.1.0-test"
-                 }
-        self.logger.info(simplejson.dumps(payload))
-        self.api_request(uri=uri, body=simplejson.dumps(payload))
-#         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+            # gender
+            gender_sql = 'select * from minus_usergender where user_id=%s' % user[0]
+            gender_size = cur.execute(gender_sql)
+            genders = cur.fetchall()
+            gender = None if 0 == gender_size else genders[0]
+            
+            # balance
+            coins = score = 0
+            for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
+                coins = balance.coins if balance.coins is not None else 0
+                score = balance.score if balance.score is not None else 0
+                
+            uri = '/moplus-service/meow/import/userprofile'
+            payload = {
+                        "birthday": str('1995-01-01' if birthdate is None else birthdate[1]),
+                        "fans_count": "0",
+                        "sign_type": "20",
+                        "gift_count": "0",
+                        "avatarid": "0",
+                        "oauth_bind": "20",
+                        "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
+                        "first_client_version": "5.1.0-test",
+                        "balance": str(coins),
+                        "reg_finish_datetime": str(user[5]),
+                        "glamour_count": str(score),
+                        "client_type": "8",
+                        "intruduction": str(user[8]),
+                        "avatar_status": "2",
+                        "name": str(user[7]),
+                        "ua": "meow",
+                        "gender": str('2' if gender is None else gender[1]),
+                        "user_id": str(user[0]),
+                        "id": str(user[0]),
+                        "login_count": "0",
+                        "client_version":"5.1.0-test"
+                     }
+            self.logger.info(simplejson.dumps(payload))
+            self.api_request(uri=uri, body=simplejson.dumps(payload))
+        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
     def user_relation(self, user):
-        self.logger.info('============================================================> relatioin')
+        self.logger.info('========> relatioin')
         try:
             uri = '/moplus-service/meow/import/relation'
             er_list = []
@@ -380,7 +380,7 @@ class Dump:
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
 
     def upload_photo(self, user):
-        self.logger.info('============================================================> relatioin')
+        self.logger.info('========> relatioin')
         try:
             self.usa_redis.sadd('S:photo', user[0])
             self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
@@ -393,7 +393,7 @@ class Dump:
             self.logger.info(self.usa_redis.hgetall('H:%s' % user[0]))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
-    def more_user(self, start_uid=450, limit=1):
+    def more_user(self, start_uid=0, limit=100):
         cur = self.usa_mysql.cursor()
         while True:
             user_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
@@ -404,14 +404,13 @@ class Dump:
             
             # convert storage
             for user in users:
-                self.logger.info('[conver storage] ##################################################################### %s' % user[0])
-#                 self.user_account(user)
+                self.logger.info('############## [conver storage] %s ##############' % user[0])
+                self.user_account(user)
                 self.user_profile(user, cur)
-#                 self.user_relation(user)
-#                 self.upload_photo(user)
+                self.user_relation(user)
+                self.upload_photo(user)
 
             if limit > user_size:break
-            break
         
         cur.close()
     
