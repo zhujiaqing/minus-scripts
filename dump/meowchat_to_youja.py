@@ -336,7 +336,7 @@ class Dump:
         
         uri = '/moplus-service/meow/import/relation'
         ee_list = []
-        for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE follower_id=%s;' % user[0]):
+        for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % user[0]):
             ee_list.append({
                             "fromUserId":str(user[0]),
                             "toUserId":str(ee.follower_id),
