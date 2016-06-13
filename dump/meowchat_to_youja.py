@@ -429,6 +429,6 @@ if __name__ == '__main__':
     dump.more_user()
     
 
-    self.logger.info('\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S'))
+    print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
 
