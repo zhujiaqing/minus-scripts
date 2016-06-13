@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+w#!/usr/bin/env python
 # encoding=utf8
 import sys
 reload(sys)
@@ -6,7 +6,7 @@ sys.setdefaultencoding('utf-8')  # @UndefinedVariable
 
 import time
 import MySQLdb
-from cassandra.cluster import Cluster
+from cassandra.cluster import Cluster  # @UnresolvedImport
 
 cluster = Cluster(['10.10.10.184'])
 session = cluster.connect('uplus_im')

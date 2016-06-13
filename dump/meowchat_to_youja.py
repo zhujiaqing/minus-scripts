@@ -13,6 +13,9 @@ import sys
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
+import logging  # @UnusedImport
+import logging.handlers
+
 class Dump:
     
     def __init__(self):
@@ -22,6 +25,14 @@ class Dump:
         self.usa_session = self.usa_cluster.connect()
     
         self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
+    
+        handler = logging.handlers.TimedRotatingFileHandler("/tmp/socket.txt", when='D', interval=1)
+        fmt = '%(asctime)s - %(message)s'
+        formatter = logging.Formatter(fmt)  # 实例化formatter
+        handler.setFormatter(formatter)  # 为handler添加formatter
+        self.logger = logging.getLogger('meow')  # 获取名为tst的logger
+        self.logger.addHandler(handler)  # 为logger添加handler
+        self.logger.setLevel(logging.INFO)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
         if uri is None or body is None: 
@@ -278,7 +289,7 @@ class Dump:
             except Exception as ex:print 'Exception %s' % str(ex)
     
     def user_profile(self, user, cur):
-        print '============================================================> profile'
+        self.logger.info('============================================================> profile')
         try:
             # birthdate
             m_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
@@ -297,7 +308,6 @@ class Dump:
             for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
                 coins = balance.coins if balance.coins is not None else 0
                 score = balance.score if balance.score is not None else 0
-                print coins, score
                 
             uri = '/moplus-service/meow/import/userprofile'
             payload = {
@@ -323,13 +333,12 @@ class Dump:
                         "login_count": "0",
                         "client_version":"5.1.0-test"
                      }
-            print payload
+            self.logger.info(payload)
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:print 'Exception %s' % str(ex)
+        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
     def user_relation(self, user):
-        print '============================================================> relatioin'
-        
+        self.logger.info('============================================================> relatioin')
         try:
             uri = '/moplus-service/meow/import/relation'
             er_list = []
@@ -345,7 +354,7 @@ class Dump:
                        "uid":str(user[0]),
                        "type":"0"
                    }
-            print payload
+            self.logger.info(payload)
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:print 'Exception %s' % str(ex)
         
