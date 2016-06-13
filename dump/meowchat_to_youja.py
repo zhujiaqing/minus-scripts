@@ -53,12 +53,6 @@ class Dump:
         except Exception as ex:
             print 'Exception %s' % str(ex)
     
-    def more_user(self, start_uid=0):
-        cur = self.usa_mysql.cursor()
-        m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
-        cur.execute(m_sql)
-        rows = cur.fetchall()
-    
     def user_account(self):
         cur = self.usa_mysql.cursor()
         m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
@@ -223,6 +217,13 @@ class Dump:
     def upload_photo(self):
         pass
 
+    def more_user(self, start_uid=0):
+        cur = self.usa_mysql.cursor()
+        while True:
+            m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
+            cur.execute(m_sql)
+            rows = cur.fetchall()
+    
 if __name__ == '__main__':
 
     dump = Dump()
