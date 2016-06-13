@@ -335,22 +335,22 @@ class Dump:
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
-        uri = '/moplus-service/meow/import/relation'
-        ee_list = []
-        for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % user[0]):
-            ee_list.append({
-                            "fromUserId":str(user[0]),
-                            "toUserId":str(ee.follower_id),
-                            "isLiked":"1",
-                            "createTime": time.mktime(time.strptime(str(ee.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
-                     })
-        payload = {
-                   "list":ee_list,
-                   "uid":str(user[0]),
-                   "type":"1"
-               }
-        print payload
-        self.api_request(uri=uri, body=simplejson.dumps(payload))
+#         uri = '/moplus-service/meow/import/relation'
+#         ee_list = []
+#         for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % user[0]):
+#             ee_list.append({
+#                             "fromUserId":str(user[0]),
+#                             "toUserId":str(ee.follower_id),
+#                             "isLiked":"1",
+#                             "createTime": time.mktime(time.strptime(str(ee.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
+#                      })
+#         payload = {
+#                    "list":ee_list,
+#                    "uid":str(user[0]),
+#                    "type":"1"
+#                }
+#         print payload
+#         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
     def upload_photo(self, user):
         self.usa_redis.sadd('S:photo', user[0])
@@ -363,7 +363,7 @@ class Dump:
                 
         print self.usa_redis.hgetall('H:%s' % user[0])
 
-    def more_user(self, start_uid=0, limit=2):
+    def more_user(self, start_uid=0, limit=1):
         cur = self.usa_mysql.cursor()
         while True:
             user_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
