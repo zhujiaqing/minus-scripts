@@ -13,7 +13,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
-import logging 
+import logging  # @UnusedImport
+import logging.handlers
 
 class Dump:
     
@@ -25,25 +26,14 @@ class Dump:
     
         self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
     
-#         handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow.out", when='H', interval=1)
-        fmt = '%(asctime)s - %(name)s - %(message)s'
+        handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow.out", when='D', interval=1)
+        fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
+        
         formatter = logging.Formatter(fmt)  # 实例化formatter
-
-        infoHandler = logging.FileHandler('/data/logs/meow.info')
-        infoHandler.setFormatter(formatter)  # 为handler添加formatter
-        infoHandler.setLevel(logging.INFO)
-        
-        warnHandler = logging.FileHandler('/data/logs/meow.warn')
-        warnHandler.setFormatter(formatter)  # 为handler添加formatter
-        warnHandler.setLevel(logging.WARN)
-        
-        self.logger = logging.getLogger('meow')  # 获取名为tst的logger
-        self.logger.addHandler(infoHandler)  # 为logger添加handler
-        self.logger.setLevel(logging.INFO)
-        
-        self.logger = logging.getLogger('meow')  # 获取名为tst的logger
-        self.logger.addHandler(warnHandler)  # 为logger添加handler
-        self.logger.setLevel(logging.WARN)
+        handler.setFormatter(formatter)  # 为handler添加formatter
+        logger = logging.getLogger('meow')  # 获取名为tst的logger
+        logger.addHandler(handler)  # 为logger添加handler
+        logger.setLevel(logging.DEBUG)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
         if uri is None or body is None: 
