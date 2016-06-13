@@ -102,6 +102,9 @@ class Dump:
             
             
         #### ====> request
+        
+        # account
+        print '============================================================> account'
         uri = '/moplus-service/meow/import/useraccount'
         payload = {
                     "nick_name": str(user[24]),
@@ -114,12 +117,12 @@ class Dump:
                     "security_token": "20",
                     "access_token": "20"
                     }
-        print '============================================================> account'
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # facebook
         if user[19] != '':
+            print '============================================================> facebook'
             payload = {
                         "nick_name": str(user[24]),
                         "username": str(user[1]),
@@ -131,12 +134,12 @@ class Dump:
                         "security_token": str(user[19]),
                         "access_token": ""
                     }
-            print '============================================================> account'
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # twitter
         if user[16] != '':
+            print '============================================================> twitter'
             payload = {
                         "nick_name": str(user[24]),
                         "username": str(user[1]),
@@ -148,10 +151,11 @@ class Dump:
                         "security_token": str(user[16]),
                         "access_token": str(user[17])
                     }
-            print '============================================================> account'
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         
+        # profile
+        print '============================================================> profile'
         uri = '/moplus-service/meow/import/userprofile'
         payload = {
                     "birthday": str(birthdate[1]),
@@ -176,11 +180,11 @@ class Dump:
                     "login_count": "0",
                     "client_version":"5.1.0-test"
                  }
-        print '============================================================> profile'
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
-        # TODO reloation list
+        # reloation
+        print '============================================================> relatioin'
         uri = '/moplus-service/meow/import/relation'
         er_list = []
         for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
@@ -196,7 +200,6 @@ class Dump:
                    "uid":str(uid),
                    "type":"0"
                }
-        print '============================================================> relatioin'
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
@@ -215,43 +218,166 @@ class Dump:
         self.photo_upload(uri=uri, key=key)
 
     def user_account(self, user):
-        pass
+        print '============================================================> account'
+        uri = '/moplus-service/meow/import/useraccount'
+        payload = {
+                    "nick_name": str(user[24]),
+                    "username": str(user[1]),
+                    "password": str(user[3]),
+                    "email": str(user[2]),
+                    "sign_type": "20",
+                    "user_id": str(user[0]),
+                    "au_id": "20",
+                    "security_token": "20",
+                    "access_token": "20"
+                    }
+        print payload
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        # facebook
+        if user[19] != '':
+            print '============================================================> facebook'
+            payload = {
+                        "nick_name": str(user[24]),
+                        "username": str(user[1]),
+                        "password": str(user[3]),
+                        "email": str(user[2]),
+                        "sign_type": "16",
+                        "user_id": str(user[0]),
+                        "au_id": "20",
+                        "security_token": str(user[19]),
+                        "access_token": ""
+                    }
+            print payload
+            self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        # twitter
+        if user[16] != '':
+            print '============================================================> twitter'
+            payload = {
+                        "nick_name": str(user[24]),
+                        "username": str(user[1]),
+                        "password": str(user[3]),
+                        "email": str(user[2]),
+                        "sign_type": "17",
+                        "user_id": str(user[0]),
+                        "au_id": "20",
+                        "security_token": str(user[16]),
+                        "access_token": str(user[17])
+                    }
+            print payload
+            self.api_request(uri=uri, body=simplejson.dumps(payload))
     
-    def user_profile(self):
-        pass
-    
-    def user_relation(self):
-        pass
+    def user_profile(self, user, cur):
+        print '============================================================> profile'
+        # birthdate
+        m_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
+        birthdate_size = cur.execute(m_sql)
+        birthdates = cur.fetchall()
+        birthdate = None if 0 == birthdate_size else birthdates[0] 
+        
+        # gender
+        m_sql = 'select * from minus_usergender where user_id=%s' % user[0]
+        gender_size = cur.execute(m_sql)
+        genders = cur.fetchall()
+        gender = None if 0 == gender_size else genders[0]
+        
+        # balance
+        coins = score = 0
+        for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
+            coins = balance.coins if balance.coins is not None else 0
+            score = balance.score if balance.score is not None else 0
+        
+        uri = '/moplus-service/meow/import/userprofile'
+        payload = {
+                    "birthday": str(birthdate[1]),
+                    "fans_count": "0",
+                    "sign_type": "20",
+                    "gift_count": "0",
+                    "avatarid": "0",
+                    "oauth_bind": "20",
+                    "nick_name": str(user[24]),
+                    "first_client_version": "5.1.0-test",
+                    "balance": str(coins),
+                    "reg_finish_datetime": str(user[5]),
+                    "glamour_count": str(score),
+                    "client_type": "8",
+                    "intruduction": str(user[8]),
+                    "avatar_status": "2",
+                    "name": str(user[7]),
+                    "ua": "meow",
+                    "gender": str(gender[1]),
+                    "user_id": str(user[0]),
+                    "id": str(user[0]),
+                    "login_count": "0",
+                    "client_version":"5.1.0-test"
+                 }
+        print payload
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+    def user_relation(self, user):
+        print '============================================================> relatioin'
+        uri = '/moplus-service/meow/import/relation'
+        er_list = []
+        for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % user[0]):
+            er_list.append({
+                            "fromUserId":str(user[0]),
+                            "toUserId":str(er.followee_id),
+                            "isLiked":"1",
+                            "createTime": time.mktime(time.strptime(str(er.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
+                     })
+        payload = {
+                   "list":er_list,
+                   "uid":str(user[0]),
+                   "type":"0"
+               }
+        print payload
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        uri = '/moplus-service/meow/import/relation'
+        ee_list = []
+        for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE follower_id=%s;' % user[0]):
+            ee_list.append({
+                            "fromUserId":str(user[0]),
+                            "toUserId":str(ee.follower_id),
+                            "isLiked":"1",
+                            "createTime": time.mktime(time.strptime(str(ee.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
+                     })
+        payload = {
+                   "list":ee_list,
+                   "uid":str(user[0]),
+                   "type":"1"
+               }
+        print payload
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
 
-    def upload_photo(self):
-        pass
+    def upload_photo(self, user):
+        self.usa_redis.sadd('S:photo', user[0])
+        self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
+        
+        # photo
+        for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % user[0]):
+            for ic in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
+                self.usa_redis.hset('H:%s' % user[0], ic.view_id, 0)
+                
+        print self.usa_redis.hgetall('H:%s' % user[0])
 
-    def more_user(self, start_uid=0, limit=100):
+    def more_user(self, start_uid=0, limit=2):
         cur = self.usa_mysql.cursor()
         while True:
-            m_sql = 'select * from minus_user where id>%s and 1=2 limit %d' % (start_uid, limit)
-            size = cur.execute(m_sql)
+            user_sql = 'select * from minus_user where id>%s and 1=2 limit %d' % (start_uid, limit)
+            user_size = cur.execute(user_sql)
             users = cur.fetchall()
+            start_uid = users[-1][0]
             
-            print size
-            
-            break
+            # convert storage
             for user in users:
-                uid = user[0]
-                
-                m_sql = 'select * from minus_userbirthdate where user_id=%s' % uid
-                cur.execute(m_sql)
-                rows = cur.fetchall()
-                birthdate = rows[0]
-                
-                m_sql = 'select * from minus_usergender where user_id=%s' % uid
-                cur.execute(m_sql)
-                rows = cur.fetchall()
-                gender = rows[0]
-                
                 self.user_account(user)
+                self.user_profile(user, cur)
+                self.user_relation(user)
+                self.upload_photo(user)
 
-            if size != limit:break
+            if user_size != limit:break
             
             break
         cur.close()
