@@ -26,17 +26,29 @@ class Dump:
     
         self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
     
-        handler = logging.handlers.TimedRotatingFileHandler("/tmp/socket.txt", when='D', interval=1)
-        fmt = '%(asctime)s - %(message)s'
+#         handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow.out", when='H', interval=1)
+        fmt = '%(asctime)s - %(name)s - %(message)s'
         formatter = logging.Formatter(fmt)  # 实例化formatter
-        handler.setFormatter(formatter)  # 为handler添加formatter
+
+        infoHandler = logging.FileHandler('/data/logs/meow.info')
+        infoHandler.setFormatter(formatter)  # 为handler添加formatter
+        infoHandler.setLevel(logging.INFO)
+        
+        warnHandler = logging.FileHandler('/data/logs/meow.warn')
+        warnHandler.setFormatter(formatter)  # 为handler添加formatter
+        warnHandler.setLevel(logging.WARN)
+        
         self.logger = logging.getLogger('meow')  # 获取名为tst的logger
-        self.logger.addHandler(handler)  # 为logger添加handler
+        self.logger.addHandler(infoHandler)  # 为logger添加handler
         self.logger.setLevel(logging.INFO)
+        
+        self.logger = logging.getLogger('meow')  # 获取名为tst的logger
+        self.logger.addHandler(warnHandler)  # 为logger添加handler
+        self.logger.setLevel(logging.WARN)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
         if uri is None or body is None: 
-            print 'Not api request'
+            self.logger.info('Not api request')
             return 
         try:
             headers = {'Content-Type': 'application/json;charset=UTF-8'}
@@ -44,29 +56,31 @@ class Dump:
             conn.request(method, uri, body=body, headers=headers)
             response = conn.getresponse()
             status = response.status
-            print status, response.read()
+            self.logger.info(status)
+            self.logger.info(response.read())
         except Exception as ex:
-            print 'Exception %s' % str(ex)
+            self.logger.warn('Exception %s' % str(ex))
     
     def photo_upload(self, host='resource.api.imyoujia.com', port=80, method='PUT', uri=None, key=None):
         if uri is None or key is None: 
-            print 'Not file upload'
+            self.logger.info('Not file upload')
             return 
         try:
             url = 'https://d1uk5e10lg6nan.cloudfront.net/j%s.jpg' % key
             url = 'http://medical.8ops.com/images/2016/04/14/1a.jpg'
             conn = httplib2.Http()
             resp, body = conn.request(url, 'GET')
-            print 'Download {"status":%s}' % resp['status']
+            self.logger.info('Download {"status":%s}' % resp['status'])
             
             headers = {'Content-Type': 'image/jpeg;charset=UTF-8', 'Content-Length':0}
             conn = httplib.HTTPConnection(host, port, timeout=2000)
             conn.request(method, uri, body=body, headers=headers)
             response = conn.getresponse()
             status = response.status
-            print status, response.read()
+            self.logger.info(status)
+            self.logger.info(response.read())
         except Exception as ex:
-            print 'Exception %s' % str(ex)
+            self.logger.warn('Exception %s' % str(ex))
     
     def test(self):
         cur = self.usa_mysql.cursor()
@@ -229,8 +243,7 @@ class Dump:
         self.photo_upload(uri=uri, key=key)
 
     def user_account(self, user):
-        print '============================================================> account'
-        
+        self.logger.info('============================================================> account')
         try:
             uri = '/moplus-service/meow/import/useraccount'
             payload = {
@@ -244,14 +257,13 @@ class Dump:
                         "security_token": "20",
                         "access_token": "20"
                         }
-            print payload
+            self.logger.info(payload)
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:print 'Exception %s' % str(ex)
+        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
         # facebook
         if user[19] != '':
-            print '============================================================> facebook'
-            
+            self.logger.info('============================================================> facebook')
             try:
                 payload = {
                             "nick_name": str(user[24]),
@@ -264,14 +276,13 @@ class Dump:
                             "security_token": str(user[19]),
                             "access_token": ""
                         }
-                print payload
+                self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
             except Exception as ex:print 'Exception %s' % str(ex)
         
         # twitter
         if user[16] != '':
-            print '============================================================> twitter'
-            
+            self.logger.info('============================================================> twitter')
             try:
                 payload = {
                             "nick_name": str(user[24]),
@@ -284,9 +295,9 @@ class Dump:
                             "security_token": str(user[16]),
                             "access_token": str(user[17])
                         }
-                print payload
+                self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
-            except Exception as ex:print 'Exception %s' % str(ex)
+            except Exception as ex:self.logger.warn('Exception %s' % str(ex))
     
     def user_profile(self, user, cur):
         self.logger.info('============================================================> profile')
@@ -333,7 +344,7 @@ class Dump:
                         "login_count": "0",
                         "client_version":"5.1.0-test"
                      }
-            self.logger.info(payload)
+            self.logger.info(simplejson(payload))
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
@@ -354,9 +365,9 @@ class Dump:
                        "uid":str(user[0]),
                        "type":"0"
                    }
-            self.logger.info(payload)
+            self.logger.info(simplejson.dumps(payload))
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:print 'Exception %s' % str(ex)
+        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
         try:
             uri = '/moplus-service/meow/import/relation'
@@ -373,13 +384,12 @@ class Dump:
                        "uid":str(user[0]),
                        "type":"1"
                    }
-            print payload
+            self.logger.info(simplejson.dumps(payload))
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:print 'Exception %s' % str(ex)
+        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
 
     def upload_photo(self, user):
-        print '============================================================> relatioin'
-        
+        self.logger.info('============================================================> relatioin')
         try:
             self.usa_redis.sadd('S:photo', user[0])
             self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
@@ -389,8 +399,8 @@ class Dump:
                 for ic in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
                     self.usa_redis.hset('H:%s' % user[0], ic.view_id, 0)
                     
-            print self.usa_redis.hgetall('H:%s' % user[0])
-        except Exception as ex:print 'Exception %s' % str(ex)
+            self.logger.info(self.usa_redis.hgetall('H:%s' % user[0]))
+        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
     def more_user(self, start_uid=0, limit=1):
         cur = self.usa_mysql.cursor()
@@ -403,7 +413,7 @@ class Dump:
             
             # convert storage
             for user in users:
-                print '[conver storage] ##################################################################### %s' % user[0]
+                self.logger.info('[conver storage] ##################################################################### %s' % user[0])
                 self.user_account(user)
                 self.user_profile(user, cur)
                 self.user_relation(user)
@@ -420,6 +430,6 @@ if __name__ == '__main__':
     dump.more_user()
     
 
-    print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
+    self.logger.info('\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S'))
 
 
