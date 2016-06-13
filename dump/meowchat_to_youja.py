@@ -10,7 +10,6 @@ from cassandra.cluster import Cluster  # @UnresolvedImport
 import redis
 
 import sys
-from psutil import users
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
