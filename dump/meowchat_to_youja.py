@@ -292,15 +292,16 @@ class Dump:
         self.logger.info('============================================================> profile')
 #         try:
         # birthdate
-        m_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
-        birthdate_size = cur.execute(m_sql)
+        birthdate_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
+        birthdate_size = cur.execute(birthdate_sql)
         birthdates = cur.fetchall()
         birthdate = None if 0 == birthdate_size else birthdates[0] 
         print birthdates
+        print birthdate_sql
         
         # gender
-        m_sql = 'select * from minus_usergender where user_id=%s' % user[0]
-        gender_size = cur.execute(m_sql)
+        gender_sql = 'select * from minus_usergender where user_id=%s' % user[0]
+        gender_size = cur.execute(gender_sql)
         genders = cur.fetchall()
         gender = None if 0 == gender_size else genders[0]
         
@@ -312,7 +313,7 @@ class Dump:
             
         uri = '/moplus-service/meow/import/userprofile'
         payload = {
-                    "birthday": str(birthdate[1]),
+                    "birthday": str('1995-01-01' if birthdate is None else birthdate[1]),
                     "fans_count": "0",
                     "sign_type": "20",
                     "gift_count": "0",
@@ -328,7 +329,7 @@ class Dump:
                     "avatar_status": "2",
                     "name": str(user[7]),
                     "ua": "meow",
-                    "gender": str(gender[1]),
+                    "gender": str('2' if gender is None else gender[1]),
                     "user_id": str(user[0]),
                     "id": str(user[0]),
                     "login_count": "0",
