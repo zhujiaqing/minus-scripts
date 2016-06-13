@@ -7,6 +7,7 @@ import httplib2
 import simplejson
 import MySQLdb
 from cassandra.cluster import Cluster  # @UnresolvedImport
+import redis
 
 import sys
 reload(sys)
@@ -16,8 +17,11 @@ class Dump:
     
     def __init__(self):
         self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
+        
         self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
+    
+        self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
         if uri is None or body is None: 
@@ -53,7 +57,7 @@ class Dump:
         except Exception as ex:
             print 'Exception %s' % str(ex)
     
-    def user_account(self):
+    def test(self):
         cur = self.usa_mysql.cursor()
         m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
         cur.execute(m_sql)
@@ -208,6 +212,9 @@ class Dump:
         print key, uri
         self.photo_upload(uri=uri, key=key)
 
+    def user_account(self):
+        pass
+    
     def user_profile(self):
         pass
     
@@ -217,17 +224,24 @@ class Dump:
     def upload_photo(self):
         pass
 
-    def more_user(self, start_uid=0):
+    def more_user(self, start_uid=0, limit=100):
         cur = self.usa_mysql.cursor()
         while True:
-            m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
-            cur.execute(m_sql)
-            rows = cur.fetchall()
+            m_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
+            size = cur.execute(m_sql)
+            users = cur.fetchall()
+            
+            print users
+            print size, users.size(), len(users)
+            
+            
+            break
+        cur.close()
     
 if __name__ == '__main__':
 
     dump = Dump()
-    dump.user_account()
+    dump.more_user()
     
 
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
