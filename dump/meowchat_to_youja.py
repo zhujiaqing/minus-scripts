@@ -290,52 +290,52 @@ class Dump:
     
     def user_profile(self, user, cur):
         self.logger.info('============================================================> profile')
-        try:
-            # birthdate
-            m_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
-            birthdate_size = cur.execute(m_sql)
-            birthdates = cur.fetchall()
-            birthdate = None if 0 == birthdate_size else birthdates[0] 
+#         try:
+        # birthdate
+        m_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
+        birthdate_size = cur.execute(m_sql)
+        birthdates = cur.fetchall()
+        birthdate = None if 0 == birthdate_size else birthdates[0] 
+        
+        # gender
+        m_sql = 'select * from minus_usergender where user_id=%s' % user[0]
+        gender_size = cur.execute(m_sql)
+        genders = cur.fetchall()
+        gender = None if 0 == gender_size else genders[0]
+        
+        # balance
+        coins = score = 0
+        for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
+            coins = balance.coins if balance.coins is not None else 0
+            score = balance.score if balance.score is not None else 0
             
-            # gender
-            m_sql = 'select * from minus_usergender where user_id=%s' % user[0]
-            gender_size = cur.execute(m_sql)
-            genders = cur.fetchall()
-            gender = None if 0 == gender_size else genders[0]
-            
-            # balance
-            coins = score = 0
-            for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
-                coins = balance.coins if balance.coins is not None else 0
-                score = balance.score if balance.score is not None else 0
-                
-            uri = '/moplus-service/meow/import/userprofile'
-            payload = {
-                        "birthday": str(birthdate[1]),
-                        "fans_count": "0",
-                        "sign_type": "20",
-                        "gift_count": "0",
-                        "avatarid": "0",
-                        "oauth_bind": "20",
-                        "nick_name": str(user[24]),
-                        "first_client_version": "5.1.0-test",
-                        "balance": str(coins),
-                        "reg_finish_datetime": str(user[5]),
-                        "glamour_count": str(score),
-                        "client_type": "8",
-                        "intruduction": str(user[8]),
-                        "avatar_status": "2",
-                        "name": str(user[7]),
-                        "ua": "meow",
-                        "gender": str(gender[1]),
-                        "user_id": str(user[0]),
-                        "id": str(user[0]),
-                        "login_count": "0",
-                        "client_version":"5.1.0-test"
-                     }
-            self.logger.info(simplejson.dumps(payload))
-            self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+        uri = '/moplus-service/meow/import/userprofile'
+        payload = {
+                    "birthday": str(birthdate[1]),
+                    "fans_count": "0",
+                    "sign_type": "20",
+                    "gift_count": "0",
+                    "avatarid": "0",
+                    "oauth_bind": "20",
+                    "nick_name": str(user[24]),
+                    "first_client_version": "5.1.0-test",
+                    "balance": str(coins),
+                    "reg_finish_datetime": str(user[5]),
+                    "glamour_count": str(score),
+                    "client_type": "8",
+                    "intruduction": str(user[8]),
+                    "avatar_status": "2",
+                    "name": str(user[7]),
+                    "ua": "meow",
+                    "gender": str(gender[1]),
+                    "user_id": str(user[0]),
+                    "id": str(user[0]),
+                    "login_count": "0",
+                    "client_version":"5.1.0-test"
+                 }
+        self.logger.info(simplejson.dumps(payload))
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
+#         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
     def user_relation(self, user):
         self.logger.info('============================================================> relatioin')
