@@ -333,7 +333,7 @@ class Dump:
                         "login_count": "0",
                         "client_version":"5.1.0-test"
                      }
-            self.logger.info(simplejson(payload))
+            self.logger.info(simplejson.dumps(payload))
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
@@ -391,7 +391,7 @@ class Dump:
             self.logger.info(self.usa_redis.hgetall('H:%s' % user[0]))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
-    def more_user(self, start_uid=0, limit=100):
+    def more_user(self, start_uid=450, limit=1):
         cur = self.usa_mysql.cursor()
         while True:
             user_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
@@ -403,12 +403,13 @@ class Dump:
             # convert storage
             for user in users:
                 self.logger.info('[conver storage] ##################################################################### %s' % user[0])
-                self.user_account(user)
+#                 self.user_account(user)
                 self.user_profile(user, cur)
-                self.user_relation(user)
-                self.upload_photo(user)
+#                 self.user_relation(user)
+#                 self.upload_photo(user)
 
             if limit > user_size:break
+            break
         
         cur.close()
     
