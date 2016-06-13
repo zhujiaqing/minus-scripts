@@ -31,9 +31,9 @@ class Dump:
         
         formatter = logging.Formatter(fmt)  # 实例化formatter
         handler.setFormatter(formatter)  # 为handler添加formatter
-        logger = logging.getLogger('meow')  # 获取名为tst的logger
-        logger.addHandler(handler)  # 为logger添加handler
-        logger.setLevel(logging.DEBUG)
+        self.logger = logging.getLogger('meow')  # 获取名为tst的logger
+        self.logger.addHandler(handler)  # 为logger添加handler
+        self.logger.setLevel(logging.DEBUG)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
         if uri is None or body is None: 
