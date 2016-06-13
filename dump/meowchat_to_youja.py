@@ -10,6 +10,7 @@ from cassandra.cluster import Cluster  # @UnresolvedImport
 import redis
 
 import sys
+from psutil import users
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
@@ -368,8 +369,12 @@ class Dump:
             user_sql = 'select * from minus_user where id>%s and 1=2 limit %d' % (start_uid, limit)
             user_size = cur.execute(user_sql)
             users = cur.fetchall()
+            print users
+            print users[-1]
+            print users[0][0]
             start_uid = users[-1][0]
             
+            break
             # convert storage
             for user in users:
                 self.user_account(user)
