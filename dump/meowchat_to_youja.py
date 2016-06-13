@@ -365,24 +365,28 @@ class Dump:
     def more_user(self, start_uid=0, limit=2):
         cur = self.usa_mysql.cursor()
         while True:
-            user_sql = 'select * from minus_user where id>%s and 1=2 limit %d' % (start_uid, limit)
+            user_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
             user_size = cur.execute(user_sql)
             users = cur.fetchall()
+            if 0 == user_size : break
             print users
             print user_size, start_uid, limit
-            print users[1]
+            print users[user_size - 1]
             print users[0][0]
-            start_uid = users[1][0]
+            start_uid = users[-1][0]
             
             print start_uid
             
             break
             # convert storage
             for user in users:
-                self.user_account(user)
-                self.user_profile(user, cur)
-                self.user_relation(user)
-                self.upload_photo(user)
+                try:
+                    self.user_account(user)
+                    self.user_profile(user, cur)
+                    self.user_relation(user)
+                    self.upload_photo(user)
+                except Exception as ex:
+                    print 'Exception convert storage %s' % str(ex)
 
             if user_size != limit:break
             
