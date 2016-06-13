@@ -392,7 +392,7 @@ class Dump:
             print self.usa_redis.hgetall('H:%s' % user[0])
         except Exception as ex:print 'Exception %s' % str(ex)
         
-    def more_user(self, start_uid=0, limit=100):
+    def more_user(self, start_uid=0, limit=1):
         cur = self.usa_mysql.cursor()
         while True:
             user_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
@@ -410,6 +410,7 @@ class Dump:
                 self.upload_photo(user)
 
             if limit > user_size:break
+            break
         
         cur.close()
     
