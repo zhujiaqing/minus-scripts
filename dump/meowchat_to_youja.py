@@ -13,8 +13,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
-import logging  # @UnusedImport
-import logging.handlers
+import logging 
 
 class Dump:
     
