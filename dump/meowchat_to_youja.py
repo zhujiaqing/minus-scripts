@@ -369,9 +369,10 @@ class Dump:
             user_size = cur.execute(user_sql)
             users = cur.fetchall()
             print users
-            print users[user_size-1]
+            print user_size, start_uid, limit
+            print users[1]
             print users[0][0]
-            start_uid = users[user_size-1][0]
+            start_uid = users[1][0]
             
             print start_uid
             
