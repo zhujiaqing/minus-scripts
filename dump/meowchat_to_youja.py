@@ -296,8 +296,6 @@ class Dump:
             birthdate_size = cur.execute(birthdate_sql)
             birthdates = cur.fetchall()
             birthdate = None if 0 == birthdate_size else birthdates[0] 
-            print birthdates
-            print birthdate_sql
             
             # gender
             gender_sql = 'select * from minus_usergender where user_id=%s' % user[0]
