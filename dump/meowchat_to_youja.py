@@ -59,7 +59,7 @@ class Dump:
     
     def test(self):
         cur = self.usa_mysql.cursor()
-        m_sql = 'select * from minus_user where username="8ops2016" or username="atschx"'
+        m_sql = 'select * from minus_user where username="8ops2016"'
         cur.execute(m_sql)
         rows = cur.fetchall()
         user = rows[0]
@@ -200,19 +200,21 @@ class Dump:
         print payload
         self.api_request(uri=uri, body=simplejson.dumps(payload))
 
+        print '============================================================> avator'
         # avator
         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=1&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
         key = user[26]
         print key, uri
         self.photo_upload(uri=uri, key=key)
  
+        print '============================================================> photo'
         # photo
         uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=0&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
         key = 'mJYT32il9pwe'
         print key, uri
         self.photo_upload(uri=uri, key=key)
 
-    def user_account(self):
+    def user_account(self, user):
         pass
     
     def user_profile(self):
@@ -227,13 +229,29 @@ class Dump:
     def more_user(self, start_uid=0, limit=100):
         cur = self.usa_mysql.cursor()
         while True:
-            m_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
+            m_sql = 'select * from minus_user where id>%s and 1=2 limit %d' % (start_uid, limit)
             size = cur.execute(m_sql)
             users = cur.fetchall()
             
-            print users
-            print size, users.size(), len(users)
+            print size
             
+            break
+            for user in users:
+                uid = user[0]
+                
+                m_sql = 'select * from minus_userbirthdate where user_id=%s' % uid
+                cur.execute(m_sql)
+                rows = cur.fetchall()
+                birthdate = rows[0]
+                
+                m_sql = 'select * from minus_usergender where user_id=%s' % uid
+                cur.execute(m_sql)
+                rows = cur.fetchall()
+                gender = rows[0]
+                
+                self.user_account(user)
+
+            if size != limit:break
             
             break
         cur.close()
