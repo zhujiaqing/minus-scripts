@@ -219,102 +219,113 @@ class Dump:
 
     def user_account(self, user):
         print '============================================================> account'
-        uri = '/moplus-service/meow/import/useraccount'
-        payload = {
-                    "nick_name": str(user[24]),
-                    "username": str(user[1]),
-                    "password": str(user[3]),
-                    "email": str(user[2]),
-                    "sign_type": "20",
-                    "user_id": str(user[0]),
-                    "au_id": "20",
-                    "security_token": "20",
-                    "access_token": "20"
-                    }
-        print payload
-        self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        try:
+            uri = '/moplus-service/meow/import/useraccount'
+            payload = {
+                        "nick_name": str(user[24]),
+                        "username": str(user[1]),
+                        "password": str(user[3]),
+                        "email": str(user[2]),
+                        "sign_type": "20",
+                        "user_id": str(user[0]),
+                        "au_id": "20",
+                        "security_token": "20",
+                        "access_token": "20"
+                        }
+            print payload
+            self.api_request(uri=uri, body=simplejson.dumps(payload))
+        except Exception as ex:print 'Exception %s' % str(ex)
         
         # facebook
         if user[19] != '':
             print '============================================================> facebook'
-            payload = {
-                        "nick_name": str(user[24]),
-                        "username": str(user[1]),
-                        "password": str(user[3]),
-                        "email": str(user[2]),
-                        "sign_type": "16",
-                        "user_id": str(user[0]),
-                        "au_id": "20",
-                        "security_token": str(user[19]),
-                        "access_token": ""
-                    }
-            print payload
-            self.api_request(uri=uri, body=simplejson.dumps(payload))
+            
+            try:
+                payload = {
+                            "nick_name": str(user[24]),
+                            "username": str(user[1]),
+                            "password": str(user[3]),
+                            "email": str(user[2]),
+                            "sign_type": "16",
+                            "user_id": str(user[0]),
+                            "au_id": "20",
+                            "security_token": str(user[19]),
+                            "access_token": ""
+                        }
+                print payload
+                self.api_request(uri=uri, body=simplejson.dumps(payload))
+            except Exception as ex:print 'Exception %s' % str(ex)
         
         # twitter
         if user[16] != '':
             print '============================================================> twitter'
-            payload = {
-                        "nick_name": str(user[24]),
-                        "username": str(user[1]),
-                        "password": str(user[3]),
-                        "email": str(user[2]),
-                        "sign_type": "17",
-                        "user_id": str(user[0]),
-                        "au_id": "20",
-                        "security_token": str(user[16]),
-                        "access_token": str(user[17])
-                    }
-            print payload
-            self.api_request(uri=uri, body=simplejson.dumps(payload))
+            
+            try:
+                payload = {
+                            "nick_name": str(user[24]),
+                            "username": str(user[1]),
+                            "password": str(user[3]),
+                            "email": str(user[2]),
+                            "sign_type": "17",
+                            "user_id": str(user[0]),
+                            "au_id": "20",
+                            "security_token": str(user[16]),
+                            "access_token": str(user[17])
+                        }
+                print payload
+                self.api_request(uri=uri, body=simplejson.dumps(payload))
+            except Exception as ex:print 'Exception %s' % str(ex)
     
     def user_profile(self, user, cur):
         print '============================================================> profile'
-        # birthdate
-        m_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
-        birthdate_size = cur.execute(m_sql)
-        birthdates = cur.fetchall()
-        birthdate = None if 0 == birthdate_size else birthdates[0] 
-        
-        # gender
-        m_sql = 'select * from minus_usergender where user_id=%s' % user[0]
-        gender_size = cur.execute(m_sql)
-        genders = cur.fetchall()
-        gender = None if 0 == gender_size else genders[0]
-        
-        # balance
-        coins = score = 0
-        for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
-            coins = balance.coins if balance.coins is not None else 0
-            score = balance.score if balance.score is not None else 0
-            print coins, score
+        try:
+            # birthdate
+            m_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
+            birthdate_size = cur.execute(m_sql)
+            birthdates = cur.fetchall()
+            birthdate = None if 0 == birthdate_size else birthdates[0] 
             
-        uri = '/moplus-service/meow/import/userprofile'
-        payload = {
-                    "birthday": str(birthdate[1]),
-                    "fans_count": "0",
-                    "sign_type": "20",
-                    "gift_count": "0",
-                    "avatarid": "0",
-                    "oauth_bind": "20",
-                    "nick_name": str(user[24]),
-                    "first_client_version": "5.1.0-test",
-                    "balance": str(coins),
-                    "reg_finish_datetime": str(user[5]),
-                    "glamour_count": str(score),
-                    "client_type": "8",
-                    "intruduction": str(user[8]),
-                    "avatar_status": "2",
-                    "name": str(user[7]),
-                    "ua": "meow",
-                    "gender": str(gender[1]),
-                    "user_id": str(user[0]),
-                    "id": str(user[0]),
-                    "login_count": "0",
-                    "client_version":"5.1.0-test"
-                 }
-        print payload
-        self.api_request(uri=uri, body=simplejson.dumps(payload))
+            # gender
+            m_sql = 'select * from minus_usergender where user_id=%s' % user[0]
+            gender_size = cur.execute(m_sql)
+            genders = cur.fetchall()
+            gender = None if 0 == gender_size else genders[0]
+            
+            # balance
+            coins = score = 0
+            for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
+                coins = balance.coins if balance.coins is not None else 0
+                score = balance.score if balance.score is not None else 0
+                print coins, score
+                
+            uri = '/moplus-service/meow/import/userprofile'
+            payload = {
+                        "birthday": str(birthdate[1]),
+                        "fans_count": "0",
+                        "sign_type": "20",
+                        "gift_count": "0",
+                        "avatarid": "0",
+                        "oauth_bind": "20",
+                        "nick_name": str(user[24]),
+                        "first_client_version": "5.1.0-test",
+                        "balance": str(coins),
+                        "reg_finish_datetime": str(user[5]),
+                        "glamour_count": str(score),
+                        "client_type": "8",
+                        "intruduction": str(user[8]),
+                        "avatar_status": "2",
+                        "name": str(user[7]),
+                        "ua": "meow",
+                        "gender": str(gender[1]),
+                        "user_id": str(user[0]),
+                        "id": str(user[0]),
+                        "login_count": "0",
+                        "client_version":"5.1.0-test"
+                     }
+            print payload
+            self.api_request(uri=uri, body=simplejson.dumps(payload))
+        except Exception as ex:print 'Exception %s' % str(ex)
         
     def user_relation(self, user):
         print '============================================================> relatioin'
@@ -336,8 +347,7 @@ class Dump:
                    }
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except: pass
-        time.sleep(2)
+        except Exception as ex:print 'Exception %s' % str(ex)
         
         try:
             uri = '/moplus-service/meow/import/relation'
@@ -356,19 +366,23 @@ class Dump:
                    }
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except:pass
+        except Exception as ex:print 'Exception %s' % str(ex)
 
     def upload_photo(self, user):
-        self.usa_redis.sadd('S:photo', user[0])
-        self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
+        print '============================================================> relatioin'
         
-        # photo
-        for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % user[0]):
-            for ic in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
-                self.usa_redis.hset('H:%s' % user[0], ic.view_id, 0)
-                
-        print self.usa_redis.hgetall('H:%s' % user[0])
-
+        try:
+            self.usa_redis.sadd('S:photo', user[0])
+            self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
+            
+            # photo
+            for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % user[0]):
+                for ic in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
+                    self.usa_redis.hset('H:%s' % user[0], ic.view_id, 0)
+                    
+            print self.usa_redis.hgetall('H:%s' % user[0])
+        except Exception as ex:print 'Exception %s' % str(ex)
+        
     def more_user(self, start_uid=0, limit=1):
         cur = self.usa_mysql.cursor()
         while True:
@@ -380,16 +394,13 @@ class Dump:
             
             # convert storage
             for user in users:
-                print '##################################################################### %s' % user[0]
-                try:
-#                     self.user_account(user)
-#                     self.user_profile(user, cur)
-                    self.user_relation(user)
-                    self.upload_photo(user)
-                except Exception as ex:
-                    print 'Exception convert storage %s' % str(ex)
+                print '[conver storage] ##################################################################### %s' % user[0]
+                self.user_account(user)
+                self.user_profile(user, cur)
+                self.user_relation(user)
+                self.upload_photo(user)
 
-            if user_size != limit:break
+            if limit > user_size:break
             
             break
         cur.close()
