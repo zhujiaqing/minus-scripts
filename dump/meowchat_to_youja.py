@@ -287,7 +287,8 @@ class Dump:
         for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
             coins = balance.coins if balance.coins is not None else 0
             score = balance.score if balance.score is not None else 0
-        
+            print coins, score
+            
         uri = '/moplus-service/meow/import/userprofile'
         payload = {
                     "birthday": str(birthdate[1]),
@@ -373,9 +374,10 @@ class Dump:
             
             # convert storage
             for user in users:
+                print '##################################################################### %s' % user[0]
                 try:
-                    self.user_account(user)
-                    self.user_profile(user, cur)
+#                     self.user_account(user)
+#                     self.user_profile(user, cur)
                     self.user_relation(user)
                     self.upload_photo(user)
                 except Exception as ex:
