@@ -29,7 +29,7 @@ class Dump:
     
         self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
     
-        handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow.out", when='D', interval=1)
+        handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow_%s-%s.out" % (start_uid, stop_uid), when='D', interval=1)
         fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
         
         formatter = logging.Formatter(fmt)  # 实例化formatter
