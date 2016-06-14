@@ -408,6 +408,7 @@ class Dump:
                 self.user_relation(user)
                 self.upload_photo(user)
 
+            self.usa_redis.bgsave()
             if limit > user_size:break
         
         cur.close()
