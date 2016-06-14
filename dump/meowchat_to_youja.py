@@ -439,8 +439,7 @@ class Dump:
         cur.close()
     
 if __name__ == '__main__':
-    import sys
-    args = sys.argv()
+    args = sys.argv
     start_uid = 0
     stop_uid = 1000
     if 2 == len(args):
