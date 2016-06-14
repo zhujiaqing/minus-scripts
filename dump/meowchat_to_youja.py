@@ -433,20 +433,20 @@ class Dump:
                 self.user_relation(user)
                 self.upload_photo(user)
 
-            self.usa_redis.bgsave()
             if limit > user_size:break
         
+        self.usa_redis.bgsave()
         cur.close()
     
 if __name__ == '__main__':
-    args = sys.argv
     start_uid = 0
     stop_uid = 1000
+    args = sys.argv
     if 2 == len(args):
         start_uid = args[0]
         stop_uid = args[1]
 
-    print start_uid, stop_uid
+    print args, len(args), start_uid, stop_uid
     
     dump = Dump()
     dump.more_user_with_mutli()
