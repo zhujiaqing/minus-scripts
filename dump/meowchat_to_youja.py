@@ -18,7 +18,10 @@ import logging.handlers
 
 class Dump:
     
-    def __init__(self):
+    def __init__(self, start_uid=0, stop_uid=1000):
+        self.start_uid = start_uid
+        self.stop_uid = stop_uid
+        
         self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
         
         self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
@@ -413,15 +416,14 @@ class Dump:
         
         cur.close()
         
-           
-    def more_user_with_mutli(self, start_uid=0, stop_uid=1000, limit=100):
+    def more_user_with_mutli(self, limit=100):
         cur = self.usa_mysql.cursor()
         while True:
-            user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (start_uid, stop_uid, limit)
+            user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (self.start_uid, self.stop_uid, limit)
             user_size = cur.execute(user_sql)
             users = cur.fetchall()
             if 0 == user_size : break
-            start_uid = users[-1][0]
+            self.start_uid = users[-1][0]
             
             # convert storage
             for user in users:
@@ -446,8 +448,8 @@ if __name__ == '__main__':
         start_uid = args[1]
         stop_uid = args[2]
 
-    dump = Dump()
-    dump.more_user_with_mutli(start_uid, stop_uid)
+    dump = Dump(start_uid, stop_uid)
+    dump.more_user_with_mutli()
     
 
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
