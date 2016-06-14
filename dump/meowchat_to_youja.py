@@ -412,11 +412,45 @@ class Dump:
             if limit > user_size:break
         
         cur.close()
+        
+           
+    def more_user_with_mutli(self, start_uid=0, stop_uid=1000, limit=100):
+        cur = self.usa_mysql.cursor()
+        while True:
+            user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (start_uid, stop_uid, limit)
+            user_size = cur.execute(user_sql)
+            users = cur.fetchall()
+            if 0 == user_size : break
+            start_uid = users[-1][0]
+            
+            # convert storage
+            for user in users:
+                if self.usa_redis.sismember('S:photo', user[0]):continue  # 避免重复转存
+                
+                self.logger.info('############## [conver storage] %s ##############' % user[0])
+                self.user_account(user)
+                self.user_profile(user, cur)
+                self.user_relation(user)
+                self.upload_photo(user)
+
+            self.usa_redis.bgsave()
+            if limit > user_size:break
+        
+        cur.close()
     
 if __name__ == '__main__':
+    import sys
+    args = sys.argv()
+    start_uid = 0
+    stop_uid = 1000
+    if 2 == len(args):
+        start_uid = args[0]
+        stop_uid = args[1]
 
+    print start_uid, stop_uid
+    
     dump = Dump()
-    dump.more_user()
+    dump.more_user_with_mutli()
     
 
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
