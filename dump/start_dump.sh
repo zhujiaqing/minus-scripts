@@ -8,6 +8,12 @@ do
 done
 
 echo "screen python meowchat_to_youja.py 100000 200000000 &" 
+echo
+}
+
+watch_20160614(){
+    echo "redis-cli -h 10.179.67.118 -p 6379 -n 1 scard S:photo"
+    echo
 }
 
 dump_20160614
