@@ -3,8 +3,8 @@
 num = 10000
 
 def task(l_min=0, l_max=100):
-    print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % l_min * num
-    print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d 200000000 &\n' % l_max * num
+    print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % (l_min * num)
+    print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d 200000000 &\n' % (l_max * num)
 
     for n in range(l_min, l_max, 1):
         print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d %d &\n' % ((n - 1) * num, n * num)
