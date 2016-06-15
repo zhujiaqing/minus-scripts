@@ -18,6 +18,9 @@ if __name__ == '__main__':
     print 'Init task over.'
     print '''
     May be: 
+        
+        uptime
+        
         redis-cli -h 10.154.148.158 -p 6379 -n 1 scard S:photo
         
         tree /data
