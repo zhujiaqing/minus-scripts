@@ -16,3 +16,14 @@ if __name__ == '__main__':
     task_20160614()
     
     print 'Init task over.'
+    print '''
+    May be: 
+        redis-cli -h 10.154.148.158 -p 6379 -n 1 scard S:photo
+        
+        tree /data
+        
+        ls -lth /data/logs
+        
+    '''
+    
+    
