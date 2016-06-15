@@ -9,7 +9,7 @@ def task(l_min=0, l_max=1, num=10000):
 
 
 if __name__ == '__main__':
-    task(l_min=500, l_max=520, num=100000)
+    task(l_min=5, l_max=10, num=1000000)
     
     print 'Init task over.\n'
     print '''
