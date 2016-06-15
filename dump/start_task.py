@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-num = 10000
-
-def task(l_min=0, l_max=1):
+def task(l_min=0, l_max=1, num=10000):
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % (l_min * num)
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d 200000000 &\n' % (l_max * num)
 
@@ -11,7 +9,7 @@ def task(l_min=0, l_max=1):
 
 
 if __name__ == '__main__':
-    task(l_min=20, l_max=100)
+    task(l_min=500, l_max=520, num=100000)
     
     print 'Init task over.\n'
     print '''
