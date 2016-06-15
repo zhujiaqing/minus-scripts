@@ -27,7 +27,8 @@ class Dump:
         self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
     
-        self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
+#         self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
+        self.usa_redis = redis.Redis(host="10.154.148.158", port=6379, db=1)
     
         handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow_%s-%s.out" % (start_uid, stop_uid), when='D', interval=1)
         fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
