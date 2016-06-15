@@ -2,16 +2,16 @@
 
 num = 10000
 
-def task(l_min=0, l_max=100):
+def task(l_min=0, l_max=1):
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % (l_min * num)
-    print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d 200000000 &\n' % ((l_max + 1) * num)
+    print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d 200000000 &\n' % (l_max * num)
 
     for n in range(l_min, l_max, 1):
         print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d %d &\n' % (n * num, (n + 1) * num)
 
 
 if __name__ == '__main__':
-    task(l_min=20, l_max=21)
+    task(l_min=20, l_max=100)
     
     print 'Init task over.\n'
     print '''
