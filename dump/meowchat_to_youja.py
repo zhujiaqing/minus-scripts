@@ -444,7 +444,7 @@ class Dump:
             
     def temp_20160617(self):
         cur = self.usa_mysql.cursor()
-        user_sql = 'select * from minus_user where id in (2512381,1616280)'
+        user_sql = 'select * from minus_user where id in (2512381,1616280,2613988)'
         cur.execute(user_sql)
         users = cur.fetchall()
         
