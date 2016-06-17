@@ -463,14 +463,15 @@ def manual_start(arg):
     dump.more_user_with_mutli(arg[2])
 
 def mutliprocess_start():
+    max_uid = 20000000
     arg = []
-    num = 1000
+    num = 100000
     limit = 100
-    for i in range(2):arg.append((i * num, (i + 1) * num, limit))
+    for i in range(max_uid / num):arg.append((i * num, (i + 1) * num, limit))
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(2 * cpu_count())
+    pool = JPool(10 * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
