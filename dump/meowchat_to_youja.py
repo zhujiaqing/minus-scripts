@@ -462,13 +462,29 @@ def manual_start(arg):
     dump = Dump(arg[0], arg[1])
     dump.more_user_with_mutli(arg[2])
 
-def mutliprocess_start():
+def mutliprocess_start_01():
     max_uid = 20000000
     arg = []
     num = 100000
     limit = 100
     for i in range(max_uid / num):arg.append((i * num, (i + 1) * num, limit))
     
+    from multiprocessing import Pool as JPool  # 多进程
+    from multiprocessing import cpu_count
+    pool = JPool(15 * cpu_count())
+    pool.map(manual_start, arg)
+    pool.close()
+    pool.join()
+
+def mutliprocess_start_02():
+    max_uid = 20000000
+    arg = []
+    num = 100000
+    limit = 100
+    for i in range(max_uid / num / 2, max_uid / num):arg.append((i * num + (7 / 8) * num, (i + 1) * num, limit))
+    
+    print arg
+    return
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(15 * cpu_count())
@@ -484,9 +500,9 @@ if __name__ == '__main__':
 #     if 3 == len(args):arg = args[1:2]
 #     manual_start(arg)
 
-    mutliprocess_start()
+#     mutliprocess_start_01()
     
-    
+    mutliprocess_start_02
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
