@@ -481,6 +481,7 @@ def mutliprocess_start_02():
     arg = []
     num = 100000
     limit = 100
+    print max_uid / num / 2, max_uid / num
     for i in range(max_uid / num / 2, max_uid / num):arg.append((i * num + (7 / 8) * num, (i + 1) * num, limit))
     
     print arg
