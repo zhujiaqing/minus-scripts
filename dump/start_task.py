@@ -22,27 +22,22 @@ def task(l_min=0, l_max=1, num=10000):
          
     '''
 
-
-
-
 def mutli_process():
-#     from multiprocessing.dummy import Pool as ThreadPool
-# # from multiprocessing import Pool as ThreadPool
-#     pool = ThreadPool(5)
-#     results = pool.map(callAutuLogin, slice)
-#     pool.close()
-#     pool.join()
-
-
     import time
-    from multiprocessing import Pool
+    def func(x):
+        print x, time.strftime('%H:%M:%S')
+        time.sleep(5)
+        return x * x
+    arr = [i for i in range(10)]
     
-    def f(x):
-#         return '%s - %d' % (time.time(), x * x)
-        return x
+    from multiprocessing import Pool as ThreadPool
+#     from multiprocessing.dummy import Pool as ThreadPool
+    pool = ThreadPool(2)
+    results = pool.map(func, arr)
+    print results
+    pool.close()
+    pool.join()
 
-    p = Pool(2)
-    print p.map(f, (1, 2, 3))
 
 def mutli_thread():
     pass
@@ -55,9 +50,9 @@ def test():
 if __name__ == '__main__':
 #     task(l_min=10, l_max=200, num=100000)
 
-#     mutli_process()
+    mutli_process()
 #     mutli_thread()
     
-    test()
+#     test()
     
     print '\nCompleted\n'

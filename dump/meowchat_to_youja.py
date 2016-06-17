@@ -10,6 +10,7 @@ from cassandra.cluster import Cluster  # @UnresolvedImport
 import redis
 
 import sys
+from psutil import users
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
@@ -450,6 +451,7 @@ class Dump:
         
         # convert storage
         for user in users:
+            print user
             self.logger.info('############## [conver storage] %s ##############' % user[0])
             self.user_account(user)
             self.user_profile(user, cur)
