@@ -467,7 +467,8 @@ def mutliprocess_start_01():
     arg = []
     num = 100000
     limit = 100
-    for i in range(max_uid / num):arg.append((i * num, (i + 1) * num, limit))
+    for i in range(max_uid / num):
+        arg.append((i * num, (i + 1) * num, limit))
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
@@ -481,11 +482,10 @@ def mutliprocess_start_02():
     arg = []
     num = 100000
     limit = 100
-    print max_uid / num / 2, max_uid / num
-    for i in range(max_uid / num / 2, max_uid / num):arg.append((i * num + (7 / 8) * num, (i + 1) * num, limit))
+    salt = num / 4 * 3
+    for i in range(max_uid / num / 4 * 3, max_uid / num):
+        arg.append((i * num + salt, (i + 1) * num, limit))
     
-    print arg
-    return
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(15 * cpu_count())
