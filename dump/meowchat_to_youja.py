@@ -399,11 +399,10 @@ class Dump:
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
     def more_user(self, start_uid=0, limit=100):
-        cur = self.usa_mysql.cursor()
         while True:
             user_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
-            user_size = cur.execute(user_sql)
-            users = cur.fetchall()
+            user_size = self.cur.execute(user_sql)
+            users = self.cur.fetchall()
             if 0 == user_size : break
             start_uid = users[-1][0]
             
@@ -411,14 +410,15 @@ class Dump:
             for user in users:
                 self.logger.info('############## [conver storage] %s ##############' % user[0])
                 self.user_account(user)
-                self.user_profile(user, cur)
+                self.user_profile(user, self.cur)
                 self.user_relation(user)
                 self.upload_photo(user)
 
             self.usa_redis.bgsave()
             if limit > user_size:break
         
-        cur.close()
+        else:
+            self.cur.close()
         
     def more_user_with_mutli(self, limit=100):
         while True:
@@ -456,8 +456,8 @@ class Dump:
             self.user_profile(user)
             self.user_relation(user)
             self.upload_photo(user)
-
-        self.cur.close()
+        else:
+            self.cur.close()
         
     def dump_with_mutliprocess(self, user):
         print user[0], time.strftime('%H:%M:%S')
@@ -474,22 +474,22 @@ class Dump:
         from multiprocessing import Pool as JPool  # 多进程
         pool = JPool(8)
         
-        cur = self.usa_mysql.cursor()
         while True:
             user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (self.start_uid, self.stop_uid, limit)
-            user_size = cur.execute(user_sql)
-            users = cur.fetchall()
+            user_size = self.cur.execute(user_sql)
+            users = self.cur.fetchall()
             if 0 == user_size : break
             self.start_uid = users[-1][0]
             
             print self.start_uid, self.stop_uid, limit, user_size
             # convert storage
-            pool.map(self.dump_with_mutliprocess, users())
+#             pool.map(self.dump_with_mutliprocess, users())
+            for user in users:self.dump_with_mutliprocess(user)
             
             if limit > user_size:break
         else:
             self.usa_redis.bgsave()
-            cur.close()
+            self.cur.close()
         
         pool.close()
         pool.join()
