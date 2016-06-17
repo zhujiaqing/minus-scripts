@@ -460,8 +460,9 @@ class Dump:
             self.cur.close()
 
 def manual_start(start_uid, stop_uid, limit=10):
-    dump = Dump(start_uid, stop_uid)
-    dump.more_user_with_mutli(limit)
+    print start_uid, stop_uid, limit
+#     dump = Dump(start_uid, stop_uid)
+#     dump.more_user_with_mutli(limit)
 
 def mutliprocess_start():
     arr = []
