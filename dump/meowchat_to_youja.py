@@ -439,7 +439,6 @@ class Dump:
 
             if limit > user_size:break
         else:
-            self.usa_redis.bgsave()
             self.cur.close()
             
     def temp_20160617(self):
