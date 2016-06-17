@@ -466,14 +466,15 @@ def manual_start(arg):
 
 def mutliprocess_start():
     arr = []
-    num = 10
-    for i in range(20):
+    num = 100
+    for i in range(5):
         start_uid = i * num
         stop_uid = (i + 1) * num
         arr.append((start_uid, stop_uid, num))
     
     from multiprocessing import Pool as JPool  # 多进程
-    pool = JPool(2)
+    from multiprocessing import cpu_count
+    pool = JPool(2 * cpu_count())
     results = pool.map(manual_start, arr)
     print results
     pool.close()

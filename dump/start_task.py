@@ -32,12 +32,11 @@ def func(arg):
 def mutli_process():
     arr = [(i, i + 1) for i in range(10)]
     print arr
-#     import multiprocessing
-#     pool = multiprocessing.Pool(multiprocessing.cpu_count)
-    
+
 #     from multiprocessing.dummy import Pool as JPool   # 多线程
     from multiprocessing import Pool as JPool  # 多进程
-    pool = JPool(2)
+    from multiprocessing import cpu_count
+    pool = JPool(cpu_count())
     results = pool.map(func, arr)
     print results
     pool.close()
