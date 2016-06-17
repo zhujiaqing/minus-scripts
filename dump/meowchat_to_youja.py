@@ -440,7 +440,28 @@ class Dump:
         else:
             self.usa_redis.bgsave()
             cur.close()
-    
+            
+            
+    def test_20160617(self):
+        cur = self.usa_mysql.cursor()
+        user_sql = 'select * from minus_user where id in (2512381,1616280)'
+        user_size = cur.execute(user_sql)
+        users = cur.fetchall()
+        if 0 == user_size : break
+        self.start_uid = users[-1][0]
+        
+        # convert storage
+        for user in users:
+            if self.usa_redis.sismember('S:photo', user[0]):continue  # 避免重复转存
+            
+            self.logger.info('############## [conver storage] %s ##############' % user[0])
+            self.user_account(user)
+            self.user_profile(user, cur)
+            self.user_relation(user)
+            self.upload_photo(user)
+
+        cur.close()
+            
 if __name__ == '__main__':
     start_uid = 0
     stop_uid = 1000
