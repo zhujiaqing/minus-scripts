@@ -471,9 +471,6 @@ def mutliprocess_start():
         stop_uid = (i + 1) * num
         arr.append((start_uid, stop_uid, num))
     
-    print arr
-    return 
-
     from multiprocessing import Pool as JPool  # 多进程
     pool = JPool(2)
     results = pool.map(manual_start, arr)
