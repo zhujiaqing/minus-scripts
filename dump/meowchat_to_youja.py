@@ -471,7 +471,7 @@ def mutliprocess_start():
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(10 * cpu_count())
+    pool = JPool(15 * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
