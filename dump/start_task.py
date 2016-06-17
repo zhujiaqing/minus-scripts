@@ -50,7 +50,7 @@ def mutli_thread():
 def test():
     from meowchat_to_youja import Dump
     dump = Dump()
-    dump.test()
+    dump.temp_20160617()
 
 if __name__ == '__main__':
 #     task(l_min=10, l_max=200, num=100000)

@@ -75,7 +75,7 @@ class Dump:
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
     
-    def test(self):
+    def temp(self):
         cur = self.usa_mysql.cursor()
         m_sql = 'select * from minus_user where username="8ops2016"'
         cur.execute(m_sql)
@@ -442,7 +442,7 @@ class Dump:
             cur.close()
             
             
-    def test_20160617(self):
+    def temp_20160617(self):
         cur = self.usa_mysql.cursor()
         user_sql = 'select * from minus_user where id in (2512381,1616280)'
         cur.execute(user_sql)
