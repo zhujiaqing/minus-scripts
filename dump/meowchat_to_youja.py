@@ -459,10 +459,10 @@ class Dump:
         else:
             self.cur.close()
 
-def manual_start(start_uid, stop_uid, limit=10):
-    print start_uid, stop_uid, limit
-#     dump = Dump(start_uid, stop_uid)
-#     dump.more_user_with_mutli(limit)
+def manual_start(arg):
+    print arg
+#     dump = Dump(arg[0], arg[1])
+#     dump.more_user_with_mutli(arg[2])
 
 def mutliprocess_start():
     arr = []
@@ -480,13 +480,10 @@ def mutliprocess_start():
     pool.join()
     
 if __name__ == '__main__':
-#     start_uid = 0
-#     stop_uid = 1000
+#     arg = (0, 100, 100)  # start,stop,limit
 #     args = sys.argv
-#     if 3 == len(args):
-#         start_uid = args[1]
-#         stop_uid = args[2]
-#     manual_start(start_uid, stop_uid)
+#     if 3 == len(args):arg = args[1:2]
+#     manual_start(arg)
 
     mutliprocess_start()
     

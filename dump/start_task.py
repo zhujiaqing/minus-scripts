@@ -24,14 +24,14 @@ def task(l_min=0, l_max=1, num=10000):
     '''
 
 import time
-def func(x):
-    print x, time.strftime('%H:%M:%S')
+def func(arg):
+    print time.strftime('%H:%M:%S'), arg[0], arg[1]
     time.sleep(2)
-    return x * x
+    return arg[0] * arg[1]
 
 def mutli_process():
-    arr = [i for i in range(10)]
-    
+    arr = [(i, i + 1) for i in range(10)]
+    print arr
 #     import multiprocessing
 #     pool = multiprocessing.Pool(multiprocessing.cpu_count)
     
