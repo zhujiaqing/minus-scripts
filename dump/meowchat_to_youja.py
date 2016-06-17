@@ -464,7 +464,7 @@ def manual_start(arg):
 
 def mutliprocess_start():
     arg = []
-    num = 100
+    num = 1000
     limit = 100
     for i in range(2):arg.append((i * num, (i + 1) * num, limit))
     
