@@ -450,8 +450,6 @@ class Dump:
         
         # convert storage
         for user in users:
-            if self.usa_redis.sismember('S:photo', user[0]):continue  # 避免重复转存
-            
             self.logger.info('############## [conver storage] %s ##############' % user[0])
             self.user_account(user)
             self.user_profile(user, cur)
