@@ -17,22 +17,9 @@ import simplejson
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
-
 class Dump:
     
     def __init__(self, start_uid=0, stop_uid=1000):
-        self.start_uid = start_uid
-        self.stop_uid = stop_uid
-        
-        self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
-        self.cur = self.usa_mysql.cursor()
-        
-        self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
-        self.usa_session = self.usa_cluster.connect()
-    
-#         self.usa_redis = redis.Redis(host="10.179.67.118", port=6379, db=1)
-        self.usa_redis = redis.Redis(host="10.154.148.158", port=6379, db=1)
-    
         handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow_%s-%s.out" % (start_uid, stop_uid), when='D', interval=1)
         fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
         
@@ -41,6 +28,18 @@ class Dump:
         self.logger = logging.getLogger('meow')  # 获取名为tst的logger
         self.logger.addHandler(handler)  # 为logger添加handler
         self.logger.setLevel(logging.DEBUG)
+        
+        self.start_uid = start_uid
+        self.stop_uid = stop_uid
+        self.logger.info('[%s] ============= task: %s ~ %s =============' % (time.strftime('%Y:%m:%d %H:%M:%S'), start_uid, stop_uid))
+        
+        self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
+        self.cur = self.usa_mysql.cursor()
+        
+        self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
+        self.usa_session = self.usa_cluster.connect()
+    
+        self.usa_redis = redis.Redis(host="10.154.148.158", port=6379, db=1)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
         if uri is None or body is None: 
@@ -460,27 +459,26 @@ class Dump:
             self.cur.close()
 
 def manual_start(arg):
-    print arg
+    print '[%s] Start dump' % time.strftime('%Y-%m-%d %H:%M:%S'), arg
     dump = Dump(arg[0], arg[1])
     dump.more_user_with_mutli(arg[2])
 
 def mutliprocess_start():
-    arr = []
+    arg = []
     num = 100
-    for i in range(5):
-        start_uid = i * num
-        stop_uid = (i + 1) * num
-        arr.append((start_uid, stop_uid, num))
+    limit = 100
+    for i in range(5):arg.append((i * num, (i + 1) * num, limit))
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(2 * cpu_count())
-    results = pool.map(manual_start, arr)
-    print results
+    pool.map(manual_start, arg)
     pool.close()
     pool.join()
     
 if __name__ == '__main__':
+    print '\n[%s] Dump start\n' % time.strftime('%Y-%m-%d %H:%M:%S')
+    
 #     arg = (0, 100, 100)  # start,stop,limit
 #     args = sys.argv
 #     if 3 == len(args):arg = args[1:2]
