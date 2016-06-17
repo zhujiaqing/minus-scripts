@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 # -*- coding:utf8 -*-
 
-import time
-import httplib
-import httplib2
-import simplejson
-import MySQLdb
 from cassandra.cluster import Cluster  # @UnresolvedImport
-import redis
-
+import httplib
+import logging  # @UnusedImport
+import logging.handlers
 import sys
-from psutil import users
+import time
+
+import MySQLdb
+import httplib2
+import redis
+import simplejson
+
+
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 
-import logging  # @UnusedImport
-import logging.handlers
 
 class Dump:
     
