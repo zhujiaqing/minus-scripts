@@ -24,6 +24,7 @@ class Dump:
         self.stop_uid = stop_uid
         
         self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
+        self.cur = self.usa_mysql.cursor()
         
         self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
@@ -293,19 +294,19 @@ class Dump:
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
             except Exception as ex:self.logger.warn('Exception %s' % str(ex))
     
-    def user_profile(self, user, cur):
+    def user_profile(self, user):
         self.logger.info('========> profile')
         try:
             # birthdate
             birthdate_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
-            birthdate_size = cur.execute(birthdate_sql)
-            birthdates = cur.fetchall()
+            birthdate_size = self.cur.execute(birthdate_sql)
+            birthdates = self.cur.fetchall()
             birthdate = None if 0 == birthdate_size else birthdates[0] 
             
             # gender
             gender_sql = 'select * from minus_usergender where user_id=%s' % user[0]
-            gender_size = cur.execute(gender_sql)
-            genders = cur.fetchall()
+            gender_size = self.cur.execute(gender_sql)
+            genders = self.cur.fetchall()
             gender = None if 0 == gender_size else genders[0]
             
             # balance
@@ -419,11 +420,10 @@ class Dump:
         cur.close()
         
     def more_user_with_mutli(self, limit=100):
-        cur = self.usa_mysql.cursor()
         while True:
             user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (self.start_uid, self.stop_uid, limit)
-            user_size = cur.execute(user_sql)
-            users = cur.fetchall()
+            user_size = self.cur.execute(user_sql)
+            users = self.cur.fetchall()
             if 0 == user_size : break
             self.start_uid = users[-1][0]
             
@@ -433,33 +433,66 @@ class Dump:
                 
                 self.logger.info('############## [conver storage] %s ##############' % user[0])
                 self.user_account(user)
-                self.user_profile(user, cur)
+                self.user_profile(user)
                 self.user_relation(user)
                 self.upload_photo(user)
 
             if limit > user_size:break
         else:
             self.usa_redis.bgsave()
-            cur.close()
-            
+            self.cur.close()
             
     def temp_20160617(self):
-        cur = self.usa_mysql.cursor()
         user_sql = 'select * from minus_user where id in (2512381,1616280,2613988)'
-        cur.execute(user_sql)
-        users = cur.fetchall()
+        self.cur.execute(user_sql)
+        users = self.cur.fetchall()
         
         # convert storage
         for user in users:
             print user
             self.logger.info('############## [conver storage] %s ##############' % user[0])
             self.user_account(user)
-            self.user_profile(user, cur)
+            self.user_profile(user)
             self.user_relation(user)
             self.upload_photo(user)
 
-        cur.close()
+        self.cur.close()
+        
+    def dump_with_mutliprocess(self, user):
+        print user[0], time.strftime('%H:%M:%S')
+        
+        if self.usa_redis.sismember('S:photo', user[0]):return  # 避免重复转存
+                
+        self.logger.info('############## [conver storage] %s ##############' % user[0])
+        self.user_account(user)
+        self.user_profile(user)
+        self.user_relation(user)
+        self.upload_photo(user)
+          
+    def more_user_with_mutliprocess(self, limit=100):
+        from multiprocessing import Pool as JPool  # 多进程
+        pool = JPool(8)
+        
+        cur = self.usa_mysql.cursor()
+        while True:
+            user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (self.start_uid, self.stop_uid, limit)
+            user_size = cur.execute(user_sql)
+            users = cur.fetchall()
+            if 0 == user_size : break
+            self.start_uid = users[-1][0]
             
+            print self.start_uid, self.stop_uid, limit, user_size
+            # convert storage
+            pool.map(self.dump_with_mutliprocess, users())
+            
+            if limit > user_size:break
+        else:
+            self.usa_redis.bgsave()
+            cur.close()
+        
+        pool.close()
+        pool.join()
+        
 if __name__ == '__main__':
     start_uid = 0
     stop_uid = 1000
@@ -467,11 +500,14 @@ if __name__ == '__main__':
     if 3 == len(args):
         start_uid = args[1]
         stop_uid = args[2]
-
+ 
     dump = Dump(start_uid, stop_uid)
-    dump.more_user_with_mutli()
-    
+#     dump.more_user_with_mutli()
 
+    dump.more_user_with_mutliprocess()
+    
+    
+    
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
 

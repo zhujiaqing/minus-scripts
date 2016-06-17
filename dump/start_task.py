@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*-coding:UTF8-*-
 
 def task(l_min=0, l_max=1, num=10000):
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % (l_min * num)
@@ -22,30 +23,25 @@ def task(l_min=0, l_max=1, num=10000):
          
     '''
 
+import time
+def func(x):
+    print x, time.strftime('%H:%M:%S')
+    time.sleep(2)
+    return x * x
+
 def mutli_process():
-    import time
-    def func(x):
-        print x, time.strftime('%H:%M:%S')
-        time.sleep(5)
-        return x * x
     arr = [i for i in range(10)]
     
-#     from multiprocessing.dummy import Pool as ThreadPool
-#     pool = ThreadPool(2)
-#     results = pool.map(func, arr)
-#     print results
-#     pool.close()
-#     pool.join()
-
-    from multiprocessing import Pool as ThreadPool
-    pool = ThreadPool(2)
+#     import multiprocessing
+#     pool = multiprocessing.Pool(multiprocessing.cpu_count)
+    
+#     from multiprocessing.dummy import Pool as JPool   # 多线程
+    from multiprocessing import Pool as JPool  # 多进程
+    pool = JPool(2)
     results = pool.map(func, arr)
     print results
     pool.close()
     pool.join()
-
-def mutli_thread():
-    pass
 
 def test():
     from meowchat_to_youja import Dump
@@ -56,7 +52,6 @@ if __name__ == '__main__':
 #     task(l_min=10, l_max=200, num=100000)
 
     mutli_process()
-#     mutli_thread()
     
 #     test()
     
