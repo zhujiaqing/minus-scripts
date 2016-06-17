@@ -458,54 +458,39 @@ class Dump:
             self.upload_photo(user)
         else:
             self.cur.close()
-        
-    def dump_with_mutliprocess(self, user):
-        print user[0], time.strftime('%H:%M:%S')
-        
-        if self.usa_redis.sismember('S:photo', user[0]):return  # 避免重复转存
-                
-        self.logger.info('############## [conver storage] %s ##############' % user[0])
-        self.user_account(user)
-        self.user_profile(user)
-        self.user_relation(user)
-        self.upload_photo(user)
-          
-    def more_user_with_mutliprocess(self, limit=100):
-        from multiprocessing import Pool as JPool  # 多进程
-        pool = JPool(8)
-        
-        while True:
-            user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (self.start_uid, self.stop_uid, limit)
-            user_size = self.cur.execute(user_sql)
-            users = self.cur.fetchall()
-            if 0 == user_size : break
-            self.start_uid = users[-1][0]
-            
-            print self.start_uid, self.stop_uid, limit, user_size
-            # convert storage
-#             pool.map(self.dump_with_mutliprocess, users())
-            for user in users:self.dump_with_mutliprocess(user)
-            
-            if limit > user_size:break
-        else:
-            self.usa_redis.bgsave()
-            self.cur.close()
-        
-        pool.close()
-        pool.join()
-        
-if __name__ == '__main__':
-    start_uid = 0
-    stop_uid = 1000
-    args = sys.argv
-    if 3 == len(args):
-        start_uid = args[1]
-        stop_uid = args[2]
- 
-    dump = Dump(start_uid, stop_uid)
-#     dump.more_user_with_mutli()
 
-    dump.more_user_with_mutliprocess()
+def manual_start(start_uid, stop_uid, limit=10):
+    dump = Dump(start_uid, stop_uid)
+    dump.more_user_with_mutli(limit)
+
+def mutliprocess_start():
+    arr = []
+    num = 10
+    for i in range(20):
+        start_uid = i * num
+        stop_uid = (i + 1) * num
+        arr.append((start_uid, stop_uid, num))
+    
+    print arr
+    return 
+
+    from multiprocessing import Pool as JPool  # 多进程
+    pool = JPool(2)
+    results = pool.map(manual_start, arr)
+    print results
+    pool.close()
+    pool.join()
+    
+if __name__ == '__main__':
+#     start_uid = 0
+#     stop_uid = 1000
+#     args = sys.argv
+#     if 3 == len(args):
+#         start_uid = args[1]
+#         stop_uid = args[2]
+#     manual_start(start_uid, stop_uid)
+
+    mutliprocess_start()
     
     
     
