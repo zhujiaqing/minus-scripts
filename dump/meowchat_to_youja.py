@@ -445,10 +445,8 @@ class Dump:
     def test_20160617(self):
         cur = self.usa_mysql.cursor()
         user_sql = 'select * from minus_user where id in (2512381,1616280)'
-        user_size = cur.execute(user_sql)
+        cur.execute(user_sql)
         users = cur.fetchall()
-        if 0 == user_size : break
-        self.start_uid = users[-1][0]
         
         # convert storage
         for user in users:
