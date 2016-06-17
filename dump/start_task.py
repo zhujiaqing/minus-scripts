@@ -30,14 +30,19 @@ def mutli_process():
         return x * x
     arr = [i for i in range(10)]
     
-    from multiprocessing import Pool as ThreadPool
 #     from multiprocessing.dummy import Pool as ThreadPool
+#     pool = ThreadPool(2)
+#     results = pool.map(func, arr)
+#     print results
+#     pool.close()
+#     pool.join()
+
+    from multiprocessing import Pool as ThreadPool
     pool = ThreadPool(2)
     results = pool.map(func, arr)
     print results
     pool.close()
     pool.join()
-
 
 def mutli_thread():
     pass
