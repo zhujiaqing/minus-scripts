@@ -467,7 +467,7 @@ def mutliprocess_start():
     arg = []
     num = 100
     limit = 100
-    for i in range(5):arg.append((i * num, (i + 1) * num, limit))
+    for i in range(2):arg.append((i * num, (i + 1) * num, limit))
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
