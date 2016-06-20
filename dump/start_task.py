@@ -47,11 +47,25 @@ def test():
     dump = Dump()
     dump.temp_20160617()
 
+def thread_func(thread_name, delay):
+    while True:
+        print time.strftime('%y-%m-%d %H:%M:%S')
+        time.sleep(delay)
+
+def test_thread():
+    import thread
+    thread.start_new_thread(thread_func, ('Thread_test', 2,))
+    while True:
+        print 'Main'
+        time.sleep(10)
+
 if __name__ == '__main__':
 #     task(l_min=10, l_max=200, num=100000)
 
 #     mutli_process()
     
-    test()
+#     test()
+
+    test_thread()
     
     print '\nCompleted\n'
