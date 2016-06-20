@@ -50,8 +50,8 @@ def test():
 if __name__ == '__main__':
 #     task(l_min=10, l_max=200, num=100000)
 
-    mutli_process()
+#     mutli_process()
     
-#     test()
+    test()
     
     print '\nCompleted\n'

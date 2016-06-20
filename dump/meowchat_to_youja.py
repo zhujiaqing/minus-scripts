@@ -267,9 +267,9 @@ class Dump:
                             "email": str(user[2]),
                             "sign_type": "16",
                             "user_id": str(user[0]),
-                            "au_id": "20",
-                            "security_token": str(user[19]),
-                            "access_token": ""
+                            "au_id": str(user[16]),
+                            "security_token": "",
+                            "access_token": str(user[19])
                         }
                 self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
@@ -286,9 +286,9 @@ class Dump:
                             "email": str(user[2]),
                             "sign_type": "17",
                             "user_id": str(user[0]),
-                            "au_id": "20",
-                            "security_token": str(user[16]),
-                            "access_token": str(user[17])
+                            "au_id": str(user[15]),
+                            "security_token": str(user[13]),
+                            "access_token": str(user[12])
                         }
                 self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
@@ -442,7 +442,7 @@ class Dump:
             self.cur.close()
             
     def temp_20160617(self):
-        user_sql = 'select * from minus_user where id in (2512381,1616280,2613988)'
+        user_sql = 'select * from minus_user where id in (12011768,15253309)'
         self.cur.execute(user_sql)
         users = self.cur.fetchall()
         
