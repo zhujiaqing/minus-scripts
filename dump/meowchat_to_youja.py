@@ -472,7 +472,7 @@ def mutliprocess_start_01():
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(15 * cpu_count())
+    pool = JPool(30 * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
@@ -501,9 +501,9 @@ if __name__ == '__main__':
 #     if 3 == len(args):arg = args[1:2]
 #     manual_start(arg)
 
-#     mutliprocess_start_01()
+    mutliprocess_start_01()
     
-    mutliprocess_start_02()
+#     mutliprocess_start_02()
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
