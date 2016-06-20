@@ -488,7 +488,7 @@ def mutliprocess_start_02():
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(15 * cpu_count())
+    pool = JPool(30 * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
