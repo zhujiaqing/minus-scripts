@@ -501,9 +501,9 @@ if __name__ == '__main__':
 #     if 3 == len(args):arg = args[1:2]
 #     manual_start(arg)
 
-    mutliprocess_start_01()
+#     mutliprocess_start_01()
     
-#     mutliprocess_start_02()
+    mutliprocess_start_02()
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
