@@ -42,6 +42,7 @@ class Dump:
         self.usa_redis = redis.Redis(host="10.154.148.158", port=6379, db=1)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
+        start_time = time.time()
         if uri is None or body is None: 
             self.logger.info('Not api request')
             return 
@@ -55,6 +56,8 @@ class Dump:
             self.logger.info(response.read())
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
+        finally:
+            self.logger.info('api request cost time: %ss' % time.time() - start_time)
     
     def photo_upload(self, host='resource.api.imyoujia.com', port=80, method='PUT', uri=None, key=None):
         if uri is None or key is None: 
@@ -141,7 +144,7 @@ class Dump:
         self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # facebook
-        if user[19] != '':
+        if user[16] != '':
             print '========> facebook'
             payload = {
                         "nick_name": str(user[24]),
@@ -150,26 +153,26 @@ class Dump:
                         "email": str(user[2]),
                         "sign_type": "16",
                         "user_id": str(user[0]),
-                        "au_id": "20",
-                        "security_token": str(user[19]),
-                        "access_token": ""
+                        "au_id": str(user[16]),
+                        "security_token": "",
+                        "access_token": str(user[19])
                     }
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         
         # twitter
-        if user[16] != '':
+        if user[15] != '':
             print '========> twitter'
             payload = {
-                        "nick_name": str(user[24]),
+                        "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
                         "username": str(user[1]),
                         "password": str(user[3]),
                         "email": str(user[2]),
                         "sign_type": "17",
                         "user_id": str(user[0]),
-                        "au_id": "20",
-                        "security_token": str(user[16]),
-                        "access_token": str(user[17])
+                        "au_id": str(user[15]),
+                        "security_token": str(user[13]),
+                        "access_token": str(user[12])
                     }
             print payload
             self.api_request(uri=uri, body=simplejson.dumps(payload))
@@ -257,7 +260,7 @@ class Dump:
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
         # facebook
-        if user[19] != '':
+        if user[16] != '':
             self.logger.info('========> facebook')
             try:
                 payload = {
@@ -276,7 +279,7 @@ class Dump:
             except Exception as ex:print 'Exception %s' % str(ex)
         
         # twitter
-        if user[16] != '':
+        if user[15] != '':
             self.logger.info('========> twitter')
             try:
                 payload = {
@@ -429,13 +432,20 @@ class Dump:
             
             # convert storage
             for user in users:
+                start_time = time.time()
                 if self.usa_redis.sismember('S:photo', user[0]):continue  # 避免重复转存
                 
-                self.logger.info('############## [conver storage] %s ##############' % user[0])
+                self.logger.info('##############>>> [start conver storage] %s - [%s]' % 
+                                 (user[0],
+                                  time.strftime('%Y-%m-%d %H:%M:%S')))
                 self.user_account(user)
                 self.user_profile(user)
                 self.user_relation(user)
                 self.upload_photo(user)
+                self.logger.info('##############>>> [end conver storage] %s - [%s], cost time %ss' % 
+                                 (user[0],
+                                  time.strftime('%Y-%m-%d %H:%M:%S'),
+                                  time.time() - start_time))
 
             if limit > user_size:break
         else:
@@ -449,7 +459,7 @@ class Dump:
         # convert storage
         for user in users:
             print user
-            self.logger.info('############## [conver storage] %s ##############' % user[0])
+            self.logger.info('############## [temp conver storage] %s ##############' % user[0])
             self.user_account(user)
             self.user_profile(user)
             self.user_relation(user)
@@ -458,7 +468,6 @@ class Dump:
             self.cur.close()
 
 def manual_start(arg):
-    print '[%s] Start dump' % time.strftime('%Y-%m-%d %H:%M:%S'), arg
     dump = Dump(arg[0], arg[1])
     dump.more_user_with_mutli(arg[2])
 
@@ -472,7 +481,7 @@ def mutliprocess_start_01():
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(20 * cpu_count())
+    pool = JPool(10 * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
@@ -488,22 +497,25 @@ def mutliprocess_start_02():
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(20 * cpu_count())
+    pool = JPool(10 * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
     
 if __name__ == '__main__':
     print '\n[%s] Dump start\n' % time.strftime('%Y-%m-%d %H:%M:%S')
+    args = sys.argv
     
 #     arg = (0, 100, 100)  # start,stop,limit
-#     args = sys.argv
 #     if 3 == len(args):arg = args[1:2]
 #     manual_start(arg)
 
-#     mutliprocess_start_01()
-    
-    mutliprocess_start_02()
+    start = '01'
+    if 2 == len(args) and ('02' == args[1] or '2' == args[1]):start = '02'
+    if '01' == start:
+        mutliprocess_start_01()
+    elif '02' == start:
+        mutliprocess_start_02()
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
