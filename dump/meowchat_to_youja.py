@@ -128,7 +128,7 @@ class Dump:
         
         # account
         print '========> account'
-        uri = '/moplus-service/meow/import/useraccount'
+        uri = '/uplus-api/meow/import/useraccount'
         payload = {
                     "nick_name": str(user[24]),
                     "username": str(user[1]),
@@ -179,7 +179,7 @@ class Dump:
         
         # profile
         print '========> profile'
-        uri = '/moplus-service/meow/import/userprofile'
+        uri = '/uplus-api/meow/import/userprofile'
         payload = {
                     "birthday": str(birthdate[1]),
                     "fans_count": "0",
@@ -208,7 +208,7 @@ class Dump:
         
         # reloation
         print '========> relatioin'
-        uri = '/moplus-service/meow/import/relation'
+        uri = '/uplus-api/meow/import/relation'
         er_list = []
         for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
             print er, str(er.dt)
@@ -243,7 +243,7 @@ class Dump:
     def user_account(self, user):
         self.logger.info('========> account')
         try:
-            uri = '/moplus-service/meow/import/useraccount'
+            uri = '/uplus-api/meow/import/useraccount'
             payload = {
                         "nick_name": str(user[24]),
                         "username": str(user[1]),
@@ -318,7 +318,7 @@ class Dump:
                 coins = balance.coins if balance.coins is not None else 0
                 score = balance.score if balance.score is not None else 0
                 
-            uri = '/moplus-service/meow/import/userprofile'
+            uri = '/uplus-api/meow/import/userprofile'
             payload = {
                         "birthday": str('1995-01-01' if birthdate is None else birthdate[1]),
                         "fans_count": "0",
@@ -349,7 +349,7 @@ class Dump:
     def user_relation(self, user):
         self.logger.info('========> relatioin')
         try:
-            uri = '/moplus-service/meow/import/relation'
+            uri = '/uplus-api/meow/import/relation'
             er_list = []
             for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % user[0]):
                 er_list.append({
@@ -368,7 +368,7 @@ class Dump:
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
         try:
-            uri = '/moplus-service/meow/import/relation'
+            uri = '/uplus-api/meow/import/relation'
             ee_list = []
             for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % user[0]):
                 ee_list.append({
