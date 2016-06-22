@@ -445,7 +445,7 @@ class Dump:
                 self.logger.info('##############>>> [end conver storage] %s - [%s], cost time %ss' % 
                                  (user[0],
                                   time.strftime('%Y-%m-%d %H:%M:%S'),
-                                  time.time() - start_time))
+                                  int(time.time() - start_time)))
 
             if limit > user_size:break
         else:
@@ -476,7 +476,7 @@ def mutliprocess_start(process_num=10, start=0, salt=0):
     start: 从哪个范围开始
     salt: 从范围中的多少开始加速
     """
-    max_uid = 20000000
+    max_uid = 20000000 # max loop is 200
     arg = []
     num = 100000
     limit = 1000
@@ -504,7 +504,7 @@ if __name__ == '__main__':
         elif '02' == args[1] or '2' == args[1]:
             mutliprocess_start(process_num=15, start=0, salt=0.6)
         elif '03' == args[1] or '3' == args[1]:
-            mutliprocess_start(process_num=20, start=0, salt=0)
+            mutliprocess_start(process_num=20, start=0, salt=0.05)
         elif '04' == args[1] or '4' == args[1]:
             mutliprocess_start(process_num=15, start=0, salt=0.4)
     
