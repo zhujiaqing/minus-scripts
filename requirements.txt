@@ -1,0 +1,6 @@
+MySQL-python
+httplib2
+simplejson
+cassandra-driver
+redis
+
