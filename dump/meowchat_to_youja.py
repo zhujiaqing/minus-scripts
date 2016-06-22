@@ -471,33 +471,21 @@ def manual_start(arg):
     dump = Dump(arg[0], arg[1])
     dump.more_user_with_mutli(arg[2])
 
-def mutliprocess_start_01():
+def mutliprocess_start(start=0, salt=0):
+    """
+    start: 从哪个范围开始
+    salt: 从范围中的多少开始加速
+    """
     max_uid = 20000000
     arg = []
     num = 100000
     limit = 100
-    for i in range(max_uid / num):
-        arg.append((i * num, (i + 1) * num, limit))
+    for i in range(start, max_uid / num):
+        arg.append((i * num + int(num * salt), (i + 1) * num, limit))
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(20 * cpu_count())
-    pool.map(manual_start, arg)
-    pool.close()
-    pool.join()
-
-def mutliprocess_start_02():
-    max_uid = 20000000
-    arg = []
-    num = 100000
-    limit = 100
-    salt = num / 4 * 3
-    for i in range(max_uid / num / 4 * 3, max_uid / num):
-        arg.append((i * num + salt, (i + 1) * num, limit))
-    
-    from multiprocessing import Pool as JPool  # 多进程
-    from multiprocessing import cpu_count
-    pool = JPool(10 * cpu_count())
+    pool = JPool(15 * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
@@ -513,9 +501,9 @@ if __name__ == '__main__':
     start = '01'
     if 2 == len(args) and ('02' == args[1] or '2' == args[1]):start = '02'
     if '01' == start:
-        mutliprocess_start_01()
+        mutliprocess_start(start=0, salt=0)
     elif '02' == start:
-        mutliprocess_start_02()
+        mutliprocess_start(start=0, salt=0.5)
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
