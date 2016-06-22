@@ -57,7 +57,7 @@ class Dump:
         except Exception as ex:
             self.logger.warn(str(ex))
         finally:
-            self.logger.info('api request cost time: %ss' % time.time() - start_time)
+            self.logger.info('api request cost time: %ss' % int(time.time() - start_time))
     
     def photo_upload(self, host='resource.api.imyoujia.com', port=80, method='PUT', uri=None, key=None):
         if uri is None or key is None: 
@@ -258,7 +258,7 @@ class Dump:
             self.logger.info(payload)
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:
-            print 'bb',ex
+            print 'bb', ex
         
         # facebook
         if user[16] != '':
@@ -277,7 +277,7 @@ class Dump:
                         }
                 self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
-            except Exception as ex:print 'aa',str(ex)
+            except Exception as ex:print 'aa', str(ex)
         
         # twitter
         if user[15] != '':
