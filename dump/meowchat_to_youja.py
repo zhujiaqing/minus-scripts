@@ -452,7 +452,7 @@ class Dump:
             self.cur.close()
             
     def temp_20160617(self):
-        user_sql = 'select * from minus_user where id in (17171928,12011768,15253309)'
+        user_sql = 'select * from minus_user where id in (17172928,12011768,15253309)'
         self.cur.execute(user_sql)
         users = self.cur.fetchall()
         
