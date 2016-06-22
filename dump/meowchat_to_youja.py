@@ -31,7 +31,7 @@ class Dump:
         
         self.start_uid = start_uid
         self.stop_uid = stop_uid
-        self.logger.info('[%s] ============= task: %s ~ %s =============' % (time.strftime('%Y:%m:%d %H:%M:%S'), start_uid, stop_uid))
+        self.logger.info('[%s] ============= init task: %s ~ %s =============' % (time.strftime('%Y:%m:%d %H:%M:%S'), start_uid, stop_uid))
         
         self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
         self.cur = self.usa_mysql.cursor()
