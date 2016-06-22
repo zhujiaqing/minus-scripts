@@ -503,6 +503,8 @@ if __name__ == '__main__':
     if '01' == start:
         mutliprocess_start(start=0, salt=0)
     elif '02' == start:
+        mutliprocess_start(start=0, salt=0.75)
+    elif '03' == start:
         mutliprocess_start(start=0, salt=0.5)
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
