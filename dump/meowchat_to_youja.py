@@ -250,7 +250,7 @@ class Dump:
                         "password": str(user[3]),
                         "email": str(user[2]),
                         "sign_type": "20",
-                        "user_id": str(user[0]),
+                        "user_id": user[0],
                         "au_id": "20",
                         "security_token": "20",
                         "access_token": "20"
