@@ -468,9 +468,8 @@ class Dump:
             self.cur.close()
 
 def manual_start(arg):
-    print arg
-#     dump = Dump(arg[0], arg[1])
-#     dump.more_user_with_mutli(arg[2])
+    dump = Dump(arg[0], arg[1])
+    dump.more_user_with_mutli(arg[2])
 
 def mutliprocess_start(start=0, salt=0):
     """
@@ -501,15 +500,14 @@ if __name__ == '__main__':
 
     type = '01'
     if 2 == len(args):
-        if '02' == args[1] or '2' == args[1]:type = '02'
-        elif '03' == args[1] or '3' == args[1]:type = '03'
-    print type
-    if '01' == type:
-        mutliprocess_start(start=0, salt=0)
-    elif '02' == type:
-        mutliprocess_start(start=0, salt=0.75)
-    elif '03' == type:
-        mutliprocess_start(start=0, salt=0.25)
+        if '01' == args[1] or '1' == args[1]:
+            mutliprocess_start(start=0, salt=0)
+        elif '02' == args[1] or '2' == args[1]:
+            mutliprocess_start(start=0, salt=0.75)
+        elif '03' == args[1] or '3' == args[1]:
+            mutliprocess_start(start=0, salt=0.5)
+        elif '04' == args[1] or '4' == args[1]:
+            mutliprocess_start(start=0, salt=0.25)
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
