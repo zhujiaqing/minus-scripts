@@ -257,7 +257,8 @@ class Dump:
                         }
             self.logger.info(payload)
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+        except Exception as ex:
+            print ex
         
         # facebook
         if user[16] != '':
