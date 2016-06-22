@@ -424,7 +424,7 @@ class Dump:
         
     def more_user_with_mutli(self, limit=100):
         while True:
-            user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (self.start_uid, self.stop_uid, limit)
+            user_sql = 'select * from minus_user where id>%s and id<=%s limit %d' % (self.start_uid, self.stop_uid, limit)
             user_size = self.cur.execute(user_sql)
             users = self.cur.fetchall()
             if 0 == user_size : break
