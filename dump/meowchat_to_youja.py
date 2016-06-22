@@ -468,8 +468,9 @@ class Dump:
             self.cur.close()
 
 def manual_start(arg):
-    dump = Dump(arg[0], arg[1])
-    dump.more_user_with_mutli(arg[2])
+    print arg
+#     dump = Dump(arg[0], arg[1])
+#     dump.more_user_with_mutli(arg[2])
 
 def mutliprocess_start(start=0, salt=0):
     """
