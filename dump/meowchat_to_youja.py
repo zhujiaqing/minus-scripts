@@ -258,7 +258,7 @@ class Dump:
             self.logger.info(payload)
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:
-            print ex
+            print 'bb',ex
         
         # facebook
         if user[16] != '':
@@ -277,7 +277,7 @@ class Dump:
                         }
                 self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
-            except Exception as ex:print str(ex)
+            except Exception as ex:print 'aa',str(ex)
         
         # twitter
         if user[15] != '':
