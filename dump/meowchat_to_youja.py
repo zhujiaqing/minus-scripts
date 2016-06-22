@@ -55,7 +55,7 @@ class Dump:
             self.logger.info(status)
             self.logger.info(response.read())
         except Exception as ex:
-            self.logger.warn('Exception %s' % str(ex))
+            self.logger.warn(str(ex))
         finally:
             self.logger.info('api request cost time: %ss' % time.time() - start_time)
     
@@ -78,7 +78,7 @@ class Dump:
             self.logger.info(status)
             self.logger.info(response.read())
         except Exception as ex:
-            self.logger.warn('Exception %s' % str(ex))
+            self.logger.warn(str(ex))
     
     def temp(self):
         cur = self.usa_mysql.cursor()
@@ -277,7 +277,7 @@ class Dump:
                         }
                 self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
-            except Exception as ex:print 'Exception %s' % str(ex)
+            except Exception as ex:print str(ex)
         
         # twitter
         if user[15] != '':
@@ -296,7 +296,7 @@ class Dump:
                         }
                 self.logger.info(simplejson.dumps(payload))
                 self.api_request(uri=uri, body=simplejson.dumps(payload))
-            except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+            except Exception as ex:self.logger.warn(str(ex))
     
     def user_profile(self, user):
         self.logger.info('========> profile')
@@ -345,7 +345,7 @@ class Dump:
                      }
             self.logger.info(simplejson.dumps(payload))
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+        except Exception as ex:self.logger.warn(str(ex))
         
     def user_relation(self, user):
         self.logger.info('========> relatioin')
@@ -366,7 +366,7 @@ class Dump:
                    }
             self.logger.info(simplejson.dumps(payload))
             self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+        except Exception as ex:self.logger.warn(str(ex))
         
         try:
             uri = '/uplus-api/meow/import/relation'
@@ -386,8 +386,7 @@ class Dump:
             self.logger.info(simplejson.dumps(payload))
             self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:
-            print ex
-#             self.logger.warn('Exception %s' % str(ex))
+            self.logger.warn(str(ex))
 
     def upload_photo(self, user):
         self.logger.info('========> relatioin')
@@ -401,7 +400,7 @@ class Dump:
                     self.usa_redis.hset('H:%s' % user[0], ic.view_id, 0)
                     
             self.logger.info(self.usa_redis.hgetall('H:%s' % user[0]))
-        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+        except Exception as ex:self.logger.warn(str(ex))
         
     def more_user(self, start_uid=0, limit=100):
         while True:
