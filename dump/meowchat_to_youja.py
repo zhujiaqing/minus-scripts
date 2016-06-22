@@ -471,7 +471,7 @@ def manual_start(arg):
     dump = Dump(arg[0], arg[1])
     dump.more_user_with_mutli(arg[2])
 
-def mutliprocess_start(start=0, salt=0):
+def mutliprocess_start(thread_num=10, start=0, salt=0):
     """
     start: 从哪个范围开始
     salt: 从范围中的多少开始加速
@@ -485,7 +485,7 @@ def mutliprocess_start(start=0, salt=0):
     
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(15 * cpu_count())
+    pool = JPool(thread_num * cpu_count())
     pool.map(manual_start, arg)
     pool.close()
     pool.join()
@@ -498,16 +498,15 @@ if __name__ == '__main__':
 #     if 3 == len(args):arg = args[1:2]
 #     manual_start(arg)
 
-    type = '01'
     if 2 == len(args):
         if '01' == args[1] or '1' == args[1]:
-            mutliprocess_start(start=0, salt=0)
+            mutliprocess_start(thread_num=20, start=0, salt=0)
         elif '02' == args[1] or '2' == args[1]:
-            mutliprocess_start(start=0, salt=0.75)
+            mutliprocess_start(thread_num=10, start=10, salt=0.75)
         elif '03' == args[1] or '3' == args[1]:
-            mutliprocess_start(start=0, salt=0.5)
+            mutliprocess_start(thread_num=20, start=0, salt=0.5)
         elif '04' == args[1] or '4' == args[1]:
-            mutliprocess_start(start=0, salt=0.25)
+            mutliprocess_start(thread_num=10, start=0, salt=0.25)
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
