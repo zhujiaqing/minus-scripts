@@ -64,8 +64,8 @@ if __name__ == '__main__':
 
 #     mutli_process()
     
-#     test()
+    test()
 
-    test_thread()
+#     test_thread()
     
     print '\nCompleted\n'
