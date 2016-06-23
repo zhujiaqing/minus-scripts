@@ -2,7 +2,6 @@
 # -*-coding:UTF8-*-
 
 import redis
-from dump.test import repair
 
 def repair(process_num=20):
     from multiprocessing import Pool as JPool  # 多进程
