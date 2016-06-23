@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 # -*-coding:UTF8-*-
 
+import sys
 import time
 
 import MySQLdb
 import redis
 import web
 
+
+reload(sys)
+sys.setdefaultencoding('UTF-8')  # @UndefinedVariable
 
 usa_redis = redis.Redis(host="10.154.148.158", port=6379, db=5)
 sg_mysql = MySQLdb.connect(host='54.169.234.201', user='minus', passwd='minus', charset='utf8', db='uplusmain', port=3306)
@@ -53,6 +57,8 @@ app = web.application(urls, globals())
 
 class status:
     def GET(self):
+        web.header('Content-Type', 'text/html; charset=utf-8', unique=True) 
+        web.header('Cache-Control', 'no-Cache') 
         meow_num, meow_speed = get_meow()
         youja_num, youja_speed = get_youja()
         return 'meow num is %s, speed is %s 个/s<br/>' \
@@ -65,6 +71,8 @@ class status:
     
 class youja:
     def GET(self):
+        web.header('Content-Type', 'text/html; charset=utf-8', unique=True) 
+        web.header('Cache-Control', 'no-Cache') 
         youja_num, youja_speed = get_youja()
         return 'meow num is %s, speed is %s 个/s' % (
                                               format(youja_num, ','),
@@ -73,6 +81,8 @@ class youja:
     
 class meow:
     def GET(self):
+        web.header('Content-Type', 'text/html; charset=utf-8', unique=True) 
+        web.header('Cache-Control', 'no-Cache') 
         meow_num, meow_speed = get_meow()
         return 'meow num is %s, speed is %s 个/s' % (
                                               format(meow_num, ','),
