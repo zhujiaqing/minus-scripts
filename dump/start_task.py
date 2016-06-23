@@ -91,7 +91,7 @@ def watch():
             
             time.sleep(delay)
 
-    finally: pass
+    except: pass
 
 if __name__ == '__main__':
 #     test()
