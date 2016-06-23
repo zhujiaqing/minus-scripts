@@ -279,6 +279,8 @@ class Dump:
             
     def repair(self, uids=()):
         for uid in uids:
+            if uid in WHITE_LIST:continue  # 淘汰不完整的用户
+            
             user_sql = 'select * from minus_user where id = %s' % uid
             size = self.cur.execute(user_sql)
             users = self.cur.fetchall()
@@ -299,6 +301,7 @@ class Dump:
                                   time.strftime('%Y-%m-%d %H:%M:%S'),
                                   int(time.time() - start_time)))
 
+WHITE_LIST = (30220, 393224)
 ################################### Execute #################################### 
 BASE_REDIS = redis.Redis(host="10.154.148.158", port=6379, db=5)
 KEY_TASK = 'L:task'
