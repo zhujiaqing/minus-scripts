@@ -18,8 +18,8 @@ sg_mysql = MySQLdb.connect(host='54.169.234.201', user='minus', passwd='minus', 
 def get_meow():
     b_timestamp = usa_redis.hget('H:scale', 'meow_timestamp')
     b_num = usa_redis.hget('H:scale', 'meow_num')
-    b_timestamp = 0 if b_timestamp else int(b_timestamp)
-    b_num = 0 if b_num else int(b_num)
+    b_timestamp = 0 if not b_timestamp else int(b_timestamp)
+    b_num = 0 if not b_num else int(b_num)
     
     info = usa_redis.info('Keyspace')
     num = info['db1']['keys']
@@ -35,8 +35,8 @@ def get_meow():
 def get_youja():
     b_timestamp = usa_redis.hget('H:scale', 'youja_timestamp')
     b_num = usa_redis.hget('H:scale', 'youja_num')
-    b_timestamp = 0 if b_timestamp else int(b_timestamp)
-    b_num = 0 if b_num else int(b_num)
+    b_timestamp = 0 if not b_timestamp else int(b_timestamp)
+    b_num = 0 if not b_num else int(b_num)
     
     cur = sg_mysql.cursor()
     cur.execute('select count(*) from user_status')
