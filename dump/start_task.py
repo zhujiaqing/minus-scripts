@@ -81,10 +81,10 @@ def watch():
             base_redis.hset('H:scale', 'num', num)
             base_redis.hset('H:scale', 'timestamp', timestamp)
             
-            print '已经导入 %s ，%d 内秒速 %d 个/s' % (
-                                      format(num),
+            print '已经导入 %s ，%d 内秒速 %s 个/s' % (
+                                      format(',', num),
                                       timestamp - b_timestamp,
-                                      (num - b_num) / (timestamp - b_timestamp)
+                                      format(',', (num - b_num) / (timestamp - b_timestamp))
                                       )
             
             time.sleep(delay)
