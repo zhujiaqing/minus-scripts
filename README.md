@@ -48,7 +48,9 @@ redis-cli -h 10.154.148.158 -n 10 SADD S:youja $(paste -s -d' ' $fff)
 sdiff
 redis-cli -h 10.154.148.158 -n 10 SDIFFSTORE S:diff S:meow S:youja
 
-
+split -l 10000 -d -a 5 user_id-20160623.txt
+ 
+ 
 screen python dump/meowchat_to_youja.py &
 
 
