@@ -313,7 +313,7 @@ def manual_start(x):
     dump.more_user_with_mutli()
     dump.close_all()
 
-def mutliprocess_start(process_num=15, limit=1000):
+def mutliprocess_start(process_num=20, limit=1000):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(process_num * cpu_count())

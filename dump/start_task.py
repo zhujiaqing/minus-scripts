@@ -71,8 +71,8 @@ def watch():
         base_redis = redis.Redis(host="10.154.148.158", port=6379, db=5)
         delay = 5
         while True:
-            b_timestamp = base_redis.hget('H:scale', 'timestamp')
-            b_num = base_redis.hget('H:scale', 'num')
+            b_timestamp = base_redis.hget('H:scale', 'meow_timestamp')
+            b_num = base_redis.hget('H:scale', 'meow_num')
             b_timestamp = 0 if b_timestamp is None else int(b_timestamp)
             b_num = 0 if b_num is None else int(b_num)
             
@@ -81,10 +81,10 @@ def watch():
             info = base_redis.info('Keyspace')
             num = info['db1']['keys']
             timestamp = int(time.time())
-            base_redis.hset('H:scale', 'num', num)
-            base_redis.hset('H:scale', 'timestamp', timestamp)
+            base_redis.hset('H:scale', 'meow_num', num)
+            base_redis.hset('H:scale', 'meow_timestamp', timestamp)
             
-            print '已经导入 %s ，%d 内秒速 %s 个/s' % (
+            print 'meow: 已经导入 %s ，%d 内秒速 %s 个/s' % (
                                       format(num, ','),
                                       timestamp - b_timestamp,
                                       format((num - b_num) / (timestamp - b_timestamp), ',')
