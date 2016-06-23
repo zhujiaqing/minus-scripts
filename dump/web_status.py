@@ -65,8 +65,8 @@ class status:
         web.header('Cache-Control', 'no-Cache') 
         meow_num, meow_speed = get_meow()
         youja_num, youja_speed = get_youja()
-        return 'meow num is %s, speed is %s 个/s<br/>' \
-            'youja num is %s, speed is %s 个/s' % (
+        return 'meow num is %s, speed is %s /s<br/>' \
+            'youja num is %s, speed is %s /s' % (
                                               format(meow_num, ','),
                                               format(meow_speed, ','),
                                               format(youja_num, ','),
@@ -78,7 +78,7 @@ class youja:
         web.header('Content-Type', 'text/html; charset=utf-8', unique=True) 
         web.header('Cache-Control', 'no-Cache') 
         youja_num, youja_speed = get_youja()
-        return 'meow num is %s, speed is %s 个/s' % (
+        return 'meow num is %s, speed is %s /s' % (
                                               format(youja_num, ','),
                                               format(youja_speed, ',')
                                               )
@@ -88,7 +88,7 @@ class meow:
         web.header('Content-Type', 'text/html; charset=utf-8', unique=True) 
         web.header('Cache-Control', 'no-Cache') 
         meow_num, meow_speed = get_meow()
-        return 'meow num is %s, speed is %s 个/s' % (
+        return 'meow num is %s, speed is %s /s' % (
                                               format(meow_num, ','),
                                               format(meow_speed, ',')
                                               )
