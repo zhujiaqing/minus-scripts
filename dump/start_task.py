@@ -50,6 +50,7 @@ def test():
     from meowchat_to_youja import Dump
     dump = Dump()
     uids = (17172928, 12011768, 15253309)
+    uids = (3407830, 3417163, 3517440, 3826975, 3617153, 4224119, 3007666, 2908330, 3707875)
     dump.repair(uids)
     dump.close_all()
 
@@ -94,7 +95,7 @@ def watch():
     except: pass
 
 if __name__ == '__main__':
-#     test()
-    watch()
+    test()
+#     watch()
 
     print '\nCompleted\n'
