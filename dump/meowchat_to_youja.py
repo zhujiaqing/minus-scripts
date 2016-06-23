@@ -235,7 +235,7 @@ class Dump:
     def upload_photo(self, user):
         self.logger.info('========> relatioin')
         try:
-            self.usa_redis.sadd('S:photo', user[0]) # 标记为后面准备上传图片
+            self.usa_redis.sadd('S:photo', user[0])  # 标记为后面准备上传图片
             self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
             
             # photo
@@ -285,12 +285,19 @@ class Dump:
             if 0 == size:break
             user = users[0]
             
+            start_time = time.time()
             # convert storage
-            self.logger.info('############## [temp conver storage] %s ##############' % user[0])
+            self.logger.info('##############>>> [repair start conver storage] %s - [%s]' % 
+                                 (user[0],
+                                  time.strftime('%Y-%m-%d %H:%M:%S')))
             self.user_account(user)
             self.user_profile(user)
             self.user_relation(user)
             self.upload_photo(user)
+            self.logger.info('##############>>> [repair end conver storage] %s - [%s], cost time %ss' % 
+                                 (user[0],
+                                  time.strftime('%Y-%m-%d %H:%M:%S'),
+                                  int(time.time() - start_time)))
 
 ################################### Execute #################################### 
 BASE_REDIS = redis.Redis(host="10.154.148.158", port=6379, db=5)

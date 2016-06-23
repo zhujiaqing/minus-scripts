@@ -49,7 +49,7 @@ def mutli_process():
 def test():
     from meowchat_to_youja import Dump
     dump = Dump()
-    uids = (17172928, 12011768, 15253309)
+#     uids = (17172928, 12011768, 15253309)
     uids = (3407830, 3417163, 3517440, 3826975, 3617153, 4224119, 3007666, 2908330, 3707875)
     dump.repair(uids)
     dump.close_all()
@@ -94,8 +94,22 @@ def watch():
 
     except: pass
 
+def repair(process_num=15):
+    from multiprocessing import Pool as JPool  # 多进程
+    from multiprocessing import cpu_count
+    
+    from meowchat_to_youja import Dump
+    dump = Dump()
+    
+    base_redis = redis.Redis(host="10.154.148.158", port=6379, db=5)
+    
+    pool = JPool(process_num * cpu_count())
+    pool.map(dump.repair, [base_redis.rpop('L:diff') for i in range(100)])  # @UnusedVariable
+    pool.close()
+    pool.join()
+
 if __name__ == '__main__':
-    test()
-#     watch()
+#     test()
+    watch()
 
     print '\nCompleted\n'
