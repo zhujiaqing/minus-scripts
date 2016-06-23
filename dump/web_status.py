@@ -14,11 +14,12 @@ sg_mysql = MySQLdb.connect(host='54.169.234.201', user='minus', passwd='minus', 
 def get_meow():
     b_timestamp = usa_redis.hget('H:scale', 'meow_timestamp')
     b_num = usa_redis.hget('H:scale', 'meow_num')
-    b_timestamp = 0 if b_timestamp is None else int(b_timestamp)
-    b_num = 0 if b_num is None else int(b_num)
+    b_timestamp = 0 if b_timestamp else int(b_timestamp)
+    b_num = 0 if b_num else int(b_num)
     
     info = usa_redis.info('Keyspace')
     num = info['db1']['keys']
+    
     timestamp = int(time.time())
     usa_redis.hset('H:scale', 'meow_num', num)
     usa_redis.hset('H:scale', 'meow_timestamp', timestamp)
@@ -26,14 +27,21 @@ def get_meow():
     return num, (num - b_num) / (timestamp - b_timestamp)
 
 def get_youja():
+    b_timestamp = usa_redis.hget('H:scale', 'youja_timestamp')
+    b_num = usa_redis.hget('H:scale', 'youja_num')
+    b_timestamp = 0 if b_timestamp else int(b_timestamp)
+    b_num = 0 if b_num else int(b_num)
+    
     cur = sg_mysql.cursor()
     cur.execute('select count(*) from user_status')
-    num = cur.fetchone()
+    num = int(cur.fetchone()[0])
     cur.close()
     
+    timestamp = int(time.time())
+    usa_redis.hset('H:scale', 'youja_num', num)
+    usa_redis.hset('H:scale', 'youja_timestamp', timestamp)
     
-    
-    return num
+    return num, (num - b_num) / (timestamp - b_timestamp)
 
 urls = (
     "/status", "status",
@@ -46,18 +54,30 @@ app = web.application(urls, globals())
 class status:
     def GET(self):
         meow_num, meow_speed = get_meow()
-        youja_num = get_youja()
-        return meow_num, meow_speed, youja_num
+        youja_num, youja_speed = get_youja()
+        return 'meow num is %s, speed is %s 个/s<br/>' \
+            'youja num is %s, speed is %s 个/s' % (
+                                              format(meow_num, ','),
+                                              format(meow_speed, ','),
+                                              format(youja_num, ','),
+                                              format(youja_speed, ',')
+                                              )
     
 class youja:
     def GET(self):
-        youja_num = get_youja()
-        return youja_num
+        youja_num, youja_speed = get_youja()
+        return 'meow num is %s, speed is %s 个/s' % (
+                                              format(youja_num, ','),
+                                              format(youja_speed, ',')
+                                              )
     
 class meow:
     def GET(self):
         meow_num, meow_speed = get_meow()
-        return meow_num, meow_speed
+        return 'meow num is %s, speed is %s 个/s' % (
+                                              format(meow_num, ','),
+                                              format(meow_speed, ',')
+                                              )
 
 if __name__ == "__main__":
     app.run()
