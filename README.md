@@ -36,5 +36,15 @@ curl -i \
 
 ```
 
+usa
+mysql -h10.169.235.151 -uroot -pcarlhu -Dminus -e"select id from minus_user" -N
+redis-cli -h 10.154.148.158 -n 10 SADD S:youja $(paste -s -d' ' $fff)
+
+sg
+mysql -h172.16.121.20 -uminus -pminus -Duplusmain -e"select id from user;" -N
+redis-cli -h 10.154.148.158 -n 10 SADD S:meow $(paste -s -d' ' $fff)
+
+sdiff
+redis-cli -h 10.154.148.158 -n 10 SDIFFSTORE S:diff S:meow S:youja
 
 
