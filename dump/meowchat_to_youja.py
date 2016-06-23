@@ -243,7 +243,7 @@ class Dump:
             self.logger.info(self.usa_redis.hgetall('H:%s' % user[0]))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
-    def more_user_with_mutli(self, limit=100):
+    def more_user_with_mutli(self, limit=1000):
         while True:
             user_sql = 'select * from minus_user where id>%s and id<=%s limit %d' % (self.start_uid, self.stop_uid, limit)
             user_size = self.cur.execute(user_sql)
@@ -288,8 +288,12 @@ class Dump:
                 self.user_relation(user)
                 self.upload_photo(user)
 
+################################### Execute #################################### 
 BASE_REDIS = redis.Redis(host="10.154.148.158", port=6379, db=5)
 KEY_TASK = 'L:task'
+MAX_UID = 20000000
+SINGLE_TASK_SIZE = 10000
+MAX_TASK_NUMBER = MAX_UID / SINGLE_TASK_SIZE
 def manual_start(x):
     task = BASE_REDIS.rpop(KEY_TASK)
     print x, task, time.time()
@@ -302,7 +306,7 @@ def mutliprocess_start(process_num=15, limit=1000):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, (i for i in range(100)))
+    pool.map(manual_start, (i for i in range(MAX_TASK_NUMBER)))
     pool.close()
     pool.join()
     
@@ -312,11 +316,10 @@ def init_task():
     若任务池存在就跳过，其它机器其它进程共用
     """
     time.sleep(random.randint(1, 5))  # 避免多台机器都在创建任务
+    
     if not BASE_REDIS.exists(KEY_TASK):
-        max_uid = 20000000  # max loop is 200
-        num = 10000
-        for i in range(max_uid / num):
-            BASE_REDIS.lpush(KEY_TASK, (i * num, (i + 1) * num))
+        for i in range(MAX_TASK_NUMBER):
+            BASE_REDIS.lpush(KEY_TASK, (i * SINGLE_TASK_SIZE, (i + 1) * SINGLE_TASK_SIZE))
 
     print 'task size: %s' % BASE_REDIS.llen(KEY_TASK)
     
