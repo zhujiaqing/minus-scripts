@@ -280,9 +280,9 @@ class Dump:
     def repair(self, uids=()):
         for uid in uids:
             user_sql = 'select * from minus_user where id = %s' % uid
-            size=self.cur.execute(user_sql)
+            size = self.cur.execute(user_sql)
             users = self.cur.fetchall()
-            if 0==size:break
+            if 0 == size:break
             user = users[0]
             
             # convert storage
@@ -300,7 +300,7 @@ SINGLE_TASK_SIZE = 10000
 MAX_TASK_NUMBER = MAX_UID / SINGLE_TASK_SIZE
 def manual_start(x):
     task = BASE_REDIS.rpop(KEY_TASK)
-    print task
+    print task, list(task)[0]
     dump = Dump(task[0], task[1])
     dump.more_user_with_mutli()
     dump.close_all()
