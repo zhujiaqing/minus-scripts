@@ -13,8 +13,9 @@ def repair(process_num=20):
     
     base_redis = redis.Redis(host="10.154.148.158", port=6379, db=10)
     
-    pool = JPool(process_num * cpu_count())
-    pool.map(dump.repair, [base_redis.rpop('L:diff') for i in range(1000)])  # @UnusedVariable
+#     pool = JPool(process_num * cpu_count())
+    pool = JPool(2)
+    pool.map(dump.repair, [base_redis.rpop('L:diff') for i in range(10)])  # @UnusedVariable
     pool.close()
     pool.join()
 
