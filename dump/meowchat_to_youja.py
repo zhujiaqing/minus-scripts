@@ -299,9 +299,10 @@ MAX_UID = 20000000
 SINGLE_TASK_SIZE = 10000
 MAX_TASK_NUMBER = MAX_UID / SINGLE_TASK_SIZE
 def manual_start(x):
-    task = BASE_REDIS.rpop(KEY_TASK)
-    print task, list(task)[0]
-    dump = Dump(task[0], task[1])
+    task_id = BASE_REDIS.rpop(KEY_TASK)
+    if task_id is None:return
+    
+    dump = Dump(int(task_id) * SINGLE_TASK_SIZE, (int(task_id) + 1) * SINGLE_TASK_SIZE)
     dump.more_user_with_mutli()
     dump.close_all()
 
@@ -319,11 +320,11 @@ def init_task():
     初始化任务
     若任务池存在就跳过，其它机器其它进程共用
     """
-    time.sleep(random.randint(1, 5))  # 避免多台机器都在创建任务
+#     time.sleep(random.randint(1, 3))  # 避免多台机器都在创建任务
+    BASE_REDIS.delete(KEY_TASK)
     
     if not BASE_REDIS.exists(KEY_TASK):
-        for i in range(10, MAX_TASK_NUMBER):
-            BASE_REDIS.lpush(KEY_TASK, (i * SINGLE_TASK_SIZE, (i + 1) * SINGLE_TASK_SIZE))
+        for i in range(10, MAX_TASK_NUMBER):BASE_REDIS.lpush(KEY_TASK, i)
 
     print 'task size: %s' % BASE_REDIS.llen(KEY_TASK)
     
