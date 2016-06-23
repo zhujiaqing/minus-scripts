@@ -52,6 +52,7 @@ def get_youja():
     return num, (num - b_num) / (timestamp - b_timestamp)
 
 urls = (
+    "/favicon.ico", "favicon",
     "/status", "status",
     "/youja", "youja",
     "/meow", "meow",
@@ -59,6 +60,10 @@ urls = (
     )
 app = web.application(urls, globals())
 
+class favicon:
+    def GET(self):
+        return ""
+    
 class status:
     def GET(self):
         web.header('Content-Type', 'text/html; charset=utf-8', unique=True) 
