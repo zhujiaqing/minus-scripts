@@ -201,13 +201,14 @@ class Dump:
                                 "isLiked":"1",
                                 "createTime": time.mktime(time.strptime(str(er.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
                          })
-            payload = {
-                       "list":er_list,
-                       "uid":str(user[0]),
-                       "type":"0"
-                   }
-            self.logger.info(simplejson.dumps(payload))
-            self.api_request(uri=uri, body=simplejson.dumps(payload))
+            if 0 < len(er_list):  # 当没有关系时不用请求
+                payload = {
+                           "list":er_list,
+                           "uid":str(user[0]),
+                           "type":"0"
+                       }
+                self.logger.info(simplejson.dumps(payload))
+                self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
         try:
@@ -220,19 +221,21 @@ class Dump:
                                 "isLiked":"1",
                                 "createTime": time.mktime(time.strptime(str(ee.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
                          })
-            payload = {
-                       "list":ee_list,
-                       "uid":str(user[0]),
-                       "type":"1"
-                   }
-            self.logger.info(simplejson.dumps(payload))
-            self.api_request(uri=uri, body=simplejson.dumps(payload))
+            
+            if 0 < len(ee_list):  # 当没有关系时不用请求
+                payload = {
+                           "list":ee_list,
+                           "uid":str(user[0]),
+                           "type":"1"
+                       }
+                self.logger.info(simplejson.dumps(payload))
+                self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
 
     def upload_photo(self, user):
         self.logger.info('========> relatioin')
         try:
-            self.usa_redis.sadd('S:photo', user[0])
+            self.usa_redis.sadd('S:photo', user[0]) # 标记为后面准备上传图片
             self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
             
             # photo
@@ -307,7 +310,7 @@ def mutliprocess_start(process_num=15, limit=1000):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, (i for i in range(MAX_TASK_NUMBER/5)))
+    pool.map(manual_start, (i for i in range(MAX_TASK_NUMBER / 5)))
     pool.close()
     pool.join()
     
