@@ -48,3 +48,8 @@ sdiff
 redis-cli -h 10.154.148.158 -n 10 SDIFFSTORE S:diff S:meow S:youja
 
 
+screen python dump/meowchat_to_youja.py &
+
+
+
+
