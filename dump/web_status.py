@@ -92,7 +92,7 @@ class meow:
     def GET(self):
         web.header('Content-Type', 'text/html; charset=utf-8', unique=True) 
         web.header('Cache-Control', 'no-Cache') 
-        web.header('"Refresh', 5)
+        web.header('Refresh', 5)
         meow_num, meow_speed = get_meow()
         return 'meow num is %s, speed is %s /s' % (
                                               format(meow_num, ','),
