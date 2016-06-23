@@ -72,8 +72,9 @@ def watch():
         delay = 5
         while True:
             os.system('clear')
-            info_keyspace = simplejson.loads(base_redis.info('Keyspace'))
-            
+#             info_keyspace = simplejson.loads(base_redis.info('Keyspace'))
+            info_keyspace = base_redis.info('Keyspace')
+            print info_keyspace['db1']
             time.sleep(delay)
 
     except: pass
