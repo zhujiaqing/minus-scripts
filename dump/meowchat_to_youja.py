@@ -246,6 +246,9 @@ class Dump:
     def more_user_with_mutli(self, limit=1000):
         while True:
             user_sql = 'select * from minus_user where id>%s and id<=%s limit %d' % (self.start_uid, self.stop_uid, limit)
+            print user_sql
+            break
+            
             user_size = self.cur.execute(user_sql)
             users = self.cur.fetchall()
             if 0 == user_size : break
@@ -277,16 +280,17 @@ class Dump:
     def repair(self, uids=()):
         for uid in uids:
             user_sql = 'select * from minus_user where id = %s' % uid
-            self.cur.execute(user_sql)
+            size=self.cur.execute(user_sql)
             users = self.cur.fetchall()
-        
+            if 0==size:break
+            user = users[0]
+            
             # convert storage
-            for user in users:
-                self.logger.info('############## [temp conver storage] %s ##############' % user[0])
-                self.user_account(user)
-                self.user_profile(user)
-                self.user_relation(user)
-                self.upload_photo(user)
+            self.logger.info('############## [temp conver storage] %s ##############' % user[0])
+            self.user_account(user)
+            self.user_profile(user)
+            self.user_relation(user)
+            self.upload_photo(user)
 
 ################################### Execute #################################### 
 BASE_REDIS = redis.Redis(host="10.154.148.158", port=6379, db=5)
@@ -296,6 +300,7 @@ SINGLE_TASK_SIZE = 10000
 MAX_TASK_NUMBER = MAX_UID / SINGLE_TASK_SIZE
 def manual_start(x):
     task = BASE_REDIS.rpop(KEY_TASK)
+    print task
     dump = Dump(task[0], task[1])
     dump.more_user_with_mutli()
     dump.close_all()
