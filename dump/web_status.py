@@ -28,6 +28,8 @@ def get_meow():
     usa_redis.hset('H:scale', 'meow_num', num)
     usa_redis.hset('H:scale', 'meow_timestamp', timestamp)
     
+    print b_timestamp, b_num, timestamp, num
+    
     return num, (num - b_num) / (timestamp - b_timestamp)
 
 def get_youja():
@@ -44,6 +46,8 @@ def get_youja():
     timestamp = int(time.time())
     usa_redis.hset('H:scale', 'youja_num', num)
     usa_redis.hset('H:scale', 'youja_timestamp', timestamp)
+    
+    print b_timestamp, b_num, timestamp, num
     
     return num, (num - b_num) / (timestamp - b_timestamp)
 
