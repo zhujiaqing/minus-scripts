@@ -16,7 +16,7 @@ def repair(process_num=20):
     pool = JPool(2)
 #     pool.map(dump.repair, [base_redis.spop('S:diff') for i in range(10)])  # @UnusedVariable
 
-    pool.map(dump.repair, [[16876896, 16876897, 16876898], [16876899, 16876900, 16876901], [16876902, 16876903, 16876904, 17171928]]) 
+    pool.map(dump.repair, set([[16876896, 16876897, 16876898], [16876899, 16876900, 16876901], [16876902, 16876903, 16876904, 17171928]])) 
     pool.close()
     pool.join()
 
