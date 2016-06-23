@@ -246,9 +246,6 @@ class Dump:
     def more_user_with_mutli(self, limit=1000):
         while True:
             user_sql = 'select * from minus_user where id>%s and id<=%s limit %d' % (self.start_uid, self.stop_uid, limit)
-            print user_sql
-            break
-            
             user_size = self.cur.execute(user_sql)
             users = self.cur.fetchall()
             if 0 == user_size : break
@@ -320,8 +317,8 @@ def init_task():
     初始化任务
     若任务池存在就跳过，其它机器其它进程共用
     """
-#     time.sleep(random.randint(1, 3))  # 避免多台机器都在创建任务
-    BASE_REDIS.delete(KEY_TASK)
+    time.sleep(random.randint(1, 3))  # 避免多台机器都在创建任务
+#     BASE_REDIS.delete(KEY_TASK)
     
     if not BASE_REDIS.exists(KEY_TASK):
         for i in range(10, MAX_TASK_NUMBER):BASE_REDIS.lpush(KEY_TASK, i)
