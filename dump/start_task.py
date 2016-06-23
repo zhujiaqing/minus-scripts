@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*-coding:UTF8-*-
 
+import os
+import time
+
+import redis
+
+
 def task(l_min=0, l_max=1, num=10000):
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % (l_min * num)
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py %d 200000000 &\n' % (l_max * num)
@@ -23,7 +29,6 @@ def task(l_min=0, l_max=1, num=10000):
          
     '''
 
-import time
 def func(arg):
     print time.strftime('%H:%M:%S'), arg[0], arg[1]
     time.sleep(2)
@@ -45,7 +50,9 @@ def mutli_process():
 def test():
     from meowchat_to_youja import Dump
     dump = Dump()
-    dump.temp_20160617()
+    uids = (17172928, 12011768, 15253309)
+    dump.repair(uids)
+    dump.close_all()
 
 def thread_func(thread_name, delay):
     while True:
@@ -59,13 +66,19 @@ def test_thread():
         print 'Main'
         time.sleep(10)
 
+def watch():
+    try:
+        base_redis = redis.Redis(host="10.154.148.158", port=6379, db=5)
+        delay = 5 * 60
+        while True:
+            os.system('clear')
+            print base_redis.info('Keyspace')
+            time.sleep(delay)
+
+    except: pass
+
 if __name__ == '__main__':
-#     task(l_min=10, l_max=200, num=100000)
+#     test()
+    watch()
 
-#     mutli_process()
-    
-    test()
-
-#     test_thread()
-    
     print '\nCompleted\n'
