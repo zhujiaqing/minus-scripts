@@ -101,7 +101,7 @@ def repair(process_num=15):
     from meowchat_to_youja import Dump
     dump = Dump()
     
-    base_redis = redis.Redis(host="10.154.148.158", port=6379, db=5)
+    base_redis = redis.Redis(host="10.154.148.158", port=6379, db=10)
     
     pool = JPool(process_num * cpu_count())
     pool.map(dump.repair, [base_redis.rpop('L:diff') for i in range(100)])  # @UnusedVariable
