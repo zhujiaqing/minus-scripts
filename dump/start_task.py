@@ -5,7 +5,6 @@ import os
 import time
 
 import redis
-import simplejson
 
 def task(l_min=0, l_max=1, num=10000):
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % (l_min * num)
@@ -71,10 +70,23 @@ def watch():
         base_redis = redis.Redis(host="10.154.148.158", port=6379, db=5)
         delay = 5
         while True:
+            b_timestamp = base_redis.hget('H:scale', 'timestamp')
+            b_num = base_redis.hget('H:scale', 'num')
+            
             os.system('clear')
-#             info_keyspace = simplejson.loads(base_redis.info('Keyspace'))
-            info_keyspace = base_redis.info('Keyspace')
-            print info_keyspace['db1']
+            
+            info = base_redis.info('Keyspace')
+            num = info['db1']['keys']
+            timestamp = int(time.time())
+            base_redis.hset('H:scale', 'num', num)
+            base_redis.hset('H:scale', 'timestamp', timestamp)
+            
+            print '已经导入 %s ，%d 内秒速 %d 个/s' % (
+                                      format(num),
+                                      timestamp - b_timestamp,
+                                      num / (timestamp - b_timestamp)
+                                      )
+            
             time.sleep(delay)
 
     except: pass
