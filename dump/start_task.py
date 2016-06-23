@@ -84,7 +84,7 @@ def watch():
             print '已经导入 %s ，%d 内秒速 %d 个/s' % (
                                       format(num),
                                       timestamp - b_timestamp,
-                                      num / (timestamp - b_timestamp)
+                                      (num - b_num) / (timestamp - b_timestamp)
                                       )
             
             time.sleep(delay)
