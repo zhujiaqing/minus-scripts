@@ -37,11 +37,12 @@ curl -i \
 ```
 
 usa
-mysql -h10.169.235.151 -uroot -pcarlhu -Dminus -e"select id from minus_user" -N
+mysql -h10.169.235.151 -uroot -pcarlhu -Dminus -e"select id from minus_user" -N > user_id-20160623.txt
 redis-cli -h 10.154.148.158 -n 10 SADD S:youja $(paste -s -d' ' $fff)
 
 sg
-mysql -h172.16.121.20 -uminus -pminus -Duplusmain -e"select id from user;" -N
+mysql -h172.16.121.20 -uminus -pminus -Duplusmain -e"select id from user;" -N > user_id-20160623.txt
+mysql -h172.16.121.20 -uminus -pminus -Duplusmain -e"select user_id from user_status;" -N > user_id-20160623.txt
 redis-cli -h 10.154.148.158 -n 10 SADD S:meow $(paste -s -d' ' $fff)
 
 sdiff
