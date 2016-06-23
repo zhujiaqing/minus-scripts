@@ -10,7 +10,7 @@ def manual_start(x):
     dump = Dump()
     
     base_redis = redis.Redis(host="10.154.148.158", port=6379, db=10)
-    uids = [16876896, 16876897, 16876898, 16876899]
+    uids = [base_redis.spop('S:diff') for i in range(10)]  # @UnusedVariable
     dump.repair(uids)
     dump.close_all()
 
