@@ -14,7 +14,7 @@ def manual_start(x):
     dump.repair(uids)
     dump.close_all()
 
-def repair(process_num=20):
+def repair(process_num=10):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     
