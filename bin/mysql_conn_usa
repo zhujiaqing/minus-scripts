@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# slave: 10.203.198.75
+# slave: 10.169.235.151
+# slave: 10.231.129.198
+
 mysql -h10.231.129.198 -uroot -pcarlhu -Dminus
 
 
