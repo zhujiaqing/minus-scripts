@@ -275,7 +275,7 @@ class Dump:
 
             if limit > user_size:break
             
-    def repair(self, uids=()):
+    def repair(self, uids=[]):
         for uid in uids:
             start_time = time.time()
             
