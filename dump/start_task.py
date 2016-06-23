@@ -5,7 +5,7 @@ import os
 import time
 
 import redis
-
+import simplejson
 
 def task(l_min=0, l_max=1, num=10000):
     print 'screen python ~/minus-scripts/dump/meowchat_to_youja.py 0 %d &\n' % (l_min * num)
@@ -69,10 +69,11 @@ def test_thread():
 def watch():
     try:
         base_redis = redis.Redis(host="10.154.148.158", port=6379, db=5)
-        delay = 5 * 60
+        delay = 5
         while True:
             os.system('clear')
-            print base_redis.info('Keyspace')
+            info_keyspace = simplejson.loads(base_redis.info('Keyspace'))
+            
             time.sleep(delay)
 
     except: pass
