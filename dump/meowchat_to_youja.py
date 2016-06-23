@@ -296,17 +296,16 @@ SINGLE_TASK_SIZE = 10000
 MAX_TASK_NUMBER = MAX_UID / SINGLE_TASK_SIZE
 def manual_start(x):
     task = BASE_REDIS.rpop(KEY_TASK)
-    print x, task, time.time()
-    
-#     dump = Dump(arg[0], arg[1])
-#     dump.more_user_with_mutli(limit)
-#     dump.close_all()
+    dump = Dump(task[0], task[1])
+    dump.more_user_with_mutli()
+    dump.close_all()
 
 def mutliprocess_start(process_num=15, limit=1000):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, (i for i in range(MAX_TASK_NUMBER)))
+#     pool.map(manual_start, (i for i in range(MAX_TASK_NUMBER/5)))
+    pool.map(manual_start, (i for i in range(1)))
     pool.close()
     pool.join()
     
@@ -318,7 +317,7 @@ def init_task():
     time.sleep(random.randint(1, 5))  # 避免多台机器都在创建任务
     
     if not BASE_REDIS.exists(KEY_TASK):
-        for i in range(MAX_TASK_NUMBER):
+        for i in range(10, MAX_TASK_NUMBER):
             BASE_REDIS.lpush(KEY_TASK, (i * SINGLE_TASK_SIZE, (i + 1) * SINGLE_TASK_SIZE))
 
     print 'task size: %s' % BASE_REDIS.llen(KEY_TASK)
