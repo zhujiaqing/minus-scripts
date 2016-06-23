@@ -7,13 +7,11 @@ import logging  # @UnusedImport
 import logging.handlers
 import sys
 import time
-import random
 
 import MySQLdb
 import httplib2
 import redis
 import simplejson
-
 
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
@@ -35,113 +33,61 @@ class Dump:
         self.logger.info('[%s] ============= init task: %s ~ %s =============' % (time.strftime('%Y:%m:%d %H:%M:%S'), start_uid, stop_uid))
         
         self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
-        self.cur = self.usa_mysql.cursor()
+        self.usa_cur = self.usa_mysql.cursor()
         
-        self.usa_cluster = Cluster(
-                           ['10.140.244.182', '10.137.127.31', '10.183.33.73', '10.35.179.200', '10.71.191.186', '10.187.62.106'],
-                           protocol_version=3)
+#         self.sg_mysql = MySQLdb.connect(host='54.169.234.201', user='minus', passwd='minus', charset='utf8', db='minus', port=3306)
+#         self.sg_cur = self.sg_mysql.cursor()
+        
+        self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
     
         self.usa_redis = redis.Redis(host="10.154.148.158", port=6379, db=1)
+        
+#         self.sg_redis = redis.Redis(host="54.169.234.201", port=6379, db=1)
     
-    def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
-        start_time = time.time()
-        if uri is None or body is None: 
-            self.logger.info('Not api request')
-            return 
-        try:
-            headers = {'Content-Type': 'application/json;charset=UTF-8'}
-            conn = httplib.HTTPConnection(host, port, timeout=2000)
-            conn.request(method, uri, body=body, headers=headers)
-            response = conn.getresponse()
-            status = response.status
-            self.logger.info(status)
-            self.logger.info(response.read())
-        except Exception as ex:
-            self.logger.warn('Exception %s' % str(ex))
-        finally:
-            self.logger.info('api request cost time: %ss' % int(time.time() - start_time))
-    
-    def photo_upload(self, host='resource.api.imyoujia.com', port=80, method='PUT', uri=None, key=None):
-        if uri is None or key is None: 
-            self.logger.info('Not file upload')
-            return 
-        try:
-            url = 'https://d1uk5e10lg6nan.cloudfront.net/j%s.jpg' % key
-            url = 'http://medical.8ops.com/images/2016/04/14/1a.jpg'
-            conn = httplib2.Http()
-            resp, body = conn.request(url, 'GET')
-            self.logger.info('Download {"status":%s}' % resp['status'])
-            
-            headers = {'Content-Type': 'image/jpeg;charset=UTF-8', 'Content-Length':0}
-            conn = httplib.HTTPConnection(host, port, timeout=2000)
-            conn.request(method, uri, body=body, headers=headers)
-            response = conn.getresponse()
-            status = response.status
-            self.logger.info(status)
-            self.logger.info(response.read())
-        except Exception as ex:
-            self.logger.warn('Exception %s' % str(ex))
-
     def user_account(self, user):
         self.logger.info('========> account')
-        try:
-            uri = '/uplus-api/meow/import/useraccount'
-            payload = {
-                        "nick_name": str(user[24]),
-                        "username": str(user[1]),
-                        "password": str(user[3]),
-                        "email": str(user[2]),
-                        "sign_type": "20",
-                        "user_id": str(user[0]),
-                        "au_id": "20",
-                        "security_token": "20",
-                        "access_token": "20"
-                        }
-            self.logger.info(payload)
-            self.api_request(uri=uri, body=simplejson.dumps(payload))
-        except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+
+        # account_auth
+        print 'insert into account_auth(username,email,password,user_id,create_time) values("%s","%s","%s",%s,"%s")' % (
+                                                                                                            str(user[1]),
+                                                                                                            str(user[2]),
+                                                                                                            str(user[3]),
+                                                                                                            str(user[0]),
+                                                                                                            str(user[5]))
+        # user_bind
+        print 'insert into user_bind(user_id,bind_type,bind_id) values(%s,%s,%s)' % (user[0], 20, 1)  # TODO cur.lastrowid or con.insert_id()
         
-        # facebook
+        # facebook_auth
         if user[16] != '':
-            self.logger.info('========> facebook')
-            try:
-                payload = {
-                            "nick_name": str(user[24]),
-                            "username": str(user[1]),
-                            "password": str(user[3]),
-                            "email": str(user[2]),
-                            "sign_type": "16",
-                            "user_id": str(user[0]),
-                            "au_id": str(user[16]),
-                            "security_token": "",
-                            "access_token": str(user[19])
-                        }
-                self.logger.info(simplejson.dumps(payload))
-                self.api_request(uri=uri, body=simplejson.dumps(payload))
-            except Exception as ex:print 'Exception %s' % str(ex)
+            print 'insert into facebook_auth(username,nick_name,user_id,access_token,create_time) values("%s","%s","%s",%s,"%s")' % (
+                                                                                                           str(user[16]),
+                                                                                                           str(user[1]),
+                                                                                                           user[0],
+                                                                                                           str(user[19]),
+                                                                                                           str(user[5]))
+            # user_bind
+            print 'insert into user_bind(user_id,bind_type,bind_id) values(%s,%s,%s)' % (user[0], 16, 1)  # TODO cur.lastrowid or con.insert_id()
         
-        # twitter
+        # twitter_auth
         if user[15] != '':
-            self.logger.info('========> twitter')
-            try:
-                payload = {
-                            "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
-                            "username": str(user[1]),
-                            "password": str(user[3]),
-                            "email": str(user[2]),
-                            "sign_type": "17",
-                            "user_id": str(user[0]),
-                            "au_id": str(user[15]),
-                            "security_token": str(user[13]),
-                            "access_token": str(user[12])
-                        }
-                self.logger.info(simplejson.dumps(payload))
-                self.api_request(uri=uri, body=simplejson.dumps(payload))
-            except Exception as ex:self.logger.warn('Exception %s' % str(ex))
+            print 'insert into twitter_auth(username,nick_name,user_id,access_token,create_time) values("%s","%s","%s",%s,"%s")' % (
+                                                                                                           str(user[15]),
+                                                                                                           str(user[1]),
+                                                                                                           user[0],
+                                                                                                           str(user[12]),
+                                                                                                           str(user[5]))
+            # user_bind
+            print 'insert into user_bind(user_id,bind_type,bind_id) values(%s,%s,%s)' % (user[0], 17, 1)  # TODO cur.lastrowid or con.insert_id()
     
     def user_profile(self, user):
         self.logger.info('========> profile')
+        
+        # device_record
+        print 'insert into device_record(device_record,user_id,ua,create_time) values("%s",%s,"meow","%s")' % ("deviceid", user[0], str(user[5]))  # TODO create deviceid 
+        
+        # dvbf47ded24d0f42058c76bfc864ddc7a80000101523342a4a
+        
         try:
             # birthdate
             birthdate_sql = 'select * from minus_userbirthdate where user_id=%s' % user[0]
@@ -155,13 +101,20 @@ class Dump:
             genders = self.cur.fetchall()
             gender = None if 0 == gender_size else genders[0]
             
+            # user
+            print 'insert into user(id,udid,available,gender) values(%s,"%s",1,)' % (
+                                                                           user[0],
+                                                                           'udid',
+                                                                           str('2' if gender is None else gender[1]))
+            # 985fcd7c-d6ea-41ce-9c0c-5de5115f237bdv0da6651800a84b00945889886d9f00b30000105567ccade7
+            
             # balance
             coins = score = 0
             for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % user[0]):
                 coins = balance.coins if balance.coins is not None else 0
                 score = balance.score if balance.score is not None else 0
                 
-            uri = '/uplus-api/meow/import/userprofile'
+            uri = '/moplus-service/meow/import/userprofile'
             payload = {
                         "birthday": str('1995-01-01' if birthdate is None else birthdate[1]),
                         "fans_count": "0",
@@ -192,7 +145,7 @@ class Dump:
     def user_relation(self, user):
         self.logger.info('========> relatioin')
         try:
-            uri = '/uplus-api/meow/import/relation'
+            uri = '/moplus-service/meow/import/relation'
             er_list = []
             for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % user[0]):
                 er_list.append({
@@ -211,7 +164,7 @@ class Dump:
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
         try:
-            uri = '/uplus-api/meow/import/relation'
+            uri = '/moplus-service/meow/import/relation'
             ee_list = []
             for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % user[0]):
                 ee_list.append({
@@ -245,7 +198,7 @@ class Dump:
         
     def more_user_with_mutli(self, limit=100):
         while True:
-            user_sql = 'select * from minus_user where id>%s and id<=%s limit %d' % (self.start_uid, self.stop_uid, limit)
+            user_sql = 'select * from minus_user where id>%s and id<%s limit %d' % (self.start_uid, self.stop_uid, limit)
             user_size = self.cur.execute(user_sql)
             users = self.cur.fetchall()
             if 0 == user_size : break
@@ -266,63 +219,37 @@ class Dump:
                 self.logger.info('##############>>> [end conver storage] %s - [%s], cost time %ss' % 
                                  (user[0],
                                   time.strftime('%Y-%m-%d %H:%M:%S'),
-                                  int(time.time() - start_time)))
+                                  time.time() - start_time))
 
             if limit > user_size:break
-     
-    def close_all(self):
-        self.cur.close()
-        self.usa_mysql.close()
+        else:
+            self.cur.close()
             
-    def repair(self, uids=()):
-        for uid in uids:
-            user_sql = 'select * from minus_user where id = %s' % uid
-            self.cur.execute(user_sql)
-            users = self.cur.fetchall()
-        
-            # convert storage
-            for user in users:
-                self.logger.info('############## [temp conver storage] %s ##############' % user[0])
-                self.user_account(user)
-                self.user_profile(user)
-                self.user_relation(user)
-                self.upload_photo(user)
 
-BASE_REDIS = redis.Redis(host="10.154.148.158", port=6379, db=5)
-KEY_TASK = 'L:task'
-def manual_start(limit):
-    task = BASE_REDIS.rpop(KEY_TASK)
-    print task, time.time()
+def manual_start(arg):
+    dump = Dump(arg[0], arg[1])
+    dump.more_user_with_mutli(arg[2])
+
+def mutliprocess_start_02(salt=0.0):
+    max_uid = 20000000
+    arg = []
+    num = 100000
+    limit = 100
+    step = int(num * salt)
+    for i in range(max_uid / num, max_uid / num):
+        arg.append((i * num + step, (i + 1) * num, limit))
     
-#     dump = Dump(arg[0], arg[1])
-#     dump.more_user_with_mutli(limit)
-#     dump.close_all()
-
-def mutliprocess_start(process_num=15, limit=1000):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
-    pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, limit)
+    pool = JPool(10 * cpu_count())
+    pool.map(manual_start, arg)
     pool.close()
     pool.join()
     
-def init_task():
-    """
-    初始化任务
-    若任务池存在就跳过，其它机器其它进程共用
-    """
-    time.sleep(random.randint(1, 5))  # 避免多台机器都在创建任务
-    if not BASE_REDIS.exists(KEY_TASK):
-        max_uid = 20000000  # max loop is 200
-        num = 10000
-        for i in range(max_uid / num):
-            BASE_REDIS.lpush(KEY_TASK, (i * num, (i + 1) * num))
-
 if __name__ == '__main__':
     print '\n[%s] Dump start\n' % time.strftime('%Y-%m-%d %H:%M:%S')
+    args = sys.argv
     
-    init_task()
-    mutliprocess_start()
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 

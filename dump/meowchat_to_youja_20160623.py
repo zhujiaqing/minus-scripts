@@ -7,7 +7,6 @@ import logging  # @UnusedImport
 import logging.handlers
 import sys
 import time
-import random
 
 import MySQLdb
 import httplib2
@@ -37,9 +36,7 @@ class Dump:
         self.usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
         self.cur = self.usa_mysql.cursor()
         
-        self.usa_cluster = Cluster(
-                           ['10.140.244.182', '10.137.127.31', '10.183.33.73', '10.35.179.200', '10.71.191.186', '10.187.62.106'],
-                           protocol_version=3)
+        self.usa_cluster = Cluster(['10.140.244.182', '10.137.127.31'], protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
     
         self.usa_redis = redis.Redis(host="10.154.148.158", port=6379, db=1)
@@ -82,6 +79,166 @@ class Dump:
             self.logger.info(response.read())
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
+    
+    def temp(self):
+        cur = self.usa_mysql.cursor()
+        m_sql = 'select * from minus_user where username="8ops2016"'
+        cur.execute(m_sql)
+        rows = cur.fetchall()
+        user = rows[0]
+        
+        uid = user[0]
+        
+        m_sql = 'select * from minus_userbirthdate where user_id=%s' % uid
+        cur.execute(m_sql)
+        rows = cur.fetchall()
+        birthdate = rows[0]
+        
+        m_sql = 'select * from minus_usergender where user_id=%s' % uid
+        cur.execute(m_sql)
+        rows = cur.fetchall()
+        gender = rows[0]
+        
+        cur.close()
+        
+        print uid, user, birthdate, gender
+        
+        #### ====>  cass
+        
+        # balance
+        for balance in  self.usa_session.execute('SELECT coins,score FROM users.score WHERE uid=%s;' % uid):
+            coins = balance.coins if balance.coins is not None else 0
+            score = balance.score if balance.score is not None else 0
+            print coins, score
+        
+        # photo
+        for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % uid):
+            for key in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
+                print key.view_id, item.dt
+        
+        # relation
+        for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
+            print er.follower_id, er.followee_id, er.dt
+    
+        for ee in self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid):
+            print ee.follower_id, ee.followee_id, ee.dt
+            
+            
+        #### ====> request
+        
+        # account
+        print '========> account'
+        uri = '/uplus-api/meow/import/useraccount'
+        payload = {
+                    "nick_name": str(user[24]),
+                    "username": str(user[1]),
+                    "password": str(user[3]),
+                    "email": str(user[2]),
+                    "sign_type": "20",
+                    "user_id": str(user[0]),
+                    "au_id": "20",
+                    "security_token": "20",
+                    "access_token": "20"
+                    }
+        print payload
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        # facebook
+        if user[16] != '':
+            print '========> facebook'
+            payload = {
+                        "nick_name": str(user[24]),
+                        "username": str(user[1]),
+                        "password": str(user[3]),
+                        "email": str(user[2]),
+                        "sign_type": "16",
+                        "user_id": str(user[0]),
+                        "au_id": str(user[16]),
+                        "security_token": "",
+                        "access_token": str(user[19])
+                    }
+            print payload
+            self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        # twitter
+        if user[15] != '':
+            print '========> twitter'
+            payload = {
+                        "nick_name": str(user[7]if '' == user[24] or None == user[24] else user[24]),
+                        "username": str(user[1]),
+                        "password": str(user[3]),
+                        "email": str(user[2]),
+                        "sign_type": "17",
+                        "user_id": str(user[0]),
+                        "au_id": str(user[15]),
+                        "security_token": str(user[13]),
+                        "access_token": str(user[12])
+                    }
+            print payload
+            self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        # profile
+        print '========> profile'
+        uri = '/uplus-api/meow/import/userprofile'
+        payload = {
+                    "birthday": str(birthdate[1]),
+                    "fans_count": "0",
+                    "sign_type": "20",
+                    "gift_count": "0",
+                    "avatarid": "0",
+                    "oauth_bind": "20",
+                    "nick_name": str(user[24]),
+                    "first_client_version": "5.1.0-test",
+                    "balance": str(coins),
+                    "reg_finish_datetime": str(user[5]),
+                    "glamour_count": str(score),
+                    "client_type": "8",
+                    "intruduction": str(user[8]),
+                    "avatar_status": "2",
+                    "name": str(user[7]),
+                    "ua": "meow",
+                    "gender": str(gender[1]),
+                    "user_id": str(uid),
+                    "id": str(uid),
+                    "login_count": "0",
+                    "client_version":"5.1.0-test"
+                 }
+        print payload
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
+        
+        # reloation
+        print '========> relatioin'
+        uri = '/uplus-api/meow/import/relation'
+        er_list = []
+        for er in self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid):
+            print er, str(er.dt)
+            er_list.append({
+                            "fromUserId":str(uid),
+                            "toUserId":str(er.followee_id),
+                            "isLiked":"1",
+                            "createTime": time.mktime(time.strptime(str(er.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
+                     })
+        payload = {
+                   "list":er_list,
+                   "uid":str(uid),
+                   "type":"0"
+               }
+        print payload
+        self.api_request(uri=uri, body=simplejson.dumps(payload))
+
+        print '========> avator'
+        # avator
+        uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=1&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
+        key = user[26]
+        print key, uri
+        self.photo_upload(uri=uri, key=key)
+ 
+        print '========> photo'
+        # photo
+        uri = '/uplusmain-file/resource_type/101?user_id=%s&albumid=0&optype=0&user_type=3&client_ver=4.0.1-g&token=s00e330000010c43d8ef768417140ca20ce417ba75c41be1c304cdda55efd28791048199c2b99261a0a1149' % uid
+        key = 'mJYT32il9pwe'
+        print key, uri
+        self.photo_upload(uri=uri, key=key)
 
     def user_account(self, user):
         self.logger.info('========> account')
@@ -243,6 +400,28 @@ class Dump:
             self.logger.info(self.usa_redis.hgetall('H:%s' % user[0]))
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
         
+    def more_user(self, start_uid=0, limit=100):
+        while True:
+            user_sql = 'select * from minus_user where id>%s limit %d' % (start_uid, limit)
+            user_size = self.cur.execute(user_sql)
+            users = self.cur.fetchall()
+            if 0 == user_size : break
+            start_uid = users[-1][0]
+            
+            # convert storage
+            for user in users:
+                self.logger.info('############## [conver storage] %s ##############' % user[0])
+                self.user_account(user)
+                self.user_profile(user, self.cur)
+                self.user_relation(user)
+                self.upload_photo(user)
+
+            self.usa_redis.bgsave()
+            if limit > user_size:break
+        
+        else:
+            self.cur.close()
+        
     def more_user_with_mutli(self, limit=100):
         while True:
             user_sql = 'select * from minus_user where id>%s and id<=%s limit %d' % (self.start_uid, self.stop_uid, limit)
@@ -269,60 +448,65 @@ class Dump:
                                   int(time.time() - start_time)))
 
             if limit > user_size:break
-     
-    def close_all(self):
-        self.cur.close()
-        self.usa_mysql.close()
+        else:
+            self.cur.close()
             
-    def repair(self, uids=()):
-        for uid in uids:
-            user_sql = 'select * from minus_user where id = %s' % uid
-            self.cur.execute(user_sql)
-            users = self.cur.fetchall()
+    def temp_20160617(self):
+        user_sql = 'select * from minus_user where id in (17172928,12011768,15253309)'
+        self.cur.execute(user_sql)
+        users = self.cur.fetchall()
         
-            # convert storage
-            for user in users:
-                self.logger.info('############## [temp conver storage] %s ##############' % user[0])
-                self.user_account(user)
-                self.user_profile(user)
-                self.user_relation(user)
-                self.upload_photo(user)
+        # convert storage
+        for user in users:
+            print user
+            self.logger.info('############## [temp conver storage] %s ##############' % user[0])
+            self.user_account(user)
+            self.user_profile(user)
+            self.user_relation(user)
+            self.upload_photo(user)
+        else:
+            self.cur.close()
 
-BASE_REDIS = redis.Redis(host="10.154.148.158", port=6379, db=5)
-KEY_TASK = 'L:task'
-def manual_start(limit):
-    task = BASE_REDIS.rpop(KEY_TASK)
-    print task, time.time()
+def manual_start(arg):
+    dump = Dump(arg[0], arg[1])
+    dump.more_user_with_mutli(arg[2])
+
+def mutliprocess_start(process_num=10, start=0, salt=0):
+    """
+    start: 从哪个范围开始
+    salt: 从范围中的多少开始加速
+    """
+    max_uid = 20000000 # max loop is 200
+    arg = []
+    num = 100000
+    limit = 1000
+    for i in range(start, max_uid / num):
+        arg.append((i * num + int(num * salt), (i + 1) * num, limit))
     
-#     dump = Dump(arg[0], arg[1])
-#     dump.more_user_with_mutli(limit)
-#     dump.close_all()
-
-def mutliprocess_start(process_num=15, limit=1000):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, limit)
+    pool.map(manual_start, arg)
     pool.close()
     pool.join()
     
-def init_task():
-    """
-    初始化任务
-    若任务池存在就跳过，其它机器其它进程共用
-    """
-    time.sleep(random.randint(1, 5))  # 避免多台机器都在创建任务
-    if not BASE_REDIS.exists(KEY_TASK):
-        max_uid = 20000000  # max loop is 200
-        num = 10000
-        for i in range(max_uid / num):
-            BASE_REDIS.lpush(KEY_TASK, (i * num, (i + 1) * num))
-
 if __name__ == '__main__':
     print '\n[%s] Dump start\n' % time.strftime('%Y-%m-%d %H:%M:%S')
+    args = sys.argv
     
-    init_task()
-    mutliprocess_start()
+#     arg = (0, 100, 100)  # start,stop,limit
+#     if 3 == len(args):arg = args[1:2]
+#     manual_start(arg)
+
+    if 2 == len(args):
+        if '01' == args[1] or '1' == args[1]:
+            mutliprocess_start(process_num=15, start=0, salt=0.8)
+        elif '02' == args[1] or '2' == args[1]:
+            mutliprocess_start(process_num=15, start=0, salt=0.6)
+        elif '03' == args[1] or '3' == args[1]:
+            mutliprocess_start(process_num=20, start=0, salt=0.05)
+        elif '04' == args[1] or '4' == args[1]:
+            mutliprocess_start(process_num=15, start=0, salt=0.4)
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
 
