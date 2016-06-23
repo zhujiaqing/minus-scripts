@@ -290,7 +290,7 @@ class Dump:
 
 BASE_REDIS = redis.Redis(host="10.154.148.158", port=6379, db=5)
 KEY_TASK = 'L:task'
-def manual_start(limit):
+def manual_start():
     task = BASE_REDIS.rpop(KEY_TASK)
     print task, time.time()
     
@@ -302,7 +302,7 @@ def mutliprocess_start(process_num=15, limit=1000):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, limit)
+    pool.map(manual_start)
     pool.close()
     pool.join()
     
@@ -318,6 +318,8 @@ def init_task():
         for i in range(max_uid / num):
             BASE_REDIS.lpush(KEY_TASK, (i * num, (i + 1) * num))
 
+    print 'task size: %s' % BASE_REDIS.llen(KEY_TASK)
+    
 if __name__ == '__main__':
     print '\n[%s] Dump start\n' % time.strftime('%Y-%m-%d %H:%M:%S')
     
