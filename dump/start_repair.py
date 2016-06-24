@@ -19,7 +19,7 @@ def repair(process_num=10):
     from multiprocessing import cpu_count
     
     pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, (i for i in range(10))) 
+    pool.map(manual_start, (i for i in range(100))) 
     pool.close()
     pool.join()
 
