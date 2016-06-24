@@ -7,7 +7,7 @@ from meowchat_to_youja import Dump
 
 
 def manual_start(x):
-    dump = Dump()
+    dump = Dump(start_uid=x)
     
     base_redis = redis.Redis(host="10.154.148.158", port=6379, db=10)
     uids = [base_redis.spop('S:diff') for i in range(100)]  # @UnusedVariable
@@ -19,7 +19,7 @@ def repair(process_num=10):
     from multiprocessing import cpu_count
     
     pool = JPool(process_num * cpu_count())
-    pool.map(manual_start, (i for i in range(500))) 
+    pool.map(manual_start, (i for i in range(10))) 
     pool.close()
     pool.join()
 
