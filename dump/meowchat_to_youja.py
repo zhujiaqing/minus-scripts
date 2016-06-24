@@ -300,6 +300,33 @@ class Dump:
                                   time.strftime('%Y-%m-%d %H:%M:%S'),
                                   int(time.time() - start_time)))
 
+    def repair_with_pop(self, usa_redis_10):
+        while True:
+            start_time = time.time()
+
+            uid = self.usa_redis_10.spop('S:diff')
+            if uid is None:break
+            
+            user_sql = 'select * from minus_user where id = %s' % uid
+            size = self.cur.execute(user_sql)
+            users = self.cur.fetchall()
+            if 0 == size:continue  # 没有结果集
+            user = users[0]
+            if '' == user[1] or user[1] is None:continue  # 若用户名为空直接丢弃
+                
+            # convert storage
+            self.logger.info('##############>>> [repair start conver storage] %s - [%s]' % 
+                                 (user[0],
+                                  time.strftime('%Y-%m-%d %H:%M:%S')))
+            self.user_account(user)
+            self.user_profile(user)
+            self.user_relation(user)
+            self.upload_photo(user)
+            self.logger.info('##############>>> [repair end conver storage] %s - [%s], cost time %ss' % 
+                                 (user[0],
+                                  time.strftime('%Y-%m-%d %H:%M:%S'),
+                                  int(time.time() - start_time)))
+
     def close_all(self):
         self.cur.close()
         self.usa_mysql.close()
