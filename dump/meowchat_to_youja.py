@@ -27,7 +27,8 @@ class Dump:
         handler.setFormatter(formatter)  # 为handler添加formatter
         self.logger = logging.getLogger('meow')  # 获取名为tst的logger
         self.logger.addHandler(handler)  # 为logger添加handler
-        self.logger.setLevel(logging.DEBUG)
+#         self.logger.setLevel(logging.DEBUG)
+        self.logger.setLevel(logging.CRITICAL)
         
         self.start_uid = start_uid
         self.stop_uid = stop_uid
