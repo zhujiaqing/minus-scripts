@@ -304,7 +304,7 @@ class Dump:
         while True:
             start_time = time.time()
 
-            uid = self.usa_redis_10.spop('S:diff')
+            uid = usa_redis_10.spop('S:diff')
             if uid is None:break
             
             user_sql = 'select * from minus_user where id = %s' % uid
