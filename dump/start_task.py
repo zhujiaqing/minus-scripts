@@ -51,5 +51,9 @@ if __name__ == '__main__':
     mutliprocess_start()
     
     print '\n[%s] Dump over\n' % time.strftime('%Y-%m-%d %H:%M:%S')
+    
+    while True:
+        print 'manual stop program'
+        time.sleep(60)
 
 
