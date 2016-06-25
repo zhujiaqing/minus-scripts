@@ -22,7 +22,7 @@ def manual_start_with_pop(x):
     dump.repair_with_pop(usa_redis_10)
     dump.close_all()
 
-def repair(process_num=10):
+def repair(process_num=20):
     from multiprocessing import Pool as JPool  # 多进程
     from multiprocessing import cpu_count
     
