@@ -98,8 +98,10 @@ class meow:
         web.header('Cache-Control', 'no-Cache') 
         web.header('Refresh', 15)
         meow_num, meow_speed = get_meow()
-        return '<H1>[%s] meow num is %s, speed is %s /s' \
-            '<BR/>cur task num is %s' \
+        return '<H1>[%s] ' \
+            '<BR/>meow num is %s' \
+            '<BR/>   speed is %s /s' \
+            '<BR/>task num is %s' \
             '</H1>' % (
                                               time.strftime('%Y-%m-%d %H:%M:%S'),
                                               format(meow_num, ','),
