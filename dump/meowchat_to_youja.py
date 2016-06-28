@@ -233,7 +233,7 @@ class Dump:
         except Exception as ex:self.logger.warn('Exception %s' % str(ex))
 
     def upload_photo(self, user):
-        self.logger.info('========> relatioin')
+        self.logger.info('========> photo')
         try:
             self.usa_redis.sadd('S:photo', user[0])  # 标记为后面准备上传图片
             self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator

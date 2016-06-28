@@ -45,6 +45,8 @@ mysql -h172.16.121.20 -uminus -pminus -Duplusmain -e"select id from user;" -N > 
 mysql -h172.16.121.20 -uminus -pminus -Duplusmain -e"select user_id from user_status;" -N | gzip > user_id-20160625.txt.gz
 scp -P 50022 jesse@54.169.234.201:~/user_id-20160625.txt.gz ~/backup/
 split -l 10000 -d -a 5 user_id-20160625.txt
+
+redis-cli -h 10.154.148.158 -n 10 del S:youja
 ls x* | while read fff;do echo $fff;redis-cli -h 10.154.148.158 -n 10 SADD S:youja $(paste -s -d' ' $fff);done
 redis-cli -h 10.154.148.158 -n 10 SCARD S:youja
 
