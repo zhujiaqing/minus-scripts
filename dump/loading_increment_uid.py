@@ -12,12 +12,13 @@ def loading_increment():
 
     usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
     cur = usa_mysql.cursor()
-    user_sql = 'select id from minus_user where id>18160302 limit 3'  # 先临时测试3条，可以的话再打开跑
-    cur.execute(user_sql)
+    user_sql = 'select id from minus_user where id>18160302' 
+    size = cur.execute(user_sql)
+    
+    print 'num: %s' % format(size, ',')
     users = cur.fetchall()
     
     for user in users:
-        print user[0]
         usa_redis_10.sadd('S:diff', user[0])
         
     cur.close()
