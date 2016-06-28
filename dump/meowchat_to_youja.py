@@ -235,7 +235,7 @@ class Dump:
     def upload_photo(self, user):
         self.logger.info('========> photo')
         try:
-            self.usa_redis.sadd('S:photo', user[0])  # 标记为后面准备上传图片
+#             self.usa_redis.sadd('S:photo', user[0])  # 标记为后面准备上传图片
             self.usa_redis.hset('H:%s' % user[0], user[26], 1)  # avator
             
             # photo
@@ -326,7 +326,10 @@ class Dump:
                                  (user[0],
                                   time.strftime('%Y-%m-%d %H:%M:%S'),
                                   int(time.time() - start_time)))
-
+            
+            uid = usa_redis_10.sadd('S:meow',uid) # 增量修复时记录刻度从切片1的S:photo转到切片10的S:meow
+            uid = usa_redis_10.sadd('S:photo',uid) # 待捞相册数据
+            
     def close_all(self):
         self.cur.close()
         self.usa_mysql.close()

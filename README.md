@@ -57,6 +57,11 @@ redis-cli -h 10.154.148.158 -n 10 SDIFFSTORE S:diff S:meow S:youja
  
 screen python dump/meowchat_to_youja.py &
 
+-- 修复数据也走 repair 模式
+手动将 uid > 18160302 塞进 切片10 'S:diff'
+
+
+
 
 
 
