@@ -19,10 +19,10 @@ def loading_s3():
     while True:
 #         uid = usa_redis_10.spop('S:photo')
 #         if uid is None:break
-        uid = 3708527
+        uid = 3708527  # 8751611
         
         views = usa_redis_1.hgetall('H:%s' % uid)
-        print views
+        print views, type(views)
         for view in views:
             s3_file_sql = 'select filename_s3 from minus_item where view_id="%s"' % view[0]
             size = cur.execute(s3_file_sql)
