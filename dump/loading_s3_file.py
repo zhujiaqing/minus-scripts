@@ -22,16 +22,16 @@ def loading_s3():
         uid = 3708527  # 8751611
         
         views = usa_redis_1.hgetall('H:%s' % uid)
-        print views, type(views)
-        for view in views:
-            s3_file_sql = 'select filename_s3 from minus_item where view_id="%s"' % view[0]
+        print views, type(views), views.keys()
+        for key in views.keys():
+            s3_file_sql = 'select filename_s3 from minus_item where view_id="%s"' % key
             size = cur.execute(s3_file_sql)
             s3_file_list = cur.fetchall()
             print size, s3_file_sql, s3_file_list
             if 0 == size:continue
             s3_file = s3_file_list[0]
             
-            if '1' == view[1]: usa_redis_2.sadd('S:%s' % uid, s3_file[0])  # 头像
+            if '1' == views[key]: usa_redis_2.sadd('S:%s' % uid, s3_file[0])  # 头像
             else: usa_redis_3.sadd('S:%s' % uid, s3_file[0])  # 相册
         
         usa_redis_10.sadd('S:s3file', uid)
