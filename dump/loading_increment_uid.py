@@ -18,7 +18,7 @@ def loading_increment():
     
     for user in users:
         print user[0]
-        usa_redis_10.sadd('S:meow', user[0])
+        usa_redis_10.sadd('S:diff', user[0])
         
     cur.close()
     usa_mysql.close()
