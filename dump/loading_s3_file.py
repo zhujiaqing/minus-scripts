@@ -19,7 +19,7 @@ def loading_s3():
     while True:
 #         uid = usa_redis_10.spop('S:photo')
 #         if uid is None:break
-        uid = 3708527  # 8751611
+        uid =  8751611
         
         views = usa_redis_1.hgetall('H:%s' % uid)
         print views, type(views), views.keys()
