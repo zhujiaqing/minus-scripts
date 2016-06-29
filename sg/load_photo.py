@@ -75,8 +75,8 @@ class loading():
                     self.sg_mysql_10_resource.commit()
                 
                 self.sg_mysql_10.sadd('S:s3file:after')
-            except:
-                print 'error'
+            except Exception as ex:
+                print 'error', ex
                 self.sg_mysql_10.rollback()
                 self.sg_mysql_20.rollback()
                 self.sg_mysql_10_resource.rollback()
