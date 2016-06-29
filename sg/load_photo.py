@@ -68,6 +68,7 @@ class loading():
 
 if __name__ == '__main__':
     load = loading()
+    load.pop()
 
     print '\n[%s] Completed \n' % (time.strftime('%Y-%m-%d %H:%M:%S'))
     
