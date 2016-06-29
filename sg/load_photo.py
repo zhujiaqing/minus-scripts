@@ -47,7 +47,7 @@ class loading():
                     sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
                     print index_id
-                    sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,%s,2,"%s",3)' % (
+                    sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,"%s",2,"%s",3)' % (
                                                                                                               index_id,
                                                                                                               uid,
                                                                                                               uri,
@@ -66,7 +66,7 @@ class loading():
                     sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
                     print index_id
-                    sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,%s,2,"%s",3)' % (
+                    sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,"%s",2,"%s",3)' % (
                                                                                                               index_id,
                                                                                                               uid,
                                                                                                               uri,
