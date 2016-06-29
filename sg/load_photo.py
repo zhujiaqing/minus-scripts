@@ -52,7 +52,7 @@ class loading():
                                                                                                               uid,
                                                                                                               uri,
                                                                                                               time.strftime('%Y-%m-%d %H:%M:%S')))
-                    self.fw.write('aws s3 ls s3://minus-item/%s || aws s3 cp s3://minus_items/%s s3://minus-item/%s\n' % (uri, uri))
+                    self.fw.write('aws s3 ls s3://minus-item/%s || aws s3 cp s3://minus_items/%s s3://minus-item/%s\n' % (uri, uri, uri))
                     sg_cur_20.execute('update user_info set avatarid=%s where user_id=%s' % (index_id, uid))
                     
                     self.sg_mysql_10.commit()
@@ -71,7 +71,7 @@ class loading():
                                                                                                               uid,
                                                                                                               uri,
                                                                                                               time.strftime('%Y-%m-%d %H:%M:%S')))
-                    self.fw.write('aws s3 ls s3://minus-item/%s || aws s3 cp s3://minus_items/%s s3://minus-item/%s\n' % (uri,uri, uri))
+                    self.fw.write('aws s3 ls s3://minus-item/%s || aws s3 cp s3://minus_items/%s s3://minus-item/%s\n' % (uri, uri, uri))
                     self.sg_mysql_10.commit()
                     self.sg_mysql_10_resource.commit()
                 
