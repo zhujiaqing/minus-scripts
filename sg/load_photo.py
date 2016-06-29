@@ -46,12 +46,17 @@ class loading():
                 if uri is not None:
                     sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
+                    print index_id
                     sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,%s,2,"%s",3)' % (
                                                                                                               index_id,
                                                                                                               uid,
                                                                                                               uri,
                                                                                                               time.strftime('%Y-%m-%d %H:%M:%S')))
                     sg_cur_20.execute('update user_info set avatarid=%s where user_id=%s' % (index_id, uid))
+                    
+                    self.sg_mysql_10.commit()
+                    self.sg_mysql_10_resource.commit()
+                    self.sg_mysql_20.commit()
                 
                 # 相册
                 while True:
@@ -60,17 +65,18 @@ class loading():
                     
                     sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
+                    print index_id
                     sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,%s,2,"%s",3)' % (
                                                                                                               index_id,
                                                                                                               uid,
                                                                                                               uri,
                                                                                                               time.strftime('%Y-%m-%d %H:%M:%S')))
-            
-                self.sg_mysql_10.commit()
-                self.sg_mysql_20.commit()
-                self.sg_mysql_10_resource.commit()
+                    self.sg_mysql_10.commit()
+                    self.sg_mysql_10_resource.commit()
+                
                 self.sg_mysql_10.sadd('S:s3file:after')
             except:
+                print 'error'
                 self.sg_mysql_10.rollback()
                 self.sg_mysql_20.rollback()
                 self.sg_mysql_10_resource.rollback()
