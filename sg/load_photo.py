@@ -34,7 +34,9 @@ class loading():
         sg_cur_20 = self.sg_mysql_20.cursor()
         sg_cur_10_resource = self.sg_mysql_10_resource.cursor()
         
+        jjj = 0
         while True:
+            
             uid = self.sg_redis_10.spop('S:s3file')
             if uid is None: break
             
@@ -74,7 +76,7 @@ class loading():
                     self.sg_mysql_10.commit()
                     self.sg_mysql_10_resource.commit()
                 
-                self.sg_mysql_10.sadd('S:s3file:after')
+                self.sg_mysql_10.sadd('S:s3file:after', uid)
             except Exception as ex:
                 print 'error', ex
                 self.sg_mysql_10.rollback()
@@ -82,7 +84,8 @@ class loading():
                 self.sg_mysql_10_resource.rollback()
                 self.sg_redis_10.sadd('S:error:sg', uid)
             
-            break
+            jjj += 1
+            if jjj > 3:break
         else:
             sg_cur_10.close()
             sg_cur_20.close()
