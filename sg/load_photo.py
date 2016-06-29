@@ -76,7 +76,7 @@ class loading():
                     self.sg_mysql_10.commit()
                     self.sg_mysql_10_resource.commit()
                 
-                self.sg_mysql_10.sadd('S:s3file:after', uid)
+                self.sg_redis_10.sadd('S:s3file:after', uid)
             except Exception as ex:
                 print 'error', ex
                 self.sg_mysql_10.rollback()
