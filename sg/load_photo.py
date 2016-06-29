@@ -29,12 +29,13 @@ class loading():
         
         self.sg_mysql_10_resource = MySQLdb.connect(host='172.16.121.10', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
     
+        self.fw = open('/data/file/aws-s3.file', 'aw')
+    
     def pop(self):
         sg_cur_10 = self.sg_mysql_10.cursor()
         sg_cur_20 = self.sg_mysql_20.cursor()
         sg_cur_10_resource = self.sg_mysql_10_resource.cursor()
         
-        jjj = 0
         while True:
             
             uid = self.sg_redis_10.spop('S:s3file')
@@ -54,6 +55,7 @@ class loading():
                                                                                                               uid,
                                                                                                               uri,
                                                                                                               time.strftime('%Y-%m-%d %H:%M:%S')))
+                    self.fw.write('aws s3 cp s3://minus_items/%s s3://minus-item/%s' % (uri, uri))
                     sg_cur_20.execute('update user_info set avatarid=%s where user_id=%s' % (index_id, uid))
                     
                     self.sg_mysql_10.commit()
@@ -73,6 +75,7 @@ class loading():
                                                                                                               uid,
                                                                                                               uri,
                                                                                                               time.strftime('%Y-%m-%d %H:%M:%S')))
+                    self.fw.write('aws s3 cp s3://minus_items/%s s3://minus-item/%s' % (uri, uri))
                     self.sg_mysql_10.commit()
                     self.sg_mysql_10_resource.commit()
                 
@@ -84,8 +87,6 @@ class loading():
                 self.sg_mysql_10_resource.rollback()
                 self.sg_redis_10.sadd('S:error:sg', uid)
             
-            jjj += 1
-            if jjj > 3:break
         else:
             sg_cur_10.close()
             sg_cur_20.close()
@@ -95,10 +96,12 @@ class loading():
         self.sg_mysql_10.close()
         self.sg_mysql_20.close()
         self.sg_mysql_10_resource.close()
+        self.fw.close()
 
 if __name__ == '__main__':
     load = loading()
     load.pop()
+    load.close_all()
 
     print '\n[%s] Completed \n' % (time.strftime('%Y-%m-%d %H:%M:%S'))
     
