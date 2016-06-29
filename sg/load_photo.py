@@ -16,7 +16,7 @@ class loading():
     """
         1, 121.10 uplusmian photo_user_index 插入user_id获取ID；
         2, 121.10 uplus-resource photos 通过上面的ID插入一条记录；
-        3, 121.20 uplusmain user_info 更新avator对应上面的ID。
+        3, 121.20 uplusmain user_info 更新avatorid对应上面的ID。
     """
     
     def __init__(self):
@@ -41,19 +41,40 @@ class loading():
             print uid
             
             try:
+                # 头像
+                uri = self.sg_redis_2.spop('S:%s' % uid)
+                if uri is not None:
+                    sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
+                    index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
+                    sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,%s,2,"%s",3)' % (
+                                                                                                              index_id,
+                                                                                                              uid,
+                                                                                                              uri,
+                                                                                                              time.strftime('%Y-%m-%d %H:%M:%S')))
+                    sg_cur_20.execute('update user_info set avatarid=%s where user_id=%s' % (index_id, uid))
                 
-                sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
-                
-                print sg_cur_10.lastrowid
-                print self.sg_mysql_10.insert_id()
+                # 相册
+                while True:
+                    uri = self.sg_redis_3.spop('S:%s' % uid)
+                    if uri is None: break
+                    
+                    sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
+                    index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
+                    sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,%s,2,"%s",3)' % (
+                                                                                                              index_id,
+                                                                                                              uid,
+                                                                                                              uri,
+                                                                                                              time.strftime('%Y-%m-%d %H:%M:%S')))
             
                 self.sg_mysql_10.commit()
-            
-            
-            
+                self.sg_mysql_20.commit()
+                self.sg_mysql_10_resource.commit()
                 self.sg_mysql_10.sadd('S:s3file:after')
             except:
-                self.sg_redis_10.sadd('S:error:after', uid)
+                self.sg_mysql_10.rollback()
+                self.sg_mysql_20.rollback()
+                self.sg_mysql_10_resource.rollback()
+                self.sg_redis_10.sadd('S:error:sg', uid)
             
             break
         else:
