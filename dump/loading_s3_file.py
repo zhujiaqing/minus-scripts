@@ -17,10 +17,10 @@ def loading_s3():
     cur = usa_mysql.cursor()
     
     while True:
-        try:
-            uid = usa_redis_10.spop('S:photo')
-            if uid is None:break
+        uid = usa_redis_10.spop('S:photo')
+        if uid is None:break
             
+        try:
             views = usa_redis_1.hgetall('H:%s' % uid)
             for key in views.keys():
                 s3_file_sql = 'select filename_s3 from minus_item where view_id="%s"' % key
