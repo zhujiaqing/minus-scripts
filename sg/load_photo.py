@@ -41,15 +41,12 @@ class loading():
             uid = self.sg_redis_10.spop('S:s3file')
             if uid is None: break
             
-            print uid
-            
             try:
                 # 头像
                 uri = self.sg_redis_2.spop('S:%s' % uid)
                 if uri is not None:
                     sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
-                    print index_id
                     sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,"%s",2,"%s",3)' % (
                                                                                                               index_id,
                                                                                                               uid,
@@ -69,7 +66,6 @@ class loading():
                     
                     sg_cur_10.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_10.lastrowid  # self.sg_mysql_10.insert_id()
-                    print index_id
                     sg_cur_10_resource.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,"%s",2,"%s",3)' % (
                                                                                                               index_id,
                                                                                                               uid,
@@ -81,11 +77,12 @@ class loading():
                 
                 self.sg_redis_10.sadd('S:s3file:after', uid)
             except Exception as ex:
-                print 'error', ex
                 self.sg_mysql_10.rollback()
                 self.sg_mysql_20.rollback()
                 self.sg_mysql_10_resource.rollback()
                 self.sg_redis_10.sadd('S:error:sg', uid)
+
+                print 'error', uid, ex
             
         else:
             sg_cur_10.close()
