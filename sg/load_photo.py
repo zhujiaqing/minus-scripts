@@ -29,7 +29,7 @@ class loading():
         
         self.sg_mysql_10_resource = MySQLdb.connect(host='172.16.121.10', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
     
-        self.fw = open('/data/file/aws-s3.file', 'aw')
+        self.fw = open('/data/file/aws-s3.file-%s' % time.strftime('%Y%m%d%H%M%S'), 'aw')
     
     def pop(self):
         sg_cur_10 = self.sg_mysql_10.cursor()
