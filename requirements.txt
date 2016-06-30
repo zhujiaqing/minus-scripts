@@ -3,4 +3,5 @@ httplib2
 simplejson
 cassandra-driver
 redis
-
+awscli
+s3cmd
