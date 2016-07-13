@@ -68,7 +68,7 @@ class DumpPhoto:
                     
                     sg_cur_20.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_20.lastrowid  # self.sg_mysql_20.insert_id()
-                    sg_cur_10.execute('insert into photos(id,user_id,photouri,size_type,create_time,status) values(%s,%s,"%s",2,"%s",3)' % (
+                    sg_cur_10.execute('insert into photos(id,album_id,user_id,photouri,size_type,create_time,status) values(%s,1,%s,"%s",2,"%s",3)' % (
                                                                                                               index_id,
                                                                                                               uid,
                                                                                                               uri,
