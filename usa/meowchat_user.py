@@ -276,7 +276,7 @@ class DumpUser:
             self.user_account(user)
             self.user_profile(user)
             self.user_relation(user)
-            self.upload_photo(user)
+            self.user_photo(user)
             self.logger.info('##############>>> [repair end conver storage] %s, cost time %ss' % 
                                  (uid,
                                   int(time.time() - start_time)))

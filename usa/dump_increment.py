@@ -28,7 +28,7 @@ def loading_increment_user():
     usa_mysql.close()
     
 if __name__ == '__main__':
-    loading_increment_user()
+#     loading_increment_user()
     
     dumpUser = DumpUser()
     dumpUser.repair_increment('S:diff:user')
