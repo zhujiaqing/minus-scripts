@@ -14,25 +14,30 @@ def loading_increment_user():
 
     usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
     cur = usa_mysql.cursor()
-    user_sql = 'select id from minus_user where id>18160302 limit 2' 
-    size = cur.execute(user_sql)
-    
-    print 'num: %s' % format(size, ',')
-    users = cur.fetchall()
-    
-    for user in users:
-        usa_redis_10.sadd('S:diff:user', user[0])
-        usa_redis_10.sadd('S:diff:photo', user[0])
+    while True:
+        user_sql = 'select id from minus_user where id>%s limit 100' % usa_redis_10.get('meow:max:uid')
+        size = cur.execute(user_sql)
+        
+        if 0 == size:break
+        
+        print 'num: %s' % format(size, ',')
+        users = cur.fetchall()
+        
+        usa_redis_10.set('meow:max:uid', users[-1][0])
+        
+        for user in users:
+            usa_redis_10.sadd('S:diff:user', user[0])
+            usa_redis_10.sadd('S:diff:photo', user[0])
         
     cur.close()
     usa_mysql.close()
     
 if __name__ == '__main__':
-#     loading_increment_user()
-#     
-#     dumpUser = DumpUser()
-#     dumpUser.repair_increment('S:diff:user')
-#     dumpUser.close_all()
+    loading_increment_user()
+     
+    dumpUser = DumpUser()
+    dumpUser.repair_increment('S:diff:user')
+    dumpUser.close_all()
     
     dumpPhoto = DumpPhoto()
     dumpPhoto.repair_increment('S:diff:photo')
