@@ -5,7 +5,7 @@ import time
 
 import redis
 
-from meowchat_to_youja import Dump
+from meowchat_to_youja import Dump  # @UnresolvedImport
 
 def manual_start(x):
     dump = Dump(start_uid=x)
