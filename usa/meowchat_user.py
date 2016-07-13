@@ -19,12 +19,12 @@ sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
 class DumpUser:
     
     def __init__(self):
-        handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow.out", when='D', interval=1)
+        handler = logging.handlers.TimedRotatingFileHandler("/data/logs/meow-user.out", when='D', interval=1)
         fmt = '%(asctime)s - %(filename)s:%(lineno)s - %(name)s - %(message)s'
         
         formatter = logging.Formatter(fmt)
         handler.setFormatter(formatter)
-        self.logger = logging.getLogger('meow')
+        self.logger = logging.getLogger('user')
         self.logger.addHandler(handler)
         self.logger.setLevel(logging.DEBUG)
         
@@ -43,14 +43,10 @@ class DumpUser:
                            protocol_version=3)
         self.usa_session = self.usa_cluster.connect()
     
-        self.usa_redis_11 = redis.Redis(host="10.154.148.158", port=6666, db=11)
         self.usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
+        self.usa_redis_11 = redis.Redis(host="10.154.148.158", port=6666, db=11)
     
     def api_request(self, host='info_ex.api.imyoujia.com', port=80, method='POST', uri=None, body=None):
-        
-        print uri
-        return False
-        
         start_time = time.time()
         if uri is None or body is None: 
             self.logger.info('Not api request')
@@ -230,7 +226,7 @@ class DumpUser:
             size = self.cur.execute(s3_file_sql)
             s3_file_list = self.cur.fetchall()
             if 0 < size:
-                s3_file = s3_file_list[0]
+                s3_file = s3_file_list[0][0]
         except Exception as ex:
             self.logger.info('Exception %s' % str(ex))
         finally:

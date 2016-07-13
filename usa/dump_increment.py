@@ -14,7 +14,7 @@ def loading_increment_user():
 
     usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
     cur = usa_mysql.cursor()
-    user_sql = 'select id from minus_user where id>18160302 limit 10' 
+    user_sql = 'select id from minus_user where id>18160302 limit 2' 
     size = cur.execute(user_sql)
     
     print 'num: %s' % format(size, ',')
@@ -28,7 +28,7 @@ def loading_increment_user():
     usa_mysql.close()
     
 if __name__ == '__main__':
-#     loading_increment_user()
+    loading_increment_user()
     
     dumpUser = DumpUser()
     dumpUser.repair_increment('S:diff:user')
