@@ -8,11 +8,11 @@ import redis
 
 
 def loading_increment():
-    usa_redis_10 = redis.Redis(host="10.154.148.158", port=6379, db=10)
+    usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
 
     usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
     cur = usa_mysql.cursor()
-    user_sql = 'select id from minus_user where id>18160302' 
+    user_sql = 'select id from minus_user where id>18160302 limit 10' 
     size = cur.execute(user_sql)
     
     print 'num: %s' % format(size, ',')
