@@ -229,9 +229,8 @@ class DumpUser:
             s3_file_sql = 'select filename_s3 from minus_item where view_id="%s"' % view_id
             size = self.cur.execute(s3_file_sql)
             s3_file_list = self.cur.fetchall()
-            if 0 == size:
-                continue
-            s3_file = s3_file_list[0]
+            if 0 < size:
+                s3_file = s3_file_list[0]
         except Exception as ex:
             self.logger.info('Exception %s' % str(ex))
         finally:
@@ -241,12 +240,16 @@ class DumpUser:
         self.logger.info('========> photo')
         try:
             # avator
-            self.usa_redis_11.sadd('S:a1:%s' % user[0], self.get_s3_by_view(user[26]))
+            s3_file_avator = self.get_s3_by_view(user[26])
+            if s3_file_avator is not None:
+                self.usa_redis_11.sadd('S:a1:%s' % user[0], s3_file_avator)
             
             # photo
             for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % user[0]):
                 for ic in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
-                    self.usa_redis_11.sadd('S:a0:%s' % user[0], self.get_s3_by_view(ic.view_id))
+                    s3_file_photo = self.get_s3_by_view(ic.view_id)
+                    if s3_file_photo is not None:
+                        self.usa_redis_11.sadd('S:a0:%s' % user[0], s3_file_photo)
             
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
