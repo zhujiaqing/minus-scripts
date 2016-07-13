@@ -41,7 +41,7 @@ class DumpPhoto:
         
         while True:
             
-            uid = self.sg_redis_10.spop(key)
+            uid = self.usa_redis_10.spop(key)
             if uid is None: break
             
             try:
@@ -63,7 +63,7 @@ class DumpPhoto:
                 
                 # 相册
                 while True:
-                    uri = self.usa_redis_10.spop('S:a0:%s' % uid)
+                    uri = self.usa_redis_11.spop('S:a0:%s' % uid)
                     if uri is None: break
                     
                     sg_cur_20.execute('insert into photo_user_index(user_id) values(%s)' % uid)
@@ -81,7 +81,7 @@ class DumpPhoto:
             except Exception as ex:
                 self.sg_mysql_20.rollback()
                 self.sg_mysql_10.rollback()
-                self.sg_redis_10.sadd('S:diff:error:sg', uid)
+                self.usa_redis_10.sadd('S:diff:error:sg', uid)
 
                 self.logger.warn('Exception %s' % str(ex))
             

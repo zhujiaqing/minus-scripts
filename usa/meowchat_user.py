@@ -228,7 +228,7 @@ class DumpUser:
             if 0 < size:
                 s3_file = s3_file_list[0][0]
         except Exception as ex:
-            self.logger.info('Exception %s' % str(ex))
+            self.logger.warn('Exception %s' % str(ex))
         finally:
             return s3_file
         
@@ -239,6 +239,7 @@ class DumpUser:
             s3_file_avator = self.get_s3_by_view(user[26])
             if s3_file_avator is not None:
                 self.usa_redis_11.sadd('S:a1:%s' % user[0], s3_file_avator)
+                self.logger.info(s3_file_avator)
             
             # photo
             for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % user[0]):
@@ -246,7 +247,8 @@ class DumpUser:
                     s3_file_photo = self.get_s3_by_view(ic.view_id)
                     if s3_file_photo is not None:
                         self.usa_redis_11.sadd('S:a0:%s' % user[0], s3_file_photo)
-            
+                    self.logger.info(self.usa_redis_11.smembers('S:a0:%s' % user[0]))
+                    
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
         
