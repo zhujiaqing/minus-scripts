@@ -37,6 +37,9 @@ def loading_increment_user():
     
 def get_uids_by_photouri_is_null():
     usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
+    usa_redis_10.sadd(KEY_SADD_DIFF_USER, 17172928)
+    
+    return 
     
     sg_mysql_10 = MySQLdb.connect(host='54.169.234.201', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
     cur = sg_mysql_10.cursor()

@@ -47,7 +47,7 @@ class DumpPhoto:
             try:
                 # 头像
                 uri = self.usa_redis_11.spop('S:a1:%s' % uid)
-                if uri is not None:
+                if uri is not None and uri != '':
                     sg_cur_20.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_20.lastrowid  # self.sg_mysql_20.insert_id()
                     sg_cur_10.execute('insert into photos(id,album_id,user_id,photouri,size_type,create_time,status) values(%s,1,%s,"%s",2,"%s",3)' % (
@@ -64,7 +64,7 @@ class DumpPhoto:
                 # 相册
                 while True:
                     uri = self.usa_redis_11.spop('S:a0:%s' % uid)
-                    if uri is None: break
+                    if uri is None and uri == '': break
                     
                     sg_cur_20.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_20.lastrowid  # self.sg_mysql_20.insert_id()
