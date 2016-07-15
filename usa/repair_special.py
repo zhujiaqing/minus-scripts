@@ -16,6 +16,10 @@ KEY_SADD_DIFF_PHOTO = 'S:diff:photo:%s' % timestamp
 def get_uids_by_photouri_is_null():
     usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
     
+    dumpUser = DumpUser()
+    dumpPhoto = DumpPhoto()
+    
+    
     # atschx 16953316
     # 8ops2016 17172928
     usa_redis_10.sadd(KEY_SADD_DIFF_USER, 16953316)
@@ -42,20 +46,20 @@ def get_uids_by_photouri_is_null():
             usa_redis_10.sadd(KEY_SADD_DIFF_USER, photo[1])
             usa_redis_10.sadd(KEY_SADD_DIFF_PHOTO, photo[1])
         
+        dumpUser.repair_photo(KEY_SADD_DIFF_USER)
+        dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
+        
         break
+    
     cur.close()
     sg_mysql_10.close()
+    
+    dumpUser.close_all()
+    dumpPhoto.close_all()
 
 if __name__ == '__main__':
     get_uids_by_photouri_is_null()
      
-    dumpUser = DumpUser()
-    dumpUser.repair_photo(KEY_SADD_DIFF_USER)
-    dumpUser.close_all()
-    
-    dumpPhoto = DumpPhoto()
-    dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
-    dumpPhoto.close_all()
     
     print '\n[%s] Completed \n' % (time.strftime('%Y-%m-%d %H:%M:%S'))
     

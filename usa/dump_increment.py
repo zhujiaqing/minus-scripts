@@ -13,7 +13,10 @@ KEY_SADD_DIFF_USER = 'S:diff:user'
 KEY_SADD_DIFF_PHOTO = 'S:diff:photo'
 
 def loading_increment_user():
-    usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
+    usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)    
+    
+    dumpUser = DumpUser()
+    dumpPhoto = DumpPhoto()
 
     usa_mysql = MySQLdb.connect(host='10.231.129.198', user='root', passwd='carlhu', charset='utf8', db='minus', port=3306)
     cur = usa_mysql.cursor()
@@ -32,19 +35,18 @@ def loading_increment_user():
             usa_redis_10.sadd(KEY_SADD_DIFF_USER, user[0])
             usa_redis_10.sadd(KEY_SADD_DIFF_PHOTO, user[0])
         
+        dumpUser.repair_increment(KEY_SADD_DIFF_USER)
+        dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
+
     cur.close()
     usa_mysql.close()
+
+    dumpUser.close_all()
+    dumpPhoto.close_all()
     
 if __name__ == '__main__':
     loading_increment_user()
      
-    dumpUser = DumpUser()
-    dumpUser.repair_increment(KEY_SADD_DIFF_USER)
-    dumpUser.close_all()
-    
-    dumpPhoto = DumpPhoto()
-    dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
-    dumpPhoto.close_all()
     
     print '\n[%s] Completed \n' % (time.strftime('%Y-%m-%d %H:%M:%S'))
     
