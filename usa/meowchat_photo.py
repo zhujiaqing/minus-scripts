@@ -43,7 +43,7 @@ class DumpPhoto:
             
             uid = self.usa_redis_10.spop(key)
             if uid is None: break
-            self.logger.info('repair photo uid: %s' % uid)
+            self.logger.info('by key %s, repair photo uid: %s' % (key, uid))
             
             try:
                 # 头像
