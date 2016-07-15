@@ -70,11 +70,11 @@ if __name__ == '__main__':
     get_uids_by_photouri_is_null()
      
     dumpUser = DumpUser()
-    dumpUser.repair_increment(KEY_SADD_DIFF_USER + ':temp')
+    dumpUser.repair_increment(KEY_SADD_DIFF_USER)
     dumpUser.close_all()
     
     dumpPhoto = DumpPhoto()
-    dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO + ':temp')
+    dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
     dumpPhoto.close_all()
     
     print '\n[%s] Completed \n' % (time.strftime('%Y-%m-%d %H:%M:%S'))
