@@ -54,7 +54,10 @@ class DumpPhoto:
                     
                 # 头像
                 uri = self.usa_redis_11.spop('S:a1:%s' % uid)
-                if uri is not None and uri != '':
+                if uri is None or uri == '':
+                    sg_cur_20.execute('update user_info set avatarid=0 where user_id=%s'%uid)
+                    self.sg_mysql_20.commit()
+                else:
                     self.logger.info('uid: %s, avator uri: %s' % (uid, uri))
                     
                     sg_cur_20.execute('insert into photo_user_index(user_id) values(%s)' % uid)
