@@ -66,7 +66,7 @@ class DumpPhoto:
                 # 相册
                 while True:
                     uri = self.usa_redis_11.spop('S:a0:%s' % uid)
-                    if uri is None and uri == '': break
+                    if uri is None or uri == '': break
                     self.logger.info('uid: %s, photo uri: %s' % (uid, uri))
                     
                     sg_cur_20.execute('insert into photo_user_index(user_id) values(%s)' % uid)
