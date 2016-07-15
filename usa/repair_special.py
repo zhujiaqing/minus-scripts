@@ -72,9 +72,9 @@ if __name__ == '__main__':
     dumpUser.repair_increment(KEY_SADD_DIFF_USER)
     dumpUser.close_all()
     
-#     dumpPhoto = DumpPhoto()
-#     dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
-#     dumpPhoto.close_all()
+    dumpPhoto = DumpPhoto()
+    dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
+    dumpPhoto.close_all()
     
     print '\n[%s] Completed \n' % (time.strftime('%Y-%m-%d %H:%M:%S'))
     
