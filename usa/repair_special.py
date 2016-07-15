@@ -15,10 +15,10 @@ KEY_SADD_DIFF_PHOTO = 'S:diff:photo:%s' % timestamp
 
 def get_uids_by_photouri_is_null():
     usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
-    usa_redis_10.sadd(KEY_SADD_DIFF_USER, 17172928)
-    usa_redis_10.sadd(KEY_SADD_DIFF_PHOTO, 17172928)
     
-    return 
+#     usa_redis_10.sadd(KEY_SADD_DIFF_USER, 17172928)
+#     usa_redis_10.sadd(KEY_SADD_DIFF_PHOTO, 17172928)
+#     return 
     
     sg_mysql_10 = MySQLdb.connect(host='54.169.234.201', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
     cur = sg_mysql_10.cursor()
@@ -31,8 +31,8 @@ def get_uids_by_photouri_is_null():
         
         if 0 == size:break
     
-        print 'num: %s' % format(size, ',')
         photos = cur.fetchall()
+        print 'num: %s' % format(size, ','), photos
         
         max_id = photos[-1][0]
         
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     get_uids_by_photouri_is_null()
      
     dumpUser = DumpUser()
-    dumpUser.repair_increment(KEY_SADD_DIFF_USER)
+    dumpUser.repair_photo(KEY_SADD_DIFF_USER)
     dumpUser.close_all()
     
     dumpPhoto = DumpPhoto()

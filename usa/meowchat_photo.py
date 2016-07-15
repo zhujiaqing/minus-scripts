@@ -46,10 +46,17 @@ class DumpPhoto:
             self.logger.info('by key %s, repair photo uid: %s' % (key, uid))
             
             try:
+                # 先清除
+                sg_cur_20.execute('delete from photo_user_index where user_id = %s' % uid)
+                sg_cur_10.execute('delete from photos where user_id = %s' % uid)
+                self.sg_mysql_20.commit()
+                self.sg_mysql_10.commit()
+                    
                 # 头像
                 uri = self.usa_redis_11.spop('S:a1:%s' % uid)
                 if uri is not None and uri != '':
                     self.logger.info('uid: %s, avator uri: %s' % (uid, uri))
+                    
                     sg_cur_20.execute('insert into photo_user_index(user_id) values(%s)' % uid)
                     index_id = sg_cur_20.lastrowid  # self.sg_mysql_20.insert_id()
                     sg_cur_10.execute('insert into photos(id,album_id,user_id,photouri,size_type,create_time,status) values(%s,1,%s,"%s",2,"%s",3)' % (

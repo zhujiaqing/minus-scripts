@@ -280,6 +280,30 @@ class DumpUser:
                                  (uid,
                                   int(time.time() - start_time)))
             
+    def repair_photo(self, key):
+        while True:
+            start_time = time.time()
+
+            uid = self.usa_redis_10.spop(key)
+            if uid is None:break
+            
+            size = self.cur.execute('select * from minus_user where id = %s' % uid)
+            users = self.cur.fetchall()
+            if 0 == size:  # 没有结果集
+                self.logger.info('uid: %s, not exists with mius_user' % uid)
+                continue
+            user = users[0]
+            if '' == user[1] or user[1] is None:  # 若用户名为空直接丢弃
+                self.logger.info('uid: %s, not object' % uid)
+                continue
+                
+            # convert storage
+            self.logger.info('##############>>> [repair start conver storage] %s' % uid) 
+            self.user_photo(user)
+            self.logger.info('##############>>> [repair end conver storage] %s, cost time %ss' % 
+                                 (uid,
+                                  int(time.time() - start_time)))
+        
     def close_all(self):
         self.cur.close()
         self.usa_mysql.close()
