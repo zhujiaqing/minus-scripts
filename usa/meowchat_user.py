@@ -238,21 +238,22 @@ class DumpUser:
         try:
             # avator
             s3_file_avator = self.get_s3_by_view(user[26])
+            print 'avator',s3_file_avator        ##################
             if s3_file_avator is not None:
                 self.usa_redis_11.sadd('S:a1:%s' % user[0], s3_file_avator)
                 self.logger.info(s3_file_avator)
-            print 'avator',s3_file_avator        ##################
             
             # photo
             for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % user[0]):
                 for ic in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
                     s3_file_photo = self.get_s3_by_view(ic.view_id)
+                    print 'photo',s3_file_photo,ic ################## 
                     if s3_file_photo is not None:
                         self.usa_redis_11.sadd('S:a0:%s' % user[0], s3_file_photo)
                     self.logger.info(self.usa_redis_11.smembers('S:a0:%s' % user[0]))
-                    print 'photo',s3_file_photo,ic ################## 
             
         except Exception as ex:
+            print ex
             self.logger.warn('Exception %s' % str(ex))
         
     def repair_increment(self, key):
