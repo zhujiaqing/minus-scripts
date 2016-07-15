@@ -32,7 +32,7 @@ def get_uids_by_photouri_is_null():
     max_id = 0
     
     while True:
-        user_sql = 'select id,user_id from photos where photouri = "" and id>%s limit 20' % max_id
+        user_sql = 'select id,user_id from photos where photouri = "" and id>%s limit 2' % max_id
         size = cur.execute(user_sql)
         
         if 0 == size:break
