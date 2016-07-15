@@ -26,7 +26,7 @@ def get_uids_by_photouri_is_null():
     usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
     
     
-    max_id = 0
+#     max_id = 0
     
     while True:
         dumpUser = DumpUser()
@@ -35,7 +35,8 @@ def get_uids_by_photouri_is_null():
         sg_mysql_10 = MySQLdb.connect(host='54.169.234.201', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
         cur = sg_mysql_10.cursor()
 
-        user_sql = 'select id,user_id from photos where photouri = "" and id>%s limit 100' % max_id
+#         user_sql = 'select id,user_id from photos where photouri = "" and id>%s limit 100' % max_id
+        user_sql = 'select id,user_id from photos where photouri = "" order by id desc limit 100'
         size = cur.execute(user_sql)
         
         if 0 == size:break
@@ -43,7 +44,7 @@ def get_uids_by_photouri_is_null():
         photos = cur.fetchall()
         print 'num: %s' % format(size, ','), photos
         
-        max_id = photos[-1][0]
+#         max_id = photos[-1][0]
         
         for photo in photos:
             usa_redis_10.sadd(KEY_SADD_DIFF_USER, photo[1])
