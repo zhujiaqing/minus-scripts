@@ -236,15 +236,20 @@ class DumpUser:
         self.logger.info('========> photo')
         try:
             # avator
+            print user
             s3_file_avator = self.get_s3_by_view(user[26])
             if s3_file_avator is not None:
+                print s3_file_avator
                 self.usa_redis_11.sadd('S:a1:%s' % user[0], s3_file_avator)
                 self.logger.info(s3_file_avator)
             
             # photo
             for item in self.usa_session.execute('SELECT item_id,dt FROM items.userline WHERE uid=%s;' % user[0]):
+                print item
                 for ic in self.usa_session.execute('SELECT view_id FROM items.dict WHERE item_id=%s;' % item.item_id):
+                    print ic
                     s3_file_photo = self.get_s3_by_view(ic.view_id)
+                    print s3_file_photo
                     if s3_file_photo is not None:
                         self.usa_redis_11.sadd('S:a0:%s' % user[0], s3_file_photo)
                     self.logger.info(self.usa_redis_11.smembers('S:a0:%s' % user[0]))
