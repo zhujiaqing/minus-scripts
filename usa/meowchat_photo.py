@@ -36,8 +36,8 @@ class DumpPhoto:
         self.fw = open('/data/file/aws-s3.file-%s' % time.strftime('%Y%m%d%H%M%S'), 'aw')
     
     def repair_increment(self, key):
-        sg_cur_20 = self.sg_mysql_20.cursor()
         sg_cur_10 = self.sg_mysql_10.cursor()
+        sg_cur_20 = self.sg_mysql_20.cursor()
         
         while True:
             
