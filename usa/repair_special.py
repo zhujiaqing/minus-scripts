@@ -48,7 +48,6 @@ def get_uids_by_photouri_is_null():
         size = cur.execute(user_sql)
         
         if 0 == size:break
-        break
     
         print 'num: %s' % format(size, ',')
         photos = cur.fetchall()
@@ -59,6 +58,7 @@ def get_uids_by_photouri_is_null():
             usa_redis_10.sadd(KEY_SADD_DIFF_USER, photo[1])
             usa_redis_10.sadd(KEY_SADD_DIFF_PHOTO, photo[1])
         
+        break
     cur.close()
     sg_mysql_10.close()
 
