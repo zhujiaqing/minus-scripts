@@ -22,8 +22,8 @@ def get_uids_by_photouri_is_null():
     
     # atschx 16953316
     # 8ops2016 17172928
-    usa_redis_10.sadd(KEY_SADD_DIFF_USER, 16953316)
-    usa_redis_10.sadd(KEY_SADD_DIFF_PHOTO, 16953316)
+#     usa_redis_10.sadd(KEY_SADD_DIFF_USER, 16953316)
+#     usa_redis_10.sadd(KEY_SADD_DIFF_PHOTO, 16953316)
 #     return 
     
     sg_mysql_10 = MySQLdb.connect(host='54.169.234.201', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
@@ -32,7 +32,7 @@ def get_uids_by_photouri_is_null():
     max_id = 0
     
     while True:
-        user_sql = 'select id,user_id from photos where photouri = "" and id>%s limit 2' % max_id
+        user_sql = 'select id,user_id from photos where photouri = "" and id>%s limit 100' % max_id
         size = cur.execute(user_sql)
         
         if 0 == size:break
@@ -49,8 +49,6 @@ def get_uids_by_photouri_is_null():
         dumpUser.repair_photo(KEY_SADD_DIFF_USER)
         dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
         
-        break
-    
     cur.close()
     sg_mysql_10.close()
     
