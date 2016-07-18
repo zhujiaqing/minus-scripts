@@ -22,7 +22,7 @@ timestamp = time.strftime('%Y%m%d%H%M%S')
 KEY_SADD_DIFF_USER = 'S:diff:user:%s' % timestamp
 KEY_SADD_DIFF_PHOTO = 'S:diff:photo:%s' % timestamp
 
-def get_uids_by_photouri_is_null():
+def repair_photouri_is_null():
     usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)
     
     
@@ -59,8 +59,23 @@ def get_uids_by_photouri_is_null():
         dumpUser.close_all()
         dumpPhoto.close_all()
 
+def repair_leak_user():
+    KEY_SADD_DIFF_USER = 'S:diff:user:20160718000000'
+    KEY_SADD_DIFF_PHOTO = 'S:diff:photo:20160718000000'
+
+    dumpUser = DumpUser()
+    dumpPhoto = DumpPhoto()
+    
+    dumpUser.repair_photo(KEY_SADD_DIFF_USER)
+    dumpPhoto.repair_increment(KEY_SADD_DIFF_PHOTO)
+    
+    dumpUser.close_all()
+    dumpPhoto.close_all()
+    
 if __name__ == '__main__':
-    get_uids_by_photouri_is_null()
+#     repair_photouri_is_null()
+    
+    repair_leak_user()
      
     
     print '\n[%s] Completed \n' % (time.strftime('%Y-%m-%d %H:%M:%S'))
