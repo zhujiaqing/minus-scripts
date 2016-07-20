@@ -6,7 +6,6 @@ import redis
 
 def repair_exp(keyword='111115*'):
     rinfo = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
-    rexp = redis.Redis(host='userexp.redis.youja.cn', port=6801, db=6)
 
     glevearr = [0,
              250, 500,
@@ -44,8 +43,7 @@ def repair_exp(keyword='111115*'):
             
             mset_val = {'GL':gl, 'GNV':gnv, 'GNP':gnp}
             
-            rexp.hmget(key, rinfo.hgetall(key))
-            rexp.hmget(key, mset_val)
+            rinfo.hmget(key, mset_val)
         except Exception as ex:
             print ex
 
@@ -72,7 +70,8 @@ def del_old_exp(keyword='11111526*'):
     del_key(r9, 'U:rtb:%s' % keyword)
     
 if __name__ == '__main__':
-    del_old_exp(keyword='*')
+    repair_exp(keyword='*')
+#     del_old_exp(keyword='*')
     
     print '\nCompleted\n'
 
