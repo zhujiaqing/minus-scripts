@@ -5,7 +5,7 @@ import redis
 
 
 def repair_exp(keyword='111115*'):
-    rinfo = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
+    rexp = redis.Redis(host='userexp.redis.youja.cn', port=6379, db=6)
 
     glevearr = [0,
              250, 500,
@@ -25,11 +25,11 @@ def repair_exp(keyword='111115*'):
              75000000, 80000000
             ]
     
-    keys = rinfo.keys('hExp:%s' % keyword)
+    keys = rexp.keys('hExp:%s' % keyword)
     
     for key in keys:
         try:
-            g = int(rinfo.hget(key, 'G'))
+            g = int(rexp.hget(key, 'G'))
             gl = gnv = gnp = 0
             if g > glevearr[-1]:
                 gl = len(glevearr) - 1
@@ -43,11 +43,11 @@ def repair_exp(keyword='111115*'):
             
             mset_val = {'GL':gl, 'GNV':gnv, 'GNP':gnp}
             
-            rinfo.hmget(key, mset_val)
+            rexp.hmget(key, mset_val)
         except Exception as ex:
             print ex
 
-def del_old_exp(keyword='11111526*'):
+def del_invalid_relation(keyword='11111526*'):
     
     def del_key(r, p):
         print r, p
@@ -69,9 +69,15 @@ def del_old_exp(keyword='11111526*'):
     r9 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=9)
     del_key(r9, 'U:rtb:%s' % keyword)
     
+def del_invalid_userexp(keyword='1111156*'):
+    rinfo = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
+    for key in rinfo.keys('hExp:%s' % keyword):
+        rinfo.delete(key)
+        
 if __name__ == '__main__':
-    repair_exp(keyword='*')
+#     repair_exp(keyword='*')
 #     del_old_exp(keyword='*')
+    del_invalid_userexp()
     
     print '\nCompleted\n'
 
