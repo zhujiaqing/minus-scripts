@@ -26,7 +26,7 @@ def repair_exp(keyword='111115*'):
              75000000, 80000000
             ]
     
-    keys = rinfo.keys('hExp:%' % keyword)
+    keys = rinfo.keys('hExp:%s' % keyword)
     
     for key in keys:
         try:
@@ -51,12 +51,12 @@ def repair_exp(keyword='111115*'):
 
 def del_old_exp(keyword='11111526*'):
     rinfo = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
-    keys = rinfo.keys('hExp:%' % keyword)
+    keys = rinfo.keys('hExp:%s' % keyword)
     for key in keys:
         rinfo.delete(key)
     
 if __name__ == '__main__':
-    repair_exp(keyword='1111152*')
+    repair_exp(keyword='*')
     
     print '\nCompleted\n'
 
