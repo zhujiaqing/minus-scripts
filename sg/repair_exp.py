@@ -56,7 +56,7 @@ def del_old_exp(keyword='11111526*'):
         rinfo.delete(key)
     
 if __name__ == '__main__':
-    repair_exp('*')
+    repair_exp(keyword='1111152*')
     
     print '\nCompleted\n'
 
