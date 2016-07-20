@@ -43,10 +43,13 @@ for key in keys:
     
     mset_val = {'GL':gl, 'GNV':gnv, 'GNP':gnp}
     
-    rexp.hmget(key, rinfo.hgetall(key))
-    rexp.mset(key, mset_val)
+    old_info = rinfo.hgetall(key)
+    print type(old_info), old_info
+#     rexp.hmget(key, rinfo.hgetall(key))
+#     rexp.mset(key, mset_val)
 #     rinfo.delete(key)
     print key, mset_val
+    break
     
     
     
