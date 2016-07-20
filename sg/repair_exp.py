@@ -46,7 +46,7 @@ for key in keys:
     old_info = rinfo.hgetall(key)
     print type(old_info), old_info
     rexp.hmget(key, rinfo.hgetall(key))
-    rexp.mset(key, mset_val)
+    rexp.hmget(key, mset_val)
 #     rinfo.delete(key)
     print key, mset_val
     break
