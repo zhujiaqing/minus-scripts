@@ -25,7 +25,7 @@ glevearr = [0,
          75000000, 80000000
         ]
 
-keys = rinfo.keys('hExp:%s' % '1111111*')
+keys = rinfo.keys('hExp:%s' % '11111*')
 print keys
 
 for key in keys:
