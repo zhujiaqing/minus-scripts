@@ -4,7 +4,7 @@
 import redis
 
 
-def repair_exp(keyword='111115*'):
+def repair_exp(keyword='111116*'):
     rexp = redis.Redis(host='userexp.redis.youja.cn', port=6801, db=6)
 
     glevearr = [0,
@@ -42,9 +42,11 @@ def repair_exp(keyword='111115*'):
                 gnp = int((g - glevearr[gl]) * 100.00 / (glevearr[gl + 1] - glevearr[gl]))
             
             mset_val = {'G':g, 'GL':gl, 'GNV':gnv, 'GNP':gnp}
-            print mset_val, rexp.hgetall(key)
-            
+            print 'Old', rexp.hgetall(key)
+            print 'Rep ', mset_val
             rexp.hmget(key, mset_val)
+            print 'Old', rexp.hgetall(key)
+            
         except Exception as ex:
             print ex
 
