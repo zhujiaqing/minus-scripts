@@ -4,7 +4,7 @@
 import redis
 
 
-rinfo = redis.Redis(host='jedisbuiderinfo.redis.youja.cn', port=6379, db=6)
+rinfo = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
 rexp = redis.Redis(host='userexp.redis.youja.cn', port=6801, db=6)
 
 glevearr = [0,
