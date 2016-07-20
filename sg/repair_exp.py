@@ -29,8 +29,8 @@ def repair_exp(keyword='111116*'):
     
     for key in keys:
         try:
-            g = int(rexp.hget(key, 'G'))
             gl = gnv = gnp = 0
+            g = int(rexp.hget(key, 'G'))
             if g > glevearr[-1]:
                 gl = len(glevearr) - 1
             else:
@@ -43,13 +43,13 @@ def repair_exp(keyword='111116*'):
             
             mset_val = {'G':g, 'GL':gl, 'GNV':gnv, 'GNP':gnp}
             
+        except:g=0
+        finally:  
 #             print 'Before ', rexp.hgetall(key)
 #             print 'Repair ', mset_val
             rexp.hmset(key, mset_val)
 #             print 'After ', rexp.hgetall(key)
             
-        except Exception as ex:
-            print ex
 
 def del_invalid_relation(keyword='11111526*'):
     
