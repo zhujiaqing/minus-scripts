@@ -42,10 +42,10 @@ def repair_exp(keyword='111116*'):
                 gnp = int((g - glevearr[gl]) * 100.00 / (glevearr[gl + 1] - glevearr[gl]))
             
             mset_val = {'G':g, 'GL':gl, 'GNV':gnv, 'GNP':gnp}
-            print 'Old', rexp.hgetall(key)
-            print 'Rep ', mset_val
-            rexp.hmget(key, mset_val)
-            print 'Old', rexp.hgetall(key)
+            print 'Before ', rexp.hgetall(key)
+            print 'Repair ', mset_val
+            rexp.hmset(key, mset_val)
+            print 'After ', rexp.hgetall(key)
             
         except Exception as ex:
             print ex
