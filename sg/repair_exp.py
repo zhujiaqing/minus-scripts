@@ -42,6 +42,7 @@ def repair_exp(keyword='111115*'):
                 gnp = int((g - glevearr[gl]) * 100.00 / (glevearr[gl + 1] - glevearr[gl]))
             
             mset_val = {'GL':gl, 'GNV':gnv, 'GNP':gnp}
+            print mset_val
             
             rexp.hmget(key, mset_val)
         except Exception as ex:
@@ -75,9 +76,8 @@ def del_invalid_userexp(keyword='1111156*'):
         rinfo.delete(key)
         
 if __name__ == '__main__':
-#     repair_exp(keyword='*')
-#     del_old_exp(keyword='*')
-    del_invalid_userexp(keyword='*')
+#     del_invalid_userexp(keyword='*')
+    repair_exp()
     
     print '\nCompleted\n'
 
