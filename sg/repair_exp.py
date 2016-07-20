@@ -52,6 +52,7 @@ def repair_exp(keyword='111115*'):
 def del_old_exp(keyword='11111526*'):
     
     def del_key(r, p):
+        print r, p
         for key in r.keys(p):r.delete(key)
     
     print '[5] U:rf '
@@ -71,7 +72,7 @@ def del_old_exp(keyword='11111526*'):
     del_key(r9, 'U:rtb:%s' % keyword)
     
 if __name__ == '__main__':
-    del_old_exp(keyword='111115*')
+    del_old_exp(keyword='*')
     
     print '\nCompleted\n'
 
