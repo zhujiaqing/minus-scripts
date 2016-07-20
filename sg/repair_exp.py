@@ -5,7 +5,7 @@ import redis
 
 
 rinfo = redis.Redis(host='jedisbuiderinfo.redis.youja.cn', port=6379, db=6)
-
+rexp = redis.Redis(host='userexp.redis.youja.cn', port=6801, db=6)
 
 glevearr = [0,
          250, 500,
@@ -42,7 +42,10 @@ for key in keys:
         gnp = int((g - glevearr[gl]) * 100.00 / (glevearr[gl + 1] - glevearr[gl]))
     
     mset_val = {'GL':gl, 'GNV':gnv, 'GNP':gnp}
-    rinfo.mset(key, mset_val)
+    
+    rexp.hmget(key, rinfo.hgetall(key))
+    rexp.mset(key, mset_val)
+#     rinfo.delete(key)
     print key, mset_val
     
     
