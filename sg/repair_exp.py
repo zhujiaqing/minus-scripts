@@ -50,13 +50,24 @@ def repair_exp(keyword='111115*'):
             print ex
 
 def del_old_exp(keyword='11111526*'):
-    rinfo = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
-    keys = rinfo.keys('hExp:%s' % keyword)
-    for key in keys:
-        rinfo.delete(key)
+    
+    def del_key(r, p):
+        for key in r.keys(p):r.delete(key)
+    
+    r5 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=5)
+    del_key(r5, 'U:rf:%s' % keyword)
+    
+    r6 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
+    del_key(r6, 'U:rfb:%s' % keyword)
+    
+    r8 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=8)
+    del_key(r8, 'U:rt:%s' % keyword)
+    
+    r9 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=9)
+    del_key(r9, 'U:rtb:%s' % keyword)
     
 if __name__ == '__main__':
-    repair_exp(keyword='*')
+    del_old_exp(keyword='111115*')
     
     print '\nCompleted\n'
 
