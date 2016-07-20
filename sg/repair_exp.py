@@ -79,7 +79,7 @@ def del_invalid_userexp(keyword='1111156*'):
         
 if __name__ == '__main__':
 #     del_invalid_userexp(keyword='*')
-    repair_exp()
+    repair_exp(keyword='*')
     
     print '\nCompleted\n'
 
