@@ -25,7 +25,7 @@ glevearr = [0,
          75000000, 80000000
         ]
 
-keys = rinfo.keys('hExp:%s' % '11111*')
+keys = rinfo.keys('hExp:%s' % '111115*')
 print keys
 
 for key in keys:
@@ -45,8 +45,8 @@ for key in keys:
     
     old_info = rinfo.hgetall(key)
     print type(old_info), old_info
-#     rexp.hmget(key, rinfo.hgetall(key))
-#     rexp.mset(key, mset_val)
+    rexp.hmget(key, rinfo.hgetall(key))
+    rexp.mset(key, mset_val)
 #     rinfo.delete(key)
     print key, mset_val
     break
