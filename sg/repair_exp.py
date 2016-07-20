@@ -54,15 +54,19 @@ def del_old_exp(keyword='11111526*'):
     def del_key(r, p):
         for key in r.keys(p):r.delete(key)
     
+    print '[5] U:rf '
     r5 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=5)
     del_key(r5, 'U:rf:%s' % keyword)
     
+    print '[6] U:rfb'
     r6 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=6)
     del_key(r6, 'U:rfb:%s' % keyword)
     
+    print '[8] U:rt'
     r8 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=8)
     del_key(r8, 'U:rt:%s' % keyword)
     
+    print '[9] U:rtb'
     r9 = redis.Redis(host='jedisbuilderinfo.redis.youja.cn', port=6379, db=9)
     del_key(r9, 'U:rtb:%s' % keyword)
     
