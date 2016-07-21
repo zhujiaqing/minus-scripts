@@ -32,7 +32,7 @@ def repair_photouri_is_null():
         dumpUser = DumpUser()
         dumpPhoto = DumpPhoto()
         
-        sg_mysql_10 = MySQLdb.connect(host='54.169.234.201', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
+        sg_mysql_10 = MySQLdb.connect(host='52.220.41.121', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
         cur = sg_mysql_10.cursor()
 
 #         user_sql = 'select id,user_id from photos where photouri = "" and id>%s limit 100' % max_id

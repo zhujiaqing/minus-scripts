@@ -30,8 +30,8 @@ class DumpPhoto:
         self.usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)  # 任务
         self.usa_redis_11 = redis.Redis(host="10.154.148.158", port=6666, db=11)  # 相册
     
-        self.sg_mysql_10 = MySQLdb.connect(host='54.169.234.201', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
-        self.sg_mysql_20 = MySQLdb.connect(host='54.169.234.201', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplusmain', port=3307)
+        self.sg_mysql_10 = MySQLdb.connect(host='52.220.41.121', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplus_resource', port=3306)
+        self.sg_mysql_20 = MySQLdb.connect(host='52.220.41.121', user='uplus', passwd='q1w2e3r4t5', charset='utf8', db='uplusmain', port=3307)
     
         self.fw = open('/data/file/aws-s3.file-%s' % time.strftime('%Y%m%d%H%M%S'), 'aw')
     
