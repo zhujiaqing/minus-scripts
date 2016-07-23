@@ -11,6 +11,7 @@ def check_by_file(uid_file):
     
     with open(uid_file, 'r') as uf:
         for uid in uf.readlines():
+            if '-' == uid:continue
             print uid
             break
     
