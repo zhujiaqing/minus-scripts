@@ -17,6 +17,8 @@ def check_by_file(uid_file):
         for uid in uf.readlines():
             try:uid = int(uid)
             except:continue
+            if uid > 100000000:continue  # 自己产生的uid，无须check
+            
             wf.write('%12s - rf - %4d - rt - %4d\n' % (uid, r_rf.zcard('U:rf:%d' % uid), r_rt.zcard('U:rt:%d' % uid)))
         
         wf.close()
