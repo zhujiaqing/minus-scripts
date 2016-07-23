@@ -223,19 +223,15 @@ class DumpUser:
         self.logger.info('========> relatioin size')
         rfs = rts = 0
         try:
-            size = self.usa_session.execute('SELECT count(*) FROM cb.cb_er_dt WHERE follower_id=%s;' % uid)
-            print size, size[0].count
-            rfs = size[0].cunt
+            rs = self.usa_session.execute('SELECT count(*) FROM cb.cb_er_dt WHERE follower_id=%s;' % uid)
+            rfs = rs[0].count
         except Exception as ex:
-            print ex
             self.logger.warn('Exception %s' % str(ex))
         
         try:
-            size = self.usa_session.execute('SELECT count(*) FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid)
-            print size, size[0].count
-            rts = size[0].count
+            rs = self.usa_session.execute('SELECT count(*) FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid)
+            rts = rs[0].count
         except Exception as ex:
-            print ex
             self.logger.warn('Exception %s' % str(ex))
             
         return rfs, rts

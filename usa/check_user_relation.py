@@ -18,8 +18,6 @@ def check_by_file(uid_file):
             rs = du.get_relation_size_by_uid(uid)
             wf.write('%12s - rf - %4d - rt - %4d\n' % (uid, rs[0], rs[1]))
 
-            break
-        
         wf.close()
         uf.close()
         
