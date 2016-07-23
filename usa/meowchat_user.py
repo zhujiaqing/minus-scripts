@@ -219,6 +219,23 @@ class DumpUser:
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
 
+    def get_relation_size_by_uid(self, uid):
+        self.logger.info('========> relatioin size')
+        rfs = rts = 0
+        try:
+            ers = self.usa_session.execute('SELECT * FROM cb.cb_er_dt WHERE follower_id=%s;' % uid)
+            rfs = len(ers)
+        except Exception as ex:
+            self.logger.warn('Exception %s' % str(ex))
+        
+        try:
+            ees = self.usa_session.execute('SELECT * FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid)
+            rts = len(ees)
+        except Exception as ex:
+            self.logger.warn('Exception %s' % str(ex))
+            
+        return rfs, rts
+
     def get_s3_by_view(self, view_id):
         s3_file = None
         try:
