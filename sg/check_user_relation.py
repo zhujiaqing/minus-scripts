@@ -14,8 +14,8 @@ def check_by_file(uid_file):
 
     with open(uid_file, 'r') as uf:
         for uid in uf.readlines():
-            print '%12s - rf - %04d' % (uid[:-2], r_rf.zcard('U:rf:%s' % uid))
-            print '%12s - rf - %4s' % (uid[:-1], r_rt.zcard('U:rt:%s' % uid))
+            print '%12s - rf - %04d' % (uid[:-1], r_rf.zcard('U:rf:%s' % uid))
+            print '%12s - rt - %04d' % (uid[:-1], r_rt.zcard('U:rt:%s' % uid))
             break
         
         uf.close()
