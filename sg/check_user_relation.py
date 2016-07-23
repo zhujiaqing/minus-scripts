@@ -13,12 +13,10 @@ def check_by_file(uid_file):
     r_rt = redis.Redis(host='user_relation.redis.youja.cn', port=6802, db=8)
 
     with open(uid_file, 'r') as uf:
-        wf = open('%s-relation', 'w')
+        wf = open('%s-relation' % uid_file, 'w')
         for uid in uf.readlines():
             uid = int(uid)
-            wf.write('%12s - rf - %4d' % (uid, r_rf.zcard('U:rf:%d' % uid)))
-            wf.write('%12s - rt - %4d' % (uid, r_rt.zcard('U:rt:%d' % uid)))
-            break
+            wf.write('%12s - rf - %4d - rt - %4d\n' % (uid, r_rf.zcard('U:rf:%d' % uid)), r_rt.zcard('U:rt:%d' % uid))
         
         wf.close()
         uf.close()
