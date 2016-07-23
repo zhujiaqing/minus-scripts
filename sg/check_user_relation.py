@@ -7,8 +7,12 @@ import redis
 
 
 def check_by_file(uid_file):
-    if uid_file is None:return
-    if not os.path.exists(uid_file):return
+    if uid_file is None:
+        print '1'
+        return
+    if not os.path.exists(uid_file):
+        print '2'
+        return
     
     print 'OK'
     
