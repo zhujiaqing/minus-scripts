@@ -9,8 +9,8 @@ import redis
 def check_by_file(uid_file):
     if uid_file is None or not os.path.exists(uid_file):return
     
-    with open(uid_file, 'r', encoding='utf-8') as uids:
-        for uid in uids:
+    with open(uid_file, 'r') as uf:
+        for uid in uf.readlines():
             print uid
             break
     
