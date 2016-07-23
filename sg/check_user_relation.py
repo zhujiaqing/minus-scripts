@@ -16,7 +16,7 @@ def check_by_file(uid_file):
         wf = open('%s-relation' % uid_file, 'w')
         for uid in uf.readlines():
             uid = int(uid)
-            wf.write('%12s - rf - %4d - rt - %4d\n' % (uid, r_rf.zcard('U:rf:%d' % uid)), r_rt.zcard('U:rt:%d' % uid))
+            wf.write('%12s - rf - %4d - rt - %4d\n' % (uid, r_rf.zcard('U:rf:%d' % uid), r_rt.zcard('U:rt:%d' % uid)))
         
         wf.close()
         uf.close()
