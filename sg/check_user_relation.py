@@ -21,7 +21,7 @@ def check_by_file(uid_file):
 
         
 if __name__ == '__main__':
-    check_by_file(uid_file='~/backup/uid-20160723')
+    check_by_file(uid_file='/home/jesse/backup/uid-20160723')
     
     print '\nCompleted\n'
 
