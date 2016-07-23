@@ -224,16 +224,16 @@ class DumpUser:
         rfs = rts = 0
         try:
             size = self.usa_session.execute('SELECT count(*) FROM cb.cb_er_dt WHERE follower_id=%s;' % uid)
-            rfs = size
-            print size
+            print size.count
+            rfs = size.count
         except Exception as ex:
             print ex
             self.logger.warn('Exception %s' % str(ex))
         
         try:
             size = self.usa_session.execute('SELECT count(*) FROM cb.cb_ee_dt WHERE followee_id=%s;' % uid)
-            rts = size
-            print size
+            print size.count
+            rts = size.count
         except Exception as ex:
             print ex
             self.logger.warn('Exception %s' % str(ex))
