@@ -186,7 +186,7 @@ class DumpUser:
                                 "fromUserId":str(user[0]),
                                 "toUserId":str(er.followee_id),
                                 "isLiked":"1",
-                                "createTime": time.mktime(time.strptime(str(er.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
+                                "createTime": time.mktime(time.strptime(str(er.dt)[0:18], '%Y-%m-%d %H:%M:%S'))*1000
                          })
             if 0 < len(er_list):  # 当没有关系时不用请求
                 #切分处理
@@ -210,7 +210,7 @@ class DumpUser:
                                 "fromUserId":str(ee.follower_id),
                                 "toUserId":str(user[0]),
                                 "isLiked":"1",
-                                "createTime": time.mktime(time.strptime(str(ee.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
+                                "createTime": time.mktime(time.strptime(str(ee.dt)[0:18], '%Y-%m-%d %H:%M:%S'))*1000
                          })
             
             if 0 < len(ee_list):  # 当没有关系时不用请求

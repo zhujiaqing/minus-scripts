@@ -25,7 +25,9 @@ def loading_increment_user():
         user_sql = 'select id from minus_user where id>%s limit 100' % usa_redis_10.get('meow:max:uid')
         size = cur.execute(user_sql)
         
-        if 0 == size:break
+        if 0 == size:
+            print '\n=============sleep==============\n'
+            time.sleep(60*60)  #break
         
         print 'num: %s' % format(size, ',')
         users = cur.fetchall()
