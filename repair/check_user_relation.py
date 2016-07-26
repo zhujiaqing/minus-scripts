@@ -36,11 +36,11 @@ def check_relation_from_redis():
             logger.info("============to sleep... =====")
             time.sleep(5*60)
             continue
-        elif uid >=100000000:
-            continue
 
         try:
             uid = int(uid)
+            if uid >= 100000000:
+                continue
             sg_rf = sg_redis_frela_5.zcard(f_rela_key.format(id=uid))
             sg_rf = int(sg_rf) if sg_rf else 0
             sg_rt = sg_redis_trela_8.zcard(t_rela_key.format(id=uid))
