@@ -10,8 +10,8 @@ from meowchat_user import DumpUser
 from meowchat_photo import DumpPhoto
 
 timestamp = time.strftime('%Y%m%d%H%M%S')
-KEY_SADD_DIFF_USER = 'S:diff:user:%s' % timestamp
-KEY_SADD_DIFF_PHOTO = 'S:diff:photo:%s' % timestamp
+KEY_SADD_DIFF_USER = 'S:diff:user:increment'
+KEY_SADD_DIFF_PHOTO = 'S:diff:photo:increment'
 
 def loading_increment_user():
     usa_redis_10 = redis.Redis(host="10.154.148.158", port=6666, db=10)    
