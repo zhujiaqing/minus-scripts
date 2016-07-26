@@ -35,6 +35,7 @@ def check_relation_from_redis():
         if not uid:
             logger.info("============to sleep... =====")
             time.sleep(5*60)
+            continue
         elif uid >=100000000:
             continue
 
@@ -47,6 +48,7 @@ def check_relation_from_redis():
             rs = du.get_relation_size_by_uid(uid)
 
 
+            logger.info("=================process uid=%s -sg_rf=%6d - rf=%6d - sg_rt =%6d -  rt=%6d===============" % (uid, sg_rf, rs[0], sg_rt, rs[1]))
             if (sg_rf < rs[0]) or (sg_rt < rs[1]) :
                 logger.info("=================process uid=%s -sg_rf=%6d - rf=%6d - sg_rt =%6d -  rt=%6d===============" % (uid, sg_rf, rs[0], sg_rt, rs[1]))
                 du.user_relation([uid])
