@@ -27,6 +27,7 @@ def check_relation_from_redis():
     sg_redis_trela_8 = redis.Redis(host="52.220.41.121", port=6666, db=8)
     f_rela_key = "U:rf:{id}"
     t_rela_key = "U:rt:{id}"
+    already_key = "S:Task:rela:ready"
 
 
     du = DumpUser()
@@ -41,18 +42,20 @@ def check_relation_from_redis():
             uid = int(uid)
             if uid >= 100000000:
                 continue
-            sg_rf = sg_redis_frela_5.zcard(f_rela_key.format(id=uid))
-            sg_rf = int(sg_rf) if sg_rf else 0
-            sg_rt = sg_redis_trela_8.zcard(t_rela_key.format(id=uid))
-            sg_rt = int(sg_rt) if sg_rt else 0
-            rs = du.get_relation_size_by_uid(uid)
+            if not usa_redis_26.sismember(already_key, uid) :
+                sg_rf = sg_redis_frela_5.zcard(f_rela_key.format(id=uid))
+                sg_rf = int(sg_rf) if sg_rf else 0
+                sg_rt = sg_redis_trela_8.zcard(t_rela_key.format(id=uid))
+                sg_rt = int(sg_rt) if sg_rt else 0
+                rs = du.get_relation_size_by_uid(uid)
 
 
-            logger.info("=================process uid=%s -sg_rf=%6d - rf=%6d - sg_rt =%6d -  rt=%6d===============" % (uid, sg_rf, rs[0], sg_rt, rs[1]))
-            if (sg_rf < rs[0]) or (sg_rt < rs[1]) :
                 logger.info("=================process uid=%s -sg_rf=%6d - rf=%6d - sg_rt =%6d -  rt=%6d===============" % (uid, sg_rf, rs[0], sg_rt, rs[1]))
-                du.user_relation([uid])
+                if (sg_rf < rs[0]) or (sg_rt < rs[1]) :
+                    logger.info("=================process uid=%s -sg_rf=%6d - rf=%6d - sg_rt =%6d -  rt=%6d===============" % (uid, sg_rf, rs[0], sg_rt, rs[1]))
+                    du.user_relation([uid])
 
+                usa_redis_26.sadd(already_key, uid)
 
 
         except Exception as ex:
