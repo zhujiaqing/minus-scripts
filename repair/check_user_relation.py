@@ -33,6 +33,7 @@ def check_relation_from_redis():
     while True:
         uid = usa_redis_26.spop("S:Task:relation")
         if not uid:
+            logger.info("============to sleep... =====")
             time.sleep(5*60)
         elif uid >=100000000:
             continue
@@ -57,7 +58,9 @@ def check_relation_from_redis():
 
 
 if __name__ == '__main__':
+    logger.info("============begin to repair relation... =====")
     check_relation_from_redis()
-    
+    logger.info("============ repair relation end =====")
+
     print '\nCompleted\n'
 
