@@ -12,6 +12,8 @@ from cassandra.cluster import Cluster  # @UnresolvedImport
 import redis
 import simplejson
 
+import util
+
 
 reload(sys)
 sys.setdefaultencoding("UTF-8")  # @UndefinedVariable
@@ -187,13 +189,16 @@ class DumpUser:
                                 "createTime": time.mktime(time.strptime(str(er.dt)[0:18], '%Y-%m-%d %H:%M:%S'))
                          })
             if 0 < len(er_list):  # 当没有关系时不用请求
-                payload = {
-                           "list":er_list,
-                           "uid":str(user[0]),
-                           "type":"0"
-                       }
-                self.logger.info(simplejson.dumps(payload))
-                self.api_request(uri=uri, body=simplejson.dumps(payload))
+                #切分处理
+                s_list = util.split_list(er_list, 100)
+                for sublist in s_list:
+                    payload = {
+                               "list":sublist,
+                               "uid":str(user[0]),
+                               "type":"0"
+                           }
+                    self.logger.info(simplejson.dumps(payload))
+                    self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
         
@@ -209,13 +214,17 @@ class DumpUser:
                          })
             
             if 0 < len(ee_list):  # 当没有关系时不用请求
-                payload = {
-                           "list":ee_list,
-                           "uid":str(user[0]),
-                           "type":"1"
-                       }
-                self.logger.info(simplejson.dumps(payload))
-                self.api_request(uri=uri, body=simplejson.dumps(payload))
+
+                # 切分处理
+                s_ee_list = util.split_list(ee_list, 100)
+                for sublist in s_ee_list:
+                    payload = {
+                               "list":sublist,
+                               "uid":str(user[0]),
+                               "type":"1"
+                           }
+                    self.logger.info(simplejson.dumps(payload))
+                    self.api_request(uri=uri, body=simplejson.dumps(payload))
         except Exception as ex:
             self.logger.warn('Exception %s' % str(ex))
 
