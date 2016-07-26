@@ -42,7 +42,7 @@ def check_relation_from_redis():
             uid = int(uid)
             sg_rf = sg_redis_frela_5.zcard(f_rela_key.format(id=uid))
             sg_rf = int(sg_rf) if sg_rf else 0
-            sg_rt = sg_redis_frela_5.zcard(t_rela_key.format(id=uid))
+            sg_rt = sg_redis_trela_8.zcard(t_rela_key.format(id=uid))
             sg_rt = int(sg_rt) if sg_rt else 0
             rs = du.get_relation_size_by_uid(uid)
 
