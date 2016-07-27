@@ -55,8 +55,7 @@ def check_relation_from_args(uid):
         logger.error(traceback.format_exc())
 
 
-def check_relation_from_redis():\
-    du = DumpUser()
+def check_relation_from_redis():
     while True:
         uid = usa_redis_26.spop("S:Task:relation")
         if not uid:

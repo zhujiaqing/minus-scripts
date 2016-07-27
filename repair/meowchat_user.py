@@ -190,7 +190,7 @@ class DumpUser:
                          })
             if 0 < len(er_list):  # 当没有关系时不用请求
                 #切分处理
-                s_list = util.split_list(er_list, 50)
+                s_list = util.split_list(er_list, 100)
                 for sublist in s_list:
                     payload = {
                                "list":sublist,
@@ -216,7 +216,7 @@ class DumpUser:
             if 0 < len(ee_list):  # 当没有关系时不用请求
 
                 # 切分处理
-                s_ee_list = util.split_list(ee_list, 50)
+                s_ee_list = util.split_list(ee_list, 100)
                 for sublist in s_ee_list:
                     payload = {
                                "list":sublist,
